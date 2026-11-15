@@ -334,5 +334,38 @@ class ShellModelTest(unittest.TestCase):
         self.assertTrue(summary.status_url.endswith("/system/status"))
 
 
+class NiceGuiCompatibilityTest(unittest.TestCase):
+    """Source-level guards for the NiceGUI >= 3 rules that bit the first live run (15-Nov-2026, NiceGUI 4.0.0)."""
+
+    UI_DIR = Path(__file__).resolve().parents[2] / "src" / "vaishnavi" / "ui"
+
+    def test_serve_creates_no_ui_element_in_global_scope(self) -> None:
+        import ast
+
+        source = (self.UI_DIR / "server.py").read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        serve = next(n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "serve")
+        calls = set()
+        for node in ast.walk(serve):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "ui":
+                calls.add(node.func.attr)
+        self.assertEqual(calls, {"run"}, "a ui.* element (ui.timer, ui.label, ...) in serve() runs in global scope; NiceGUI >= 3 refuses to start with @ui.page routes — use app.timer / page functions")
+
+    def test_html_calls_pass_sanitize_and_downloads_use_the_new_api(self) -> None:
+        import re
+
+        problems = []
+        for path in self.UI_DIR.rglob("*.py"):
+            text = path.read_text(encoding="utf-8")
+            for m in re.finditer(r"ui\.html\((.*)", text):
+                if "sanitize=" not in m.group(1):
+                    problems.append(f"{path.name}: ui.html(...) without sanitize=")
+            if re.search(r"ui\.download\((?!\.)", text):
+                problems.append(f"{path.name}: legacy ui.download(...) — use ui.download.content/file")
+            if "e.content.read()" in text:
+                problems.append(f"{path.name}: UploadEventArguments.content is gone — use await e.file.read()")
+        self.assertEqual(problems, [])
+
+
 if __name__ == "__main__":
     unittest.main()
