@@ -256,7 +256,8 @@ def serve(state: AppState, on_ready: Callable[[], None]) -> None:
             app.shutdown()
 
     app.on_startup(on_ready)
-    ui.timer(10.0, heartbeat)
+    # app.timer, not ui.timer: a UI element in global scope makes NiceGUI >= 3 refuse to start with @ui.page routes.
+    app.timer(10.0, heartbeat)
     tls = state.extra.get("tls")  # (cert_path, key_path) prepared by startup when server.https_enabled
     port = settings.server.https_port if tls else settings.server.port
     extra_kwargs = {"ssl_certfile": str(tls[0]), "ssl_keyfile": str(tls[1])} if tls else {}
