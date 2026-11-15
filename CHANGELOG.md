@@ -702,7 +702,7 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   --restore` guided, `main.py --update <release>`), `platform/watchdog.py` (heartbeat → start / ok / restart),
   `platform/tls.py` + `server.https_enabled` (self-signed HTTPS listener), installer messages `[restore]` /
   `[update]` EN+HI.
-  **Phase 7 code complete: 766 stdlib-only tests. All seven phases are code-complete.**
+  **Phase 7 code complete: 763 stdlib-only tests. All seven phases are code-complete.**
 
 ### Fixed — Phase 7
 - `python -m vaishnavi --config-dir … <command>`: options given *before* the command were silently reset to
@@ -715,3 +715,7 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   `hardware/scale.py`, `hardware/printer/{discovery,os_print}.py`, `api/{auth,data}.py`,
   `ui/components/{cart_table,data_grid,payment_dialog,product_tile,qty_pad,receipt_preview,wizard}.py`.
   `tests/core/test_hardening.py` fails if a docstring-only module reappears.
+- Repository clean-up after the code-complete milestone: `bootstrap/tls.py` (openssl shell-out, never wired;
+  superseded by `platform/tls.py`) and its tests, the empty `tests/unit`, `tests/integration`, `tests/fakes`
+  tiers (everything is in the stdlib-only `tests/core` tier that ships with the app), `__pycache__` folders
+  and a stray `logs/` created by a local test run. `pytest testpaths` → `tests/core` only.
