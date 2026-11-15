@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
+from html import escape as html_escape
 from typing import Any, Final
 
 from vaishnavi.core.clock import format_ist, parse_iso_utc
@@ -311,7 +312,7 @@ def register(state: Any) -> None:
                         ui.button(icon="arrow_back", on_click=lambda: ui.navigate.to("/sales")).props("flat")
                         ui.label(f"{m.labels['detail_title']} {m.sale.invoice_no}{DOT}{m.cashier}{DOT}{m.sale.status}").classes("text-xl font-semibold")
                     with ui.row().classes("gap-4 w-full no-wrap items-start"):
-                        ui.html(f"<pre class='vsm-mono text-xs vsm-card p-3'>{m.receipt_text}</pre>")
+                        ui.html(f"<pre class='vsm-mono text-xs vsm-card p-3'>{html_escape(m.receipt_text)}</pre>", sanitize=False)
                         with ui.column().classes("gap-2 flex-1"):
                             ui.button(f"{m.labels['reprint']} ({m.reprint_count})", icon="print", on_click=lambda: (_toast(do_reprint(services, actor, sale_id)), render())).props("outline").set_enabled(m.can_reprint)
                             if m.blocked_reason:
