@@ -1,0 +1,101 @@
+# Vaishnavi Store Manager — settings (docs/09 Settings, docs/05 policies).
+# Most of these can also be changed in the app under Settings (Owner login); edits made there are
+# stored in the database and take precedence over this file.
+#
+# NEVER put an API key, token or password in this file — the app refuses to start (E-SEC-006).
+# Keys are pasted in Settings → Assistant → Provider and stored encrypted.
+
+[shop]
+name = "Vaishnavi Puja Store"
+name_hi = "वैष्णवी पूजा स्टोर"
+address_line1 = ""
+address_line2 = ""
+phone = ""
+email = ""
+gstin = ""              # leave empty if not GST-registered
+state_code = ""         # two-digit GST state code, e.g. "27"
+language = "en"         # default UI language: en | hi | hinglish (each user can switch)
+
+[tax]
+registered = false            # true → CGST + SGST lines on receipts (needs shop.gstin)
+prices_include_tax = true     # shelf prices already include GST (usual for a puja shop)
+cgst_label = "CGST"
+sgst_label = "SGST"
+default_rate_bp = 0           # basis points for new products: 0 = exempt, 500 = 5 %, 1200 = 12 %
+
+[receipt]
+paper_width_mm = 80           # 80 or 58
+header_lines = []             # extra lines under the shop name, e.g. ["Near Hanuman Mandir", "Open 8am–9pm"]
+footer_lines = ["Thank you — Dhanyavaad!"]
+show_hindi_name = false       # Hindi item names on the receipt (never on the billing screen)
+show_qr_upi = false           # UPI QR code on the receipt (UPI ID is stored encrypted in Settings)
+copies = 1
+invoice_prefix = "VPS"        # bill numbers look like VPS/25-26/000123
+
+[billing]
+require_scan = true                 # staff must scan; F3 Find lookups are marked on the bill
+require_printer = false             # true → no sale without a working printer
+manual_add_policy = "ALLOW"         # items without barcode: ALLOW (capped, marked on bill, reported) | PIN (owner PIN) | BLOCK
+open_item_cap_per_bill = 3
+adhoc_discount_cap_percent = 10     # above this staff need the Owner PIN
+negative_stock_policy = "BLOCK"     # BLOCK | WARN | ALLOW
+reprint_limit = 2
+idle_lock_minutes = 10
+heartbeat_seconds = 15
+
+[server]
+host = "127.0.0.1"
+port = 8080
+https_port = 8443
+lan_access = false            # true → phones/tablets on the shop Wi-Fi can open the app and the log console
+kiosk_browser = true
+
+# [ai] — written by the installer from your answer; change in Settings → Assistant.
+[ai]
+enabled = true
+provider = "ollama"           # ollama | openai | huggingface | none
+default_language = "hinglish"
+temperature = 0.1
+top_k_docs = 4
+max_tool_rounds = 4
+request_timeout_s = 60
+max_messages_per_minute = 10
+max_message_chars = 500
+flag_alert_threshold = 2
+off_topic_limit_per_session = 3
+
+[ai.ollama]
+host = "http://127.0.0.1:11434"
+chat_model = "qwen2.5:3b-instruct"
+embed_model = "nomic-embed-text"
+keep_alive = "30m"
+num_ctx = 8192
+
+[ai.openai]
+base_url = "https://api.openai.com/v1"
+chat_model = "gpt-4o-mini"
+embed_model = "text-embedding-3-small"
+
+[ai.huggingface]
+base_url = "https://router.huggingface.co/v1"
+chat_model = "Qwen/Qwen2.5-7B-Instruct"
+embed_model = "BAAI/bge-m3"
+
+[ai.cloud]
+monthly_token_budget = 2000000
+budget_alert_pct = 80
+
+[backup]
+nightly_time = "21:30"
+interval_minutes = 0          # 0 = on start, shift close and nightly only; e.g. 15 for every 15 minutes
+keep_daily = 30
+keep_weekly = 12
+keep_monthly = 24
+restore_drill_weekday = 6     # 0 = Monday … 6 = Sunday
+
+[hardware]
+scanner_vid_pid = ""          # paired by the onboarding wizard, e.g. "0C2E:0B61"
+scanner_suffix = "enter"      # enter | tab | none
+printer_kind = "none"         # none | usb | network | system
+printer_address = ""          # usb "VID:PID" · network "192.168.1.50:9100" · system printer name
+scale_port = ""               # e.g. "COM3" or "/dev/ttyUSB0"
