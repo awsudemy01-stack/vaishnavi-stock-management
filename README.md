@@ -1,7 +1,16 @@
 # Vaishnavi Store Manager (VSM) — Billing, Stock & AI Assistant for Vaishnavi Puja Store
 
-> **Status: Phase 0 — Blueprint complete and reviewed (see doc 16); login and billing mock-ups approved; no application code written yet.**
-> This repository currently contains the design documents that every later phase will be built from.
+> **Status: all seven phases code-complete (units 1–54, 15-Nov-2026) — ready for the first live run on the shop PC.**
+> Installer (`main.py` with `--restore` / `--update`), database schema + migrations, hash-chained ledger,
+> backup/restore, recovery key, doctor, start-up spine, UI shell, login + attendance, **products & stock, labels,
+> POS billing (scan-first, discounts, open items, hold/resume, receipts & ESC/POS printing), shifts with blind
+> count, voids/refunds, anti-theft reports, sales reports, dashboard, forecasting & reorder plan, the guard-railed
+> bilingual AI assistant (Ollama / OpenAI / Hugging Face / off), report publishing (folder · e-mail · Telegram ·
+> WhatsApp), the day-close wizard and purchase orders** are implemented and covered by **766 stdlib-only tests**
+> that run on a bare Python interpreter. Nothing has been executed on the development PC beyond those tests; the
+> first live run is the shop PC's, following the **[first-run checklist](docs/17-install-and-run.md#51-first-run-on-the-shop-pc--the-checklist)**.
+> What remains needs that PC: the three-OS disaster drill, the 24-h soak, the live-model red-team run and a real
+> phone receiving a digest (see the Phase 7 status note in the [Roadmap](docs/13-roadmap.md)).
 > Product name: **Vaishnavi Store Manager** (short **VSM**; technical identifier `vaishnavi` — CLI `python -m vaishnavi`, data folder `~/VaishnaviStore`).
 
 Vaishnavi Store Manager is a **100 % Python, offline-first, single-shop, cross-platform (Windows · macOS · Ubuntu)** point-of-sale and stock-management
@@ -69,19 +78,28 @@ Consequences for the implementation:
 - OS differences are confined to `vaishnavi/platform/` adapters and the bootstrapper; the rest of the code never checks the OS.
 - Model choice is a table in [06 §2](docs/06-ai-assistant.md#2-ai-provider-and-model-selection), not a hard-coded value.
 
-## Quick start (will apply once Phase 1 lands — run on the shop PC)
+## Quick start (run on the shop PC)
 
-Same on every OS — double-click the wrapper for your system or run:
+Same on every OS — double-click the wrapper for your system (`Start Vaishnavi.bat` · `Start Vaishnavi.command` ·
+`start-vaishnavi.sh`) or run:
 
 ```bash
 python3 main.py          # first run: installs everything (asks for admin password only if system parts are needed)
-                              # later runs: checks everything in ~3 s, then starts the app and opens the browser
+                         # later runs: checks everything in ~3 s, then starts the app and opens the browser
+python3 main.py --doctor # health check only, plain language (EN / HI)
+python3 main.py --selftest   # the shipped test suite + live checks on this PC — the acceptance gate
+python3 main.py --where  # where is my data / database / logs / backups?
 ```
 
 Watch what is happening from any browser on the shop network:
 `http://<shop-pc>:8081` during installation, `http://<shop-pc>:8080/system/logs` afterwards (Owner login).
 
-Full instructions — prerequisites, every stage of the first run, all `main.py` flags, offline install and
-recovery — are in [17 — How to Install and Run](docs/17-install-and-run.md).
+Full instructions — prerequisites, every stage of the first run, the **first-run checklist**, all `main.py` flags,
+offline install and recovery — are in [17 — How to Install and Run](docs/17-install-and-run.md).
+
+### Developers: running the tests here
+
+The Phase-1 test tier needs nothing but the standard library (`python -m unittest discover -s tests/core -t .`);
+it runs on Windows, macOS and Linux with the system Python 3.11+. Tests that need a third-party wheel skip themselves.
 
 See [Roadmap](docs/13-roadmap.md) for what gets built in which order.
