@@ -15,6 +15,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
+from html import escape as html_escape
 from typing import Any, Final
 
 from vaishnavi.core.barcode import internal_ean13, parse_receipt_ean13
@@ -936,7 +937,7 @@ def register(state: Any) -> None:
                 ui.label(f"{texts.t('pos.done_title')}{DOT}{result.invoice_no}").classes("text-xl font-bold")
                 ui.label(texts.t(f"pos.done_{o.print_status}")).classes("text-sm")
                 ui.label(f"{texts.t('pos.change')}: {format_inr(result.change_paise)}").classes("text-lg")
-                ui.html(f"<pre class='vsm-mono text-xs'>{o.receipt_preview}</pre>")
+                ui.html(f"<pre class='vsm-mono text-xs'>{html_escape(o.receipt_preview)}</pre>", sanitize=False)
                 with ui.row():
                     ui.button(texts.t("pos.reprint"), on_click=lambda: services.print_queue.reprint(actor, result.sale_id)).props("flat")
                     ui.button(texts.t("pos.new_bill"), on_click=lambda: (dlg.close(), render())).props("unelevated color=primary")
