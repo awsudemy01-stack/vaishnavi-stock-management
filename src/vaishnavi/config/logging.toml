@@ -1,0 +1,26 @@
+# Logging configuration for Vaishnavi Store Manager (docs/08).
+# Edit levels here without touching code; the app re-reads this file at start.
+# Files live under <primary location>/logs/ ; DEBUG always goes to app/vaishnavi.log.
+
+[logging]
+console_level = "INFO"   # what the start-up window shows: DEBUG | INFO | WARNING
+json_lines = true        # also write app/vaishnavi.jsonl (feeds the /system/logs console API)
+sql_echo = false         # true = every SQL statement in the log (slow; for debugging only)
+
+# Per-logger levels (hierarchical names). Lower a module to DEBUG while chasing a problem.
+[levels]
+"vaishnavi" = "DEBUG"
+"vaishnavi.ai" = "DEBUG"
+"vaishnavi.hardware" = "DEBUG"
+"uvicorn.access" = "INFO"
+"apscheduler" = "WARNING"
+
+# Retention in days per log family (rotation is daily at midnight).
+[families]
+app      = { days = 30 }
+app_json = { days = 30 }
+errors   = { days = 90, level = "WARNING" }
+audit    = { days = 365 }
+ai       = { days = 14 }
+hardware = { days = 14 }
+access   = { days = 7 }
