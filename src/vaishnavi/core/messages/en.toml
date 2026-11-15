@@ -1,0 +1,300 @@
+# Plain-language texts for every error code (English — the fallback for other languages).
+# msg = what it means · fix = what to do. Placeholders like {name} are filled by the code that raises.
+# Keep in step with docs/08 §5 and with hi.toml (tests enforce identical code sets).
+# Tables other than [errors] hold other owner-facing texts (core/i18n.py): doctor titles and lines.
+
+[doctor]
+header = "Vaishnavi Store Manager Health Check — {when}  (ref {ref})"
+status_pass = "PASS"
+status_warn = "NOTE"
+status_fail = "PROBLEM"
+status_skip = "skipped"
+result_ok = "RESULT: Ready to open the shop."
+result_warn = "RESULT: Ready to open the shop ({count} note(s) to look at)."
+result_fail = "RESULT: Do not open the shop yet — {count} problem(s) must be fixed first."
+fixed = "fixed automatically"
+details = "Details: {where}"
+
+[doctor.title]
+python_env = "Python"
+packages = "Software packages"
+filesystem = "Folders & disk"
+config = "Settings file"
+database = "Shop database"
+ledger = "Sales integrity"
+backup = "Backup"
+secrets = "Secure key store"
+network = "Clock & ports"
+autostart = "Start automatically"
+system_components = "System components"
+code_integrity = "Application files"
+ai_provider = "AI assistant"
+hardware = "Scanner, printer, scale"
+
+[doctor.python_env]
+ok = "Python {version} in the private environment"
+not_venv = "Python {version} — not running from the private environment (.venv)"
+not_venv_hint = "Start the app with Start Vaishnavi (python main.py), which uses .venv."
+too_old = "Python {version} is too old (needs {need})"
+untested = "Python {version} is newer than tested — continuing"
+
+[doctor.packages]
+ok = "{count} packages load correctly"
+missing = "cannot load: {names}"
+missing_hint = "Run Start Vaishnavi again — it reinstalls the software packages."
+
+[doctor.filesystem]
+ok = "{free} GB free · data in {primary}"
+low_disk = "only {free} GB free on the data disk"
+low_disk_hint = "Free some space soon (old exports, downloads). Below 0.5 GB the app refuses to start."
+primary_missing = "the data folder is not reachable: {path}"
+primary_hint = "Check the disk is connected. Your database is there — do not continue until it is reachable."
+not_writable = "cannot write in {path}"
+
+[doctor.config]
+ok = "settings valid · shop: {shop}"
+invalid = "{problem}"
+secret_in_file = "an API key is inside a settings file"
+
+[doctor.database]
+ok = "OK · {sales} bills · {products} items · {mode}"
+ok_new = "created now — Owner setup is next"
+missing = "no database yet"
+missing_hint = "Run Start Vaishnavi to create it, or restore a backup (Settings → Backups / copy a snapshot to {path})."
+damaged = "the database file is damaged and was set aside"
+foreign = "this database belongs to another installation"
+restored = "running on a backup from {taken_at} — bills after that time must be re-entered"
+unclean = "did not close properly last time — all saved data is intact"
+behind = "database needs an upgrade ({current} → {head})"
+behind_hint = "Start the app normally: it upgrades the database after taking a backup (a copy is tested first)."
+owner_pending = "Owner account not set up yet"
+owner_pending_hint = "Open the app and complete Owner setup (choose the Owner password and PIN)."
+wal_fixed = "journal mode set to WAL"
+
+[doctor.ledger]
+ok = "{sales} bills verified · no gaps · stock matches"
+chain = "the sales record was changed outside the app"
+gaps = "bill numbers are missing: {detail}"
+stock = "stock figures do not match their movements ({count} item(s))"
+stock_hint = "Owner: Reports → Backups & integrity shows the items; the app recomputes from movements on confirm."
+
+[doctor.backup]
+ok = "last backup {age} ago · verified · {where}"
+never = "no backup has been made yet"
+never_hint = "Make one now: Settings → Backups → Backup now (or run the doctor with --fix)."
+stale = "last backup is {age} old"
+stale_hint = "A backup is taken at every shift close and nightly; run one now if the shop was open since."
+secondary_down = "backup drive not reachable — {queued} backup(s) waiting locally"
+fixed = "backup made now · verified"
+
+[doctor.secrets]
+ok = "computer key store in use"
+file_fallback = "no key store service — a protected file is used instead"
+leftover = "plain-text secret file still present: {path}"
+
+[doctor.network]
+ok = "clock in sync · ports {ports} free"
+port_busy = "port {port} is already in use by another program"
+port_busy_hint = "Close the other program (or change server.port in Settings → System) and start again."
+clock_behind = "the computer's clock is behind the last recorded event by {minutes} minutes"
+clock_hint = "Check the date and time in the operating system settings."
+
+[doctor.autostart]
+ok = "will start when the computer is switched on"
+missing = "not set to start automatically"
+missing_hint = "Run Start Vaishnavi once and answer yes to 'start automatically'."
+unknown = "could not determine"
+
+[doctor.system_components]
+ok = "USB library, print system and Hindi font present"
+missing = "missing: {what}"
+hint = "Run Start Vaishnavi again and allow the installation when asked, or install the component by hand."
+libusb = "USB library (USB printers and scanner pairing will not work)"
+print_system = "print system (CUPS / Windows Spooler — OS printers cannot be used)"
+devanagari_font = "Hindi font (Hindi text on receipts and PDFs would show as boxes)"
+
+[doctor.code_integrity]
+ok = "{count} application files match the release"
+no_manifest = "no release manifest — this is a development copy, files are not verified"
+no_manifest_hint = "Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json."
+changed = "{count} application file(s) differ from the release"
+changed_hint = "Do not use the app. Run Start Vaishnavi to reinstall the release and check who had access to the PC."
+
+[doctor.hardware]
+scanner_unpaired = "no barcode scanner paired yet"
+scanner_unpaired_hint = "Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired."
+scanner_ok = "scanner connected ({name})"
+scanner_missing = "paired scanner {id} not connected"
+scanner_missing_hint = "Plug the scanner into the USB port. Selling continues as soon as it is detected; the Owner can still log in."
+printer_none = "printer not set up (bills saved as PDF)"
+printer_ok = "printer ready ({address})"
+printer_down = "printer not ready — {detail}; receipts will queue"
+printer_down_hint = "Check the printer's power, cable and paper. Queued bills print automatically when it is back."
+scale_ok = "scale on {port}"
+scale_missing = "scale port {port} not found"
+scale_missing_hint = "Check the scale's cable, or type weights by hand."
+
+[doctor.ai_provider]
+off = "assistant turned off — stock and price questions still answered from the database"
+ollama_missing = "local AI engine (Ollama) is not installed"
+ollama_down = "local AI engine (Ollama) is not running"
+models_missing = "AI model(s) not downloaded: {names}"
+ollama_ok = "Ollama running · models ready ({chat}, {embed})"
+ollama_warm = "Ollama running · models ready · {chat} answered the warm-up in {ms} ms"
+no_internet = "{provider} is not reachable (no internet or a firewall)"
+no_key = "{provider} API key not stored yet"
+budget = "monthly AI budget {percent}% used"
+cloud_ok = "{provider} reachable · key stored · {model} · {percent}% of monthly budget used"
+
+[errors]
+
+# ---------------------------------------------------------------- configuration
+E-CFG-001 = { msg = "A required setting is missing or invalid: {key}", fix = "Open Settings and fill it in, or fix config/settings.toml. The app cannot start without it." }
+E-CFG-002 = { msg = "Unknown setting: {key}", fix = "This setting name does not exist in this version. Nothing was changed." }
+
+# ---------------------------------------------------------------- database
+E-DB-002 = { msg = "The shop database file was not found: {path}", fix = "On a new installation nothing is wrong — it is created now. Otherwise restore the latest backup from Settings → Backups (or copy a snapshot from the backup folder to that place as vaishnavi.db)." }
+E-DB-003 = { msg = "The shop database did not pass its integrity check", fix = "Do not sell until this is fixed. Restore the latest verified backup from Settings → Backups (or run: python main.py --restore)." }
+E-DB-010 = { msg = "The database could not be upgraded to this version", fix = "Nothing was changed — a copy was tested first. Reinstall the previous version or send the log to support." }
+E-DB-020 = { msg = "This is a restored copy of the database (from {taken_at})", fix = "Sales recorded after that backup are not in it. Check today's bills and re-enter if needed." }
+E-DB-021 = { msg = "This database belongs to a different installation and was refused", fix = "Use a backup from THIS shop's backup folder, or set up a new shop in Settings → System." }
+E-DB-022 = { msg = "Vaishnavi did not close properly last time — all saved data is intact", fix = "Nothing to do. If this happens often, check Reports → Backups & integrity for the crash count." }
+E-DB-030 = { msg = "Vaishnavi Store Manager is already running on this computer", fix = "Use the window that is already open (check the taskbar). If none is open, delete the file {path} and start again." }
+
+# ---------------------------------------------------------------- login & permissions
+E-AUTH-001 = { msg = "Wrong username or password", fix = "Check CAPS LOCK and try again. After 5 wrong tries the account locks for 15 minutes." }
+E-AUTH-002 = { msg = "Wrong Owner PIN", fix = "Ask the owner to enter the PIN again. After 3 wrong tries it locks for 15 minutes." }
+E-AUTH-003 = { msg = "This account is locked for {minutes} more minutes after too many wrong passwords", fix = "Wait, or ask the owner to reset the password in Settings → Users." }
+E-AUTH-004 = { msg = "This account has been deactivated", fix = "Ask the owner. Deactivated accounts keep their history but cannot log in." }
+E-AUTH-005 = { msg = "The Owner account is not set up yet", fix = "On the shop computer, open the app and complete Owner setup (choose the Owner password and PIN)." }
+E-AUTH-006 = { msg = "The last Owner account cannot be deactivated", fix = "Create another Owner account first, then deactivate this one." }
+E-AUTH-007 = { msg = "This password is not acceptable: {reason}", fix = "Choose a different password (at least 6 characters, not a common one)." }
+E-AUTH-008 = { msg = "This Owner PIN is not acceptable: {reason}", fix = "Choose 4 to 6 digits that are not easy to guess (not 1234, not 0000)." }
+E-AUTH-009 = { msg = "The username {username} is already taken", fix = "Choose another username, or reactivate the existing account in Settings → Users." }
+E-AUTH-010 = { msg = "You are not allowed to do this ({permission})", fix = "Only the owner can do this. Ask the owner." }
+E-AUTH-011 = { msg = "This action needs the Owner PIN ({permission})", fix = "Ask the owner to come to the counter and enter the PIN on this screen." }
+E-AUTH-012 = { msg = "No Owner PIN has been set up yet", fix = "Owner: log in and set a PIN in Settings → Users → Owner PIN. Until then this action is only possible from the Owner login." }
+E-AUTH-020 = { msg = "Your shift is still open", fix = "Close the shift first (Shift → Close), or ask the owner to enter the PIN to log out anyway." }
+E-AUTH-021 = { msg = "Your last session did not end properly ({ended_at})", fix = "Confirm when you actually left so the work history is correct." }
+E-AUTH-030 = { msg = "Owner PIN locked after 3 wrong attempts", fix = "Wait 15 minutes, or log in as Owner with the password and reset the PIN in Settings → Users." }
+E-AUTH-040 = { msg = "The recovery key is not correct", fix = "Type the 12 words exactly as written on your recovery sheet, in order." }
+E-AUTH-041 = { msg = "Resetting the Owner password needs the computer's administrator rights", fix = "Run Start Vaishnavi → Reset owner password again and accept the administrator prompt (or enter the computer's admin password)." }
+E-AUTH-042 = { msg = "Too many wrong recovery keys — locked for 15 minutes", fix = "Wait 15 minutes, find the recovery sheet, and type the 12 words carefully." }
+
+# ---------------------------------------------------------------- catalogue
+E-CAT-004 = { msg = "This barcode is already used by another item ({name})", fix = "Scan a different code, or open that item and edit it instead." }
+E-CAT-010 = { msg = "Someone else changed this item while you were editing", fix = "Reload the item and make your change again." }
+E-CAT-020 = { msg = "This is not a valid barcode: {code}", fix = "Check the digits; a label can be re-printed from the item page." }
+
+# ---------------------------------------------------------------- inventory
+E-INV-003 = { msg = "Not enough stock: {name} has {available}, you asked for {requested}", fix = "Reduce the quantity, or ask the owner to correct the stock." }
+E-INV-010 = { msg = "Stock can only change through a completed sale for this login", fix = "Only the owner can adjust stock directly (Stock → Adjust)." }
+E-INV-011 = { msg = "Stock movement without a sale was blocked", fix = "This is a protection rule. If you are the owner, use Stock → Adjust with a reason." }
+E-INV-012 = { msg = "Direct edit of the stock table was blocked by the database", fix = "Stock changes must go through the app. The attempt has been recorded." }
+E-INV-013 = { msg = "Stock figure did not match its movements for {name}", fix = "The app re-calculated it. If this repeats, run the integrity check from Settings → System." }
+
+# ---------------------------------------------------------------- billing
+E-BILL-042 = { msg = "No shift is open", fix = "Open your shift first (Shift → Open) and count the drawer." }
+E-BILL-050 = { msg = "Payment is less than the bill total by {short}", fix = "Collect the remaining amount or change the payment entries." }
+E-BILL-060 = { msg = "Discount is above the allowed limit ({cap})", fix = "Ask the owner to enter the PIN, or reduce the discount." }
+E-BILL-061 = { msg = "This offer cannot be removed from the bill", fix = "Ask the owner to enter the PIN to remove it." }
+E-BILL-070 = { msg = "Adding an item without a barcode is not allowed", fix = "Use F3 Find to look the item up by name, or ask the owner." }
+E-BILL-071 = { msg = "Too many items without barcode on this bill ({cap})", fix = "Find the items with F3, or ask the owner to add barcodes." }
+E-BILL-072 = { msg = "This price looks unusually low ({price})", fix = "Please check the price before continuing." }
+E-BILL-080 = { msg = "This bill was already saved ({invoice_no})", fix = "Nothing to do — the earlier bill is shown. It was not charged twice." }
+E-BILL-090 = { msg = "This bill is older than the allowed window for voids ({hours} hours)", fix = "Only the owner can void or refund an older bill — ask the owner to log in." }
+E-BILL-091 = { msg = "Cannot refund more than was sold ({name}: {available} left)", fix = "Reduce the quantity to what the customer actually returned." }
+E-BILL-092 = { msg = "This bill was already voided or refunded ({invoice_no})", fix = "Open the credit note from the bill's page. Nothing more can be returned on it." }
+E-MEAS-001 = { msg = "Quantity is below the minimum ({minimum})", fix = "Enter at least the minimum quantity shown on the shelf label." }
+E-MEAS-002 = { msg = "Quantity must be in steps of {step}", fix = "Use one of the preset buttons, or round to the nearest step." }
+E-MEAS-003 = { msg = "This item is sold by the piece — whole numbers only", fix = "Enter 1, 2, 3 … pieces." }
+
+# ---------------------------------------------------------------- shifts
+E-SHIFT-001 = { msg = "No open shift for this cash movement", fix = "Open your shift first (Shift → Open) — or the shift is already closed." }
+E-SHIFT-002 = { msg = "A shift is already open for {user}", fix = "Continue that shift, or close it before opening a new one." }
+E-SHIFT-003 = { msg = "This shift is already closed", fix = "Open a new shift. The closed one stays in Reports → Shifts." }
+E-SHIFT-004 = { msg = "Cash-out of {amount} is more than the drawer holds ({drawer})", fix = "Count the drawer; take out at most what is there, or record a cash-in first." }
+
+# ---------------------------------------------------------------- integrity
+E-LEDGER-001 = { msg = "The sales record has been tampered with (bill {invoice_no})", fix = "Stop and contact the owner. Records are protected; the change is visible in Reports → Audit trail." }
+E-LEDGER-002 = { msg = "A bill number is missing between {before} and {after}", fix = "Contact the owner. Bill numbers must be continuous." }
+E-LEDGER-003 = { msg = "Stock and sales do not match for {name}", fix = "Owner: check Reports → Shrinkage and run Stock → Stock-take for this item." }
+
+# ---------------------------------------------------------------- hardware
+E-PRN-001 = { msg = "The receipt printer is not ready — the bill was saved and will print later", fix = "Check the printer's power and cable. Queued bills print automatically when it is back." }
+E-PRN-002 = { msg = "Printed receipts are required and the printer is not ready", fix = "Fix the printer, or ask the owner to allow selling without printing for now." }
+E-SCN-001 = { msg = "The barcode scanner is not connected", fix = "Plug the scanner into the USB port. Selling continues as soon as it is detected." }
+E-SCN-002 = { msg = "Unknown barcode: {code}", fix = "Use F3 Find to search by name, or ask the owner to add this item." }
+E-SCALE-001 = { msg = "The weighing scale was not found", fix = "Check its cable, or type the weight by hand." }
+E-SCALE-002 = { msg = "The scale reading did not settle", fix = "Keep the item still and try again, or type the weight by hand." }
+
+# ---------------------------------------------------------------- publishing & forecast
+E-PUB-001 = { msg = "The report channel {channel} is not set up correctly", fix = "Settings → Publishing: fill in the destination (folder, e-mail, chat id) and the token, then press Test." }
+E-PUB-003 = { msg = "Report could not be sent to {channel} — it will be retried", fix = "Check the internet connection. It is sent automatically when online." }
+E-FCST-001 = { msg = "Not enough sales history yet for a forecast ({days} days)", fix = "Forecasts appear after about 4 weeks of sales." }
+
+# ---------------------------------------------------------------- AI assistant
+E-AI-001 = { msg = "The local AI engine (Ollama) is not responding", fix = "It restarts on the next start; or Settings → Assistant → Restart AI engine. Billing is not affected." }
+E-AI-002 = { msg = "Ollama could not be installed", fix = "Install it by hand from ollama.com/download, or choose a cloud provider in Settings → Assistant." }
+E-AI-004 = { msg = "The AI model {model} is not available", fix = "Settings → Assistant → Download models (needs internet once)." }
+E-AI-010 = { msg = "The AI assistant is turned off", fix = "Stock and price questions are still answered. Turn it on in Settings → Assistant." }
+E-AI-011 = { msg = "The API key for {provider} is not set", fix = "Open Settings → Assistant → Provider and paste the key." }
+E-AI-012 = { msg = "The API key for {provider} was rejected", fix = "Check the key on the provider's website and paste it again in Settings → Assistant." }
+E-AI-020 = { msg = "Cannot reach {provider} — no internet or a firewall", fix = "Check the connection. Stock questions are still answered from the database." }
+E-AI-021 = { msg = "{provider} is busy (rate limit)", fix = "Try again in a minute." }
+E-AI-030 = { msg = "Monthly AI budget {percent}% used", fix = "Owner: raise the limit in Settings → Assistant, or wait for next month. Stock questions still work." }
+
+# ---------------------------------------------------------------- guardrails
+E-GRD-001 = { msg = "I can only help with stock, sales and how to use this app", fix = "" }
+E-GRD-002 = { msg = "That request is not allowed and has been reported to the owner", fix = "" }
+E-GRD-003 = { msg = "The answer was withheld because it contained something that must not be shown", fix = "Ask the question differently, or check the figures in Reports." }
+E-GRD-004 = { msg = "Too many messages — please wait a moment", fix = "" }
+E-GRD-005 = { msg = "The assistant asked for data in a way that is not allowed ({tool})", fix = "Ask again in simpler words; the figures are always available in Reports." }
+E-GRD-006 = { msg = "These assistant instructions cannot be used", fix = "Remove the part that widens the assistant's scope or touches protected data, then save again." }
+
+# ---------------------------------------------------------------- secrets
+E-SEC-001 = { msg = "The computer's secure key store is not available — a protected file is used instead", fix = "The app works. For better protection install a keyring service (Linux) or sign in to the OS account." }
+E-SEC-005 = { msg = "A plain-text secret file is still present: {path}", fix = "The key was already imported and encrypted. Delete that file." }
+E-SEC-006 = { msg = "An API key was found inside a settings file: {path}", fix = "Remove that line and paste the key in Settings → Assistant → Provider instead. The app will not start with a key in a plain file." }
+E-SEC-010 = { msg = "Unknown protected setting: {key}", fix = "Only known payment, AI-key and publishing values can be stored encrypted. Nothing was changed." }
+E-SEC-011 = { msg = "A protected value could not be decrypted ({key})", fix = "The computer's secure key changed (new PC, new OS account or restored database). Enter the value again in Settings." }
+
+# ---------------------------------------------------------------- backup
+E-BKP-001 = { msg = "The backup location is not reachable: {path}", fix = "Plug in the backup drive. Backups are queued and written when it returns." }
+E-BKP-002 = { msg = "Cannot write backups to {path} ({detail})", fix = "Free some space or choose another backup folder in Settings → Backups." }
+E-BKP-003 = { msg = "A backup snapshot failed verification and was discarded", fix = "A new snapshot is attempted at the next run. If it repeats, check the disk." }
+E-BKP-010 = { msg = "The weekly restore test failed", fix = "Owner: run Settings → Backups → Test restore and check the log. Your live data is unaffected." }
+
+# ---------------------------------------------------------------- installation / platform
+E-SYS-001 = { msg = "Python is too old or incomplete on this computer", fix = "Install Python 3.11 or newer (Ubuntu: sudo apt install python3 python3-venv python3-pip), then start again." }
+E-SYS-002 = { msg = "Software packages could not be installed", fix = "Check the internet connection and start again — it continues where it stopped. Or use an offline bundle." }
+E-SYS-003 = { msg = "A system component is missing: {name}", fix = "Run Start Vaishnavi again and allow the installation, or install it by hand ({command})." }
+E-SYS-004 = { msg = "Administrator rights were declined or are unavailable", fix = "Some hardware features stay off until the component is installed. Run Start Vaishnavi again when ready." }
+E-SYS-005 = { msg = "Automatic start could not be set up", fix = "Start the app with the Start Vaishnavi icon. Details in the log." }
+E-SYS-006 = { msg = "The secure key store is not available", fix = "A protected file is used instead. See E-SEC-001." }
+E-SYS-007 = { msg = "The install log console could not start (port busy)", fix = "Close other programs using ports 8081–8085, or just continue — the log file has everything." }
+E-SYS-008 = { msg = "No recommended answer exists for a question, so --yes cannot answer it", fix = "Run the installer once without --yes." }
+E-SYS-009 = { msg = "The installer needs to ask a question but has no keyboard", fix = "Run it from a terminal, or pass --yes or --answers <file>." }
+E-SYS-010 = { msg = "Some hardware details could not be read", fix = "Nothing to do; details are in the log." }
+E-SYS-011 = { msg = "Python {found} is newer than the versions this release was tested with", fix = "Continue; report any problem." }
+E-SYS-012 = { msg = "Data and backups are on the same disk", fix = "Move backups to another disk when you can: Settings → Backups → Secondary location." }
+E-SYS-013 = { msg = "The data folder cannot be used: {path}", fix = "Check the disk is connected and the folder is writable. Your database is there — do not continue until it is reachable." }
+E-SYS-014 = { msg = "The backup folder is not reachable: {path}", fix = "Plug in the backup drive. The app starts; backups queue until it is back." }
+E-SYS-015 = { msg = "The offline bundle does not fit this computer", fix = "Build a matching bundle on a PC with internet: python main.py --make-offline-bundle <os>." }
+E-SYS-016 = { msg = "Setup is already running in another window on this computer", fix = "Use the window that is already open. If none is open, wait a minute and start again." }
+E-SYS-017 = { msg = "Port {port} is already used by another program", fix = "Close that program, or change server.port in Settings → System, then start again." }
+E-SYS-020 = { msg = "The app stopped responding and was restarted automatically", fix = "Nothing was lost. If this repeats, send the log to support." }
+E-SYS-030 = { msg = "The computer's clock jumped by {minutes} minutes", fix = "Check the date and time in the OS settings. Times on bills and attendance are flagged." }
+E-SYS-040 = { msg = "The application files on this computer were modified", fix = "Do not use the app. Run Start Vaishnavi to reinstall the release and check who had access to the PC." }
+E-SYS-041 = { msg = "Software packages are not from the verified list", fix = "The app runs. Ask for a release that includes requirements.lock." }
+E-SYS-050 = { msg = "This installer command is not available in this version", fix = "" }
+E-SYS-060 = { msg = "The file or folder given to --update is not a release of Vaishnavi Store Manager", fix = "Use the release ZIP exactly as it was sent to you, or the folder you unpacked from it." }
+E-SYS-061 = { msg = "The update was not applied and the previous version was put back", fix = "Nothing is lost. Try again later or send the install log to the person who gave you the release." }
+E-SYS-090 = { msg = "Setup was interrupted", fix = "Run Start Vaishnavi again — it continues where it stopped." }
+E-SYS-099 = { msg = "An unexpected error occurred", fix = "Nothing on your computer was damaged. Send the log file to support: {path}" }
+
+# ---------------------------------------------------------------- money, log API, alerts
+E-MONEY-001 = { msg = "This is not a valid amount: {value}", fix = "Type the amount in rupees, for example 9.99" }
+E-LOGAPI-001 = { msg = "Sign in as Owner to view the logs", fix = "" }
+E-LOGAPI-002 = { msg = "Too many requests to the log console", fix = "Wait a moment and reload." }
+E-ALERT-001 = { msg = "Alert: {name} is {value} (limit {threshold})", fix = "" }
