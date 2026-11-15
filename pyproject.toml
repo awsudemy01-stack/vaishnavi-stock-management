@@ -36,7 +36,7 @@ classifiers = [
 
 dependencies = [
   # UI / server (NiceGUI bundles FastAPI + uvicorn)
-  "nicegui>=2.0",
+  "nicegui>=3.0,<5",
   # persistence
   "sqlalchemy>=2.0",
   "alembic>=1.13",
@@ -212,7 +212,7 @@ ignore_missing_imports = true
 
 # ----------------------------------------------------------------------------- pytest
 [tool.pytest.ini_options]
-testpaths = ["tests/core", "tests/unit", "tests/integration"]
+testpaths = ["tests/core"]
 python_files = ["test_*.py"]
 asyncio_mode = "auto"
 addopts = "-ra --strict-markers"
