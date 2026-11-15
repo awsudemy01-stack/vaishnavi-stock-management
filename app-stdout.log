@@ -1,0 +1,30 @@
+COMMAND_CRASH command=run error=RuntimeError('ui.page cannot be used in NiceGUI scripts when UI is defined in the global scope.\nTo use multiple pages, either move all UI into page functions or use ui.sub_pages.')
+Traceback (most recent call last):
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/__main__.py", line 74, in main
+    return int(handler(ns, resolve_env(ns)))
+               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/commands/run.py", line 31, in run
+    return run_app(settings=env.settings, paths=env.paths, config_dir=env.config_dir, open_browser=not ns.no_browser, lang=env.lang)
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/bootstrap/startup.py", line 275, in run_app
+    server(state, on_ready)
+    ~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/bootstrap/startup.py", line 418, in _default_serve
+    ui_serve(state, on_ready)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/ui/server.py", line 264, in serve
+    ui.run(
+    ~~~~~~^
+        host=settings.server.bind_host,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+        **extra_kwargs,
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/.venv/lib/python3.13/site-packages/nicegui/ui_run.py", line 138, in run
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: ui.page cannot be used in NiceGUI scripts when UI is defined in the global scope.
+To use multiple pages, either move all UI into page functions or use ui.sub_pages.
+Unexpected error in 'run': RuntimeError. Details are in the log. (E-SYS-099)

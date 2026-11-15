@@ -1,0 +1,33 @@
+{
+  "os_family": "macos",
+  "os_name": "macOS",
+  "os_version": "27.2.1",
+  "arch": "arm64",
+  "hostname": "Rohits-MacBook-Pro.local",
+  "python_version": "3.13.5",
+  "python_executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
+  "in_venv": false,
+  "cpu_count": 10,
+  "cpu_name": "arm",
+  "ram_gib": 16.0,
+  "gpus": [
+    {
+      "name": "Apple silicon GPU",
+      "vram_gib": null,
+      "vendor": "apple"
+    }
+  ],
+  "apple_silicon": true,
+  "disk_free_program_gib": 57.1,
+  "disk_free_home_gib": 57.1,
+  "printers": [],
+  "serial_ports": [],
+  "usb_hid_devices": [],
+  "internet": true,
+  "package_managers": [
+    "brew"
+  ],
+  "ollama_found": true,
+  "probe_errors": {},
+  "surveyed_on": "2026-11-15"
+}

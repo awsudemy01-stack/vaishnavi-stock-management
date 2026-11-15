@@ -1,0 +1,326 @@
+{
+  "schema": 1,
+  "runs": [
+    {
+      "run_id": "26111520271180ae",
+      "started_at": "2026-11-15T20:27:11",
+      "argv": [],
+      "exit_code": 2,
+      "finished_at": "2026-11-15T20:33:11"
+    }
+  ],
+  "stages": {
+    "log_console": {
+      "status": "OK",
+      "at": "2026-11-15T20:27:11",
+      "cache_key": null,
+      "message": "watch at http://192.168.0.190:8081/",
+      "error_code": "",
+      "elapsed_ms": 92,
+      "data": {
+        "url": "http://192.168.0.190:8081/",
+        "port": 8081
+      }
+    },
+    "language": {
+      "status": "OK",
+      "at": "2026-11-15T20:28:22",
+      "cache_key": null,
+      "message": "English",
+      "error_code": "",
+      "elapsed_ms": 71267,
+      "data": {
+        "lang": "en"
+      }
+    },
+    "survey": {
+      "status": "OK",
+      "at": "2026-11-15T20:28:23",
+      "cache_key": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3|2026-W46",
+      "message": "macOS 27.2.1, 16 GB memory, Apple silicon → local AI will work on this PC",
+      "error_code": "",
+      "elapsed_ms": 794,
+      "data": {
+        "survey": {
+          "os_family": "macos",
+          "os_name": "macOS",
+          "os_version": "27.2.1",
+          "arch": "arm64",
+          "hostname": "Rohits-MacBook-Pro.local",
+          "python_version": "3.13.5",
+          "python_executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
+          "in_venv": false,
+          "cpu_count": 10,
+          "cpu_name": "arm",
+          "ram_gib": 16.0,
+          "gpus": [
+            {
+              "name": "Apple silicon GPU",
+              "vram_gib": null,
+              "vendor": "apple"
+            }
+          ],
+          "apple_silicon": true,
+          "disk_free_program_gib": 57.1,
+          "disk_free_home_gib": 57.1,
+          "printers": [],
+          "serial_ports": [],
+          "usb_hid_devices": [],
+          "internet": true,
+          "package_managers": [
+            "brew"
+          ],
+          "ollama_found": true,
+          "probe_errors": {},
+          "surveyed_on": "2026-11-15"
+        },
+        "ai_provider": "ollama",
+        "ai_local_tier": "7b",
+        "ai_local_possible": true,
+        "ai_reason_key": "survey.ai.local_ok"
+      }
+    },
+    "offline_bundle": {
+      "status": "SKIP",
+      "at": "2026-11-15T20:28:23",
+      "cache_key": null,
+      "message": "not needed on this computer",
+      "error_code": "",
+      "elapsed_ms": 0,
+      "data": {}
+    },
+    "python_check": {
+      "status": "OK",
+      "at": "2026-11-15T20:28:23",
+      "cache_key": null,
+      "message": "Python 3.13 found",
+      "error_code": "",
+      "elapsed_ms": 21,
+      "data": {
+        "version": "3.13",
+        "executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3"
+      }
+    },
+    "venv": {
+      "status": "OK",
+      "at": "2026-11-15T20:28:27",
+      "cache_key": null,
+      "message": "created (.venv)",
+      "error_code": "",
+      "elapsed_ms": 4121,
+      "data": {
+        "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
+        "created": true
+      }
+    },
+    "packages": {
+      "status": "WARN",
+      "at": "2026-11-15T20:29:29",
+      "cache_key": null,
+      "message": "100 packages installed — but not from the verified list",
+      "error_code": "E-SYS-041",
+      "elapsed_ms": 61517,
+      "data": {
+        "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
+        "hash_verified": false,
+        "installed": [
+          "Mako-1.4.3",
+          "MarkupSafe-3.0.4",
+          "PyYAML-6.0.3",
+          "Pygments-2.21.0",
+          "aiofiles-25.1.0",
+          "aiohappyeyeballs-2.7.1",
+          "aiohttp-3.14.5",
+          "aiosignal-1.4.0",
+          "alembic-1.20.1",
+          "annotated-doc-0.0.6",
+          "annotated-types-0.8.0",
+          "anyio-4.16.0",
+          "appdirs-1.4.4",
+          "apscheduler-3.11.3",
+          "argcomplete-3.7.2",
+          "attrs-26.1.0",
+          "bidict-0.24.1",
+          "certifi-2026.10.23",
+          "cffi-2.1.1",
+          "charset-normalizer-3.5.2",
+          "click-8.5.1",
+          "contourpy-1.4.0",
+          "cryptography-50.0.2",
+          "cycler-0.12.1",
+          "docutils-0.23",
+          "et-xmlfile-2.0.0",
+          "fastapi-0.163.1",
+          "fonttools-4.68.0",
+          "frozenlist-1.8.0",
+          "h11-0.16.0",
+          "hidapi-0.15.0",
+          "httpcore-1.0.9",
+          "httpcore2-2.16.0",
+          "httptools-0.9.0",
+          "httpx-0.28.1",
+          "httpx2-2.16.0",
+          "idna-3.20",
+          "ifaddr-0.2.0",
+          "importlib-resources-7.1.0",
+          "itsdangerous-2.2.0",
+          "jaraco.classes-3.4.0",
+          "jaraco.context-6.1.2",
+          "jaraco.functools-4.6.0",
+          "jinja2-3.1.6",
+          "jiter-0.19.0",
+          "keyring-25.7.0",
+          "kiwisolver-1.5.1",
+          "markdown2-2.5.5",
+          "matplotlib-3.11.2",
+          "more-itertools-11.2.1",
+          "multidict-7.2.1",
+          "nicegui-4.0.0",
+          "numpy-2.5.4",
+          "ollama-0.6.3",
+          "openai-3.51.0",
+          "openpyxl-3.1.5",
+          "opentelemetry-api-1.45.2",
+          "orjson-3.13.0",
+          "packaging-26.3",
+          "pillow-13.0.0",
+          "propcache-0.5.4",
+          "pycparser-3.12",
+          "pydantic-2.14.3",
+          "pydantic-core-2.50.4",
+          "pydantic-settings-2.16.3",
+          "pyparsing-3.3.3",
+          "pyserial-3.5",
+          "python-barcode-0.16.1",
+          "python-dateutil-4.0.0",
+          "python-dotenv-1.2.4",
+          "python-engineio-4.15.1",
+          "python-escpos-3.1",
+          "python-multipart-0.0.33",
+          "python-socketio-5.18.1",
+          "python-ulid-4.1.0",
+          "pyusb-1.3.1",
+          "qrcode-8.2",
+          "reportlab-5.1.0",
+          "requests-2.34.2",
+          "setuptools-84.2.1",
+          "simple-websocket-1.1.0",
+          "six-1.17.0",
+          "sniffio-1.3.1",
+          "sqlalchemy-2.1.8",
+          "starlette-1.10.0",
+          "tinycss2-1.5.1",
+          "truststore-0.10.5",
+          "typing-extensions-4.16.0",
+          "typing-inspection-0.4.5",
+          "tzdata-2026.6",
+          "tzlocal-5.4.5",
+          "urllib3-2.8.0",
+          "uvicorn-0.54.0",
+          "uvloop-0.23.0",
+          "vaishnavi-store-manager-0.1.0",
+          "watchfiles-1.3.0",
+          "webencodings-0.6.1",
+          "websockets-17.4",
+          "wsproto-1.3.2",
+          "yarl-1.25.1"
+        ],
+        "inputs_key": "|8a7c36dffe02e213|/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python||"
+      }
+    },
+    "system_components": {
+      "status": "OK",
+      "at": "2026-11-15T20:30:01",
+      "cache_key": null,
+      "message": "installed: USB library (libusb)",
+      "error_code": "",
+      "elapsed_ms": 32573,
+      "data": {
+        "missing": [],
+        "installed": [
+          "libusb"
+        ]
+      }
+    },
+    "ai_provider": {
+      "status": "OK",
+      "at": "2026-11-15T20:31:57",
+      "cache_key": null,
+      "message": "Ollama ready — qwen2.5:7b-instruct · bge-m3",
+      "error_code": "",
+      "elapsed_ms": 115919,
+      "data": {
+        "provider": "ollama",
+        "ready": true,
+        "chat_model": "qwen2.5:7b-instruct",
+        "embed_model": "bge-m3",
+        "pulled": [
+          "qwen2.5:7b-instruct"
+        ],
+        "version": "0.40.16"
+      }
+    },
+    "locations": {
+      "status": "WARN",
+      "at": "2026-11-15T20:32:37",
+      "cache_key": null,
+      "message": "primary /Users/rohit/VaishnaviStore (52.4 GB free) · backups /Users/rohit/VaishnaviStore-Backups (52.4 GB free)",
+      "error_code": "E-SYS-012",
+      "elapsed_ms": 39607,
+      "data": {
+        "primary": "/Users/rohit/VaishnaviStore",
+        "secondary": "/Users/rohit/VaishnaviStore-Backups",
+        "same_device": true,
+        "free_primary_gib": 52.4,
+        "free_secondary_gib": 52.4
+      }
+    },
+    "autostart": {
+      "status": "OK",
+      "at": "2026-11-15T20:32:59",
+      "cache_key": null,
+      "message": "will start at log-in",
+      "error_code": "",
+      "elapsed_ms": 21685,
+      "data": {
+        "registered": true,
+        "detail": ""
+      }
+    },
+    "database": {
+      "status": "OK",
+      "at": "2026-11-15T20:33:01",
+      "cache_key": null,
+      "message": "new database created and prepared. The Owner password will be set in the browser on first start.",
+      "error_code": "",
+      "elapsed_ms": 2048,
+      "data": {
+        "created": true,
+        "migrated": false,
+        "revision": "0001_initial",
+        "owner_setup_pending": true,
+        "secrets_stored": 0
+      }
+    },
+    "doctor": {
+      "status": "WARN",
+      "at": "2026-11-15T20:33:04",
+      "cache_key": null,
+      "message": "finished with notes — the shop can open; see the lines marked '!' above.",
+      "error_code": "",
+      "elapsed_ms": 2979,
+      "data": {
+        "exit_code": 1
+      }
+    },
+    "start": {
+      "status": "FAIL",
+      "at": "2026-11-15T20:33:11",
+      "cache_key": null,
+      "message": "the application stopped right after starting (code 4)",
+      "error_code": "E-SYS-099",
+      "elapsed_ms": 7120,
+      "data": {}
+    }
+  }
+}
