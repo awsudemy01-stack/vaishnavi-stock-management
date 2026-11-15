@@ -704,7 +704,17 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   `[update]` EN+HI.
   **Phase 7 code complete: 763 stdlib-only tests. All seven phases are code-complete.**
 
-### Fixed — Phase 7
+### Fixed — first live run (macOS 15-Nov, NiceGUI 4.0.0)
+- **App crashed right after the installer finished** (`APP_EXITED_EARLY code=4`, `RuntimeError: ui.page cannot be
+  used in NiceGUI scripts when UI is defined in the global scope`): `ui/server.serve()` created the 10-second
+  heartbeat with `ui.timer` *outside* any page, which NiceGUI ≥ 3 treats as a "NiceGUI script" and refuses when
+  `@ui.page` routes exist. Now `app.timer`. The installer, database creation and doctor had all passed.
+- Adapted to the NiceGUI 3/4 API the code was not written against: `ui.html(..., sanitize=False)` everywhere (and
+  the receipt / Z-report `<pre>` bodies are HTML-escaped — product names may contain `<`), `ui.download(...)` →
+  `ui.download.content(...)` / `ui.download.file(...)`, CSV import handler reads `await e.file.read()`. Dependency
+  pin tightened to `nicegui>=3.0,<5`. `tests/core/test_ui_shell.NiceGuiCompatibilityTest` scans the UI sources so
+  none of these can come back.
+
 - `python -m vaishnavi --config-dir … <command>`: options given *before* the command were silently reset to
   their defaults by the sub-parser (argparse parents); `--lang` and `--config-dir` now work in either position.
 - `SqliteTxn` closed the connection only after `BEGIN` succeeded; a damaged file leaked the handle (Windows kept
