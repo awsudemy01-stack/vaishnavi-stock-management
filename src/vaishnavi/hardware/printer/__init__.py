@@ -1,0 +1,1 @@
+"""Receipt/label printer adapters."""
