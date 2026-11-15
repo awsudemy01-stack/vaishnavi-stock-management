@@ -288,7 +288,7 @@ def register(state: Any) -> None:
                 if can_edit:
                     ui.button(model.labels["new"], icon="add", on_click=lambda: ui.navigate.to("/products/new")).props("unelevated color=primary")
                     ui.button(model.labels["import"], icon="upload", on_click=lambda: ui.navigate.to("/products/import")).props("outline")
-                    ui.button(model.labels["export"], icon="download", on_click=lambda: ui.download(services.import_export.export_csv().encode("utf-8"), "products.csv")).props("outline")
+                    ui.button(model.labels["export"], icon="download", on_click=lambda: ui.download.content(services.import_export.export_csv().encode("utf-8"), "products.csv")).props("outline")
                     ui.button(model.labels["labels"], icon="label", on_click=lambda: ui.navigate.to("/labels")).props("outline")
             columns = [{"name": k, "label": texts.t(f"products.{k}") if texts.has(f"products.{k}") else k, "field": k, "sortable": True} for k in ("sku", "name", "name_hi", "category", "price_text", "stock_text", "barcode")]
             table = ui.table(columns=columns, rows=[r.__dict__ for r in model.rows], row_key="id", pagination=model.page_size).classes("w-full")
@@ -308,11 +308,12 @@ def register(state: Any) -> None:
         with frame(state, current_path="/products"):
             ui.label(texts.t("products.import")).classes("text-xl font-semibold")
             ui.label(texts.t("products.import_hint")).classes("text-sm text-gray-600")
-            ui.button(texts.t("products.import_template"), icon="download", on_click=lambda: ui.download(("\ufeffsku,name,name_hi,category,price,mrp,cost,tax_rate,hsn,unit,sale_mode,barcode,opening_stock,min_stock,tags\n").encode("utf-8"), "products-template.csv")).props("flat")
+            ui.button(texts.t("products.import_template"), icon="download", on_click=lambda: ui.download.content(("\ufeffsku,name,name_hi,category,price,mrp,cost,tax_rate,hsn,unit,sale_mode,barcode,opening_stock,min_stock,tags\n").encode("utf-8"), "products-template.csv")).props("flat")
             result_box = ui.column().classes("w-full gap-2")
 
-            def on_upload(e: Any) -> None:
-                text = e.content.read().decode("utf-8", errors="replace")
+            async def on_upload(e: Any) -> None:
+                raw = await e.file.read()  # NiceGUI >= 3: UploadEventArguments.file (async reader)
+                text = raw.decode("utf-8", errors="replace")
                 preview = services.import_export.preview_csv(text)
                 holder["preview"] = preview
                 result_box.clear()
