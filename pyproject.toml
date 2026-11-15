@@ -1,0 +1,391 @@
+# Vaishnavi Store Manager — project metadata, dependencies and tool configuration.
+#
+# Exact versions are NOT pinned here. The installer (main.py → bootstrap/python_env.py) installs from
+# `requirements.lock`, a hash-pinned file generated on a connected machine with:
+#
+#     pip install pip-tools
+#     pip-compile --generate-hashes --extra dev --extra cups --extra pdf-html \
+#                 --output-file requirements.lock pyproject.toml
+#
+# If `requirements.lock` is absent, the installer falls back to `pip install -e .` and the doctor
+# reports WARN E-SYS-041 ("dependencies not hash-verified"). See docs/17 §10 and ADR-036.
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vaishnavi-store-manager"
+dynamic = ["version"]
+description = "Billing and stock management for Vaishnavi Puja Store — offline-first, anti-theft, with an optional AI assistant."
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "Proprietary — Vaishnavi Puja Store. All rights reserved." }
+authors = [{ name = "Vaishnavi Puja Store" }]
+keywords = ["pos", "billing", "inventory", "sqlite", "nicegui", "ollama"]
+classifiers = [
+  "Private :: Do Not Upload",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+]
+
+dependencies = [
+  # UI / server (NiceGUI bundles FastAPI + uvicorn)
+  "nicegui>=2.0",
+  # persistence
+  "sqlalchemy>=2.0",
+  "alembic>=1.13",
+  # configuration / validation
+  "pydantic>=2.6",
+  "pydantic-settings>=2.2",
+  # security
+  "cryptography>=42.0",
+  "keyring>=25.0",
+  # catalogue, barcodes, documents
+  "pillow>=10.0",
+  "python-barcode>=0.15",
+  "qrcode>=7.4",
+  "reportlab>=4.0",
+  "jinja2>=3.1",
+  "openpyxl>=3.1",
+  "matplotlib>=3.8",
+  # receipt printing (ESC/POS) and hardware — imported lazily inside hardware/ and platform/
+  "python-escpos>=3.0",
+  "pyusb>=1.2",
+  "hidapi>=0.14",
+  "pyserial>=3.5",
+  "pywin32>=306; sys_platform == 'win32'",
+  "pyudev>=0.24; sys_platform == 'linux'",
+  # AI providers — imported lazily inside ai/providers/
+  "ollama>=0.3",
+  "openai>=1.40",
+  "httpx>=0.27",
+  "numpy>=1.26",
+  # publishing
+  "requests>=2.31",
+  # scheduling and ids
+  "apscheduler>=3.10,<4",
+  "python-ulid>=2.2",
+]
+
+[project.optional-dependencies]
+# Needs libcups headers to build; the printing adapter falls back to the `lp` command without it.
+cups = ["pycups>=2.0; sys_platform == 'linux'"]
+# HTML→PDF renderer; needs pango/cairo system libraries. reportlab is the primary PDF engine.
+pdf-html = ["weasyprint>=62.0"]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+  "ruff>=0.5",
+  "mypy>=1.10",
+  "import-linter>=2.0",
+  "pip-tools>=7.4",
+  "types-requests",
+  "types-pyserial",
+]
+
+[project.scripts]
+vaishnavi = "vaishnavi.__main__:main"
+
+# ----------------------------------------------------------------------------- packaging
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "vaishnavi.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vaishnavi = [
+  "py.typed",
+  "core/messages/*.toml",
+  "core/wordlist.txt",
+  "ai/prompts/*.md",
+  "ui/i18n/*.json",
+  "db/alembic/*.ini",
+  "db/alembic/*.py",
+  "db/alembic/script.py.mako",
+  "db/alembic/versions/*.py",
+  "db/schema.sql",
+]
+
+# ----------------------------------------------------------------------------- ruff (lint + format)
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "bootstrap", "tests"]
+extend-exclude = ["docs", "offline", ".venv"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W",   # pycodestyle
+  "F",        # pyflakes
+  "I",        # isort
+  "B",        # bugbear
+  "UP",       # pyupgrade
+  "N",        # pep8-naming
+  "S",        # bandit (hard-coded secrets, subprocess, yaml, …)
+  "T20",      # print() — forbidden in the app; allowed in the console installer
+  "TID",      # tidy imports (banned APIs, relative imports)
+  "D",        # pydocstyle — every module/class/function documents its responsibility
+  "RUF",      # ruff-specific
+]
+ignore = [
+  "D105",  # magic methods need no docstring
+  "D107",  # __init__ documented at class level
+  "E501",  # line length is enforced by the formatter
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"sys.platform".msg = "OS detection is allowed only in bootstrap/ (root) and vaishnavi/platform/ — use a platform adapter."
+"platform.system".msg = "OS detection is allowed only in bootstrap/ (root) and vaishnavi/platform/ — use a platform adapter."
+"os.name".msg = "OS detection is allowed only in bootstrap/ (root) and vaishnavi/platform/ — use a platform adapter."
+
+[tool.ruff.lint.per-file-ignores]
+# The console installer talks to the owner through print(); it also runs subprocesses by design.
+"main.py" = ["T20", "S603", "S607", "TID251"]
+"bootstrap/**" = ["T20", "S603", "S607", "TID251"]
+# The only in-app package that may know the OS and shell out.
+"src/vaishnavi/platform/**" = ["S603", "S607", "TID251"]
+# Tests: asserts are the point; docstrings on every test function are noise.
+"tests/**" = ["S101", "D100", "D101", "D102", "D103", "D104"]
+# Alembic migration scripts are generated-style and keep Alembic's naming.
+"src/vaishnavi/db/alembic/versions/*.py" = ["D", "N999"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["vaishnavi", "bootstrap"]
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+
+# ----------------------------------------------------------------------------- mypy
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "src"
+packages = ["vaishnavi"]
+files = ["main.py", "bootstrap", "tests"]
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unreachable = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+strict_equality = true
+show_error_codes = true
+pretty = true
+
+# Business core is held to the strictest settings.
+[[tool.mypy.overrides]]
+module = ["vaishnavi.core.*", "vaishnavi.services.*", "vaishnavi.db.*", "vaishnavi.forecast.*"]
+disallow_any_generics = true
+disallow_untyped_decorators = true
+disallow_untyped_calls = true
+warn_return_any = true
+no_implicit_reexport = true
+
+# Hardware / AI / publishing libraries without type stubs.
+[[tool.mypy.overrides]]
+module = [
+  "escpos.*", "usb.*", "hid.*", "pyudev.*", "serial.*", "cups.*",
+  "win32print.*", "win32api.*", "win32con.*", "wmi.*",
+  "barcode.*", "qrcode.*", "reportlab.*", "weasyprint.*", "openpyxl.*", "matplotlib.*",
+  "ollama.*", "keyring.*", "apscheduler.*", "nicegui.*", "ulid.*",
+]
+ignore_missing_imports = true
+
+# ----------------------------------------------------------------------------- pytest
+[tool.pytest.ini_options]
+testpaths = ["tests/core", "tests/unit", "tests/integration"]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
+addopts = "-ra --strict-markers"
+markers = [
+  "integration: needs a temporary database / scheduler / API (slower)",
+  "hardware: needs a real device (skipped in CI)",
+]
+log_level = "DEBUG"
+
+# ----------------------------------------------------------------------------- import-linter
+# Encodes the dependency rules of docs/03 §2 and ADR-040. Run: `lint-imports`.
+[tool.importlinter]
+root_packages = ["vaishnavi"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Layered architecture (commands → bootstrap → ui → api/scheduler → ai/hardware/publishing → services → db → forecast/platform → core)"
+type = "layers"
+layers = [
+  "vaishnavi.commands",
+  "vaishnavi.bootstrap",
+  "vaishnavi.ui",
+  "vaishnavi.api | vaishnavi.scheduler",
+  "vaishnavi.ai | vaishnavi.hardware | vaishnavi.publishing",
+  "vaishnavi.services",
+  "vaishnavi.db",
+  "vaishnavi.forecast | vaishnavi.platform",
+  "vaishnavi.core",
+]
+
+[[tool.importlinter.contracts]]
+name = "Stdlib-only core tier (ADR-040) imports no third-party package"
+type = "forbidden"
+source_modules = [
+  "vaishnavi.core.money",
+  "vaishnavi.core.ids",
+  "vaishnavi.core.clock",
+  "vaishnavi.core.events",
+  "vaishnavi.core.permissions",
+  "vaishnavi.core.errors",
+  "vaishnavi.core.logging",
+  "vaishnavi.core.settings",
+  "vaishnavi.db.schema",
+  "vaishnavi.db.seed",
+  "vaishnavi.db.records",
+  "vaishnavi.db.ledger_store",
+  "vaishnavi.db.guardian",
+  "vaishnavi.services.backup",
+  "vaishnavi.platform.paths",
+  "vaishnavi.services.common",
+  "vaishnavi.services.audit",
+  "vaishnavi.services.settings",
+  "vaishnavi.services.secure_settings",
+  "vaishnavi.services.user",
+  "vaishnavi.services.recovery",
+  "vaishnavi.services.tax",
+  "vaishnavi.services.measure",
+  "vaishnavi.services.ledger",
+  "vaishnavi.services.work_session",
+  "vaishnavi.services.catalog",
+  "vaishnavi.services.price_history",
+  "vaishnavi.services.inventory",
+  "vaishnavi.services.labels",
+  "vaishnavi.services.import_export",
+  "vaishnavi.services.onboarding",
+  "vaishnavi.services.offers",
+  "vaishnavi.services.billing",
+  "vaishnavi.services.receipt",
+  "vaishnavi.services.print_queue",
+  "vaishnavi.services.hardware_guard",
+  "vaishnavi.services.shift",
+  "vaishnavi.services.open_item_review",
+  "vaishnavi.services.report",
+  "vaishnavi.services.forecast",
+  "vaishnavi.services.insights",
+  "vaishnavi.forecast.series",
+  "vaishnavi.forecast.methods",
+  "vaishnavi.forecast.festivals",
+  "vaishnavi.forecast.planner",
+  "vaishnavi.hardware.receipts",
+  "vaishnavi.hardware.printer.escpos",
+  "vaishnavi.hardware.labels",
+  "vaishnavi.core.barcode",
+  "vaishnavi.services.notifications",
+  "vaishnavi.db.lock",
+  "vaishnavi.db.sqlite_stores",
+  "vaishnavi.scheduler.simple",
+  "vaishnavi.scheduler.jobs",
+  "vaishnavi.api.system",
+  "vaishnavi.app_services",
+  "vaishnavi.bootstrap.startup",
+  "vaishnavi.bootstrap.doctor",
+  "vaishnavi.commands",
+  "vaishnavi.ui.theme",
+  "vaishnavi.ui.i18n",
+  "vaishnavi.ui.state",
+  "vaishnavi.ui.components.status_chip",
+  "vaishnavi.ui.components.notification_bell",
+  "vaishnavi.ui.components.charts",
+  "vaishnavi.forecast",
+  "vaishnavi.ai.guardrails",
+  "vaishnavi.ai.fastpath",
+  "vaishnavi.ai.providers._http",
+  "vaishnavi.ai.providers.ollama_provider",
+  "vaishnavi.ai.providers.openai_compat_provider",
+  "vaishnavi.ai.providers.factory",
+  "vaishnavi.ai.output_filter",
+  "vaishnavi.ai.tool_protocol",
+  "vaishnavi.ai.tools",
+  "vaishnavi.ai.embeddings",
+  "vaishnavi.ai.indexer",
+  "vaishnavi.ai.chat_service",
+  "vaishnavi.ai.prompts",
+  "vaishnavi.ai.redteam.corpus",
+  "vaishnavi.services.prompt",
+  "vaishnavi.services.publisher",
+  "vaishnavi.services.purchase_order",
+  "vaishnavi.services.export",
+  "vaishnavi.publishing.renderer",
+  "vaishnavi.publishing.outbox",
+  "vaishnavi.publishing.channels",
+  "vaishnavi.publishing.channels.folder",
+  "vaishnavi.publishing.channels.smtp",
+  "vaishnavi.publishing.channels.telegram",
+  "vaishnavi.publishing.channels.whatsapp",
+  "vaishnavi.platform.watchdog",
+  "vaishnavi.platform.tls",
+  "vaishnavi.commands.restore",
+]
+forbidden_modules = [
+  "nicegui", "fastapi", "starlette", "uvicorn",
+  "sqlalchemy", "alembic",
+  "pydantic", "pydantic_settings",
+  "numpy", "matplotlib", "pandas",
+  "cryptography", "keyring",
+  "ollama", "openai", "httpx", "requests",
+  "apscheduler", "escpos", "usb", "hid", "serial", "pyudev", "cups", "win32print",
+  "PIL", "barcode", "qrcode", "reportlab", "jinja2", "openpyxl", "ulid",
+]
+
+[[tool.importlinter.contracts]]
+name = "LLM client libraries only inside ai.providers"
+type = "forbidden"
+source_modules = [
+  "vaishnavi.ui", "vaishnavi.api", "vaishnavi.scheduler", "vaishnavi.bootstrap",
+  "vaishnavi.services", "vaishnavi.db", "vaishnavi.core", "vaishnavi.forecast", "vaishnavi.platform",
+  "vaishnavi.hardware", "vaishnavi.publishing",
+  "vaishnavi.ai.chat_service", "vaishnavi.ai.tools", "vaishnavi.ai.guardrails", "vaishnavi.ai.fastpath",
+  "vaishnavi.ai.embeddings", "vaishnavi.ai.indexer", "vaishnavi.ai.output_filter", "vaishnavi.ai.tool_protocol",
+]
+forbidden_modules = ["ollama", "openai"]
+
+[[tool.importlinter.contracts]]
+name = "Device driver libraries only inside hardware and platform"
+type = "forbidden"
+source_modules = [
+  "vaishnavi.ui", "vaishnavi.api", "vaishnavi.scheduler", "vaishnavi.bootstrap",
+  "vaishnavi.services", "vaishnavi.db", "vaishnavi.core", "vaishnavi.forecast",
+  "vaishnavi.ai", "vaishnavi.publishing",
+]
+forbidden_modules = ["escpos", "usb", "hid", "serial", "pyudev", "cups", "win32print", "win32api", "wmi"]
+
+[[tool.importlinter.contracts]]
+name = "NiceGUI only inside ui and the startup orchestrator"
+type = "forbidden"
+source_modules = [
+  "vaishnavi.services", "vaishnavi.db", "vaishnavi.core", "vaishnavi.forecast", "vaishnavi.platform",
+  "vaishnavi.ai", "vaishnavi.hardware", "vaishnavi.publishing", "vaishnavi.scheduler", "vaishnavi.api",
+]
+forbidden_modules = ["nicegui"]
+
+[[tool.importlinter.contracts]]
+name = "Only ai.providers.factory and services.secure_settings may read secrets"
+type = "forbidden"
+source_modules = ["vaishnavi.ai.tools", "vaishnavi.ai.chat_service", "vaishnavi.ai.fastpath", "vaishnavi.ai.guardrails"]
+forbidden_modules = ["vaishnavi.services.secure_settings"]
