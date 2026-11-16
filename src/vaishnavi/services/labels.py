@@ -120,6 +120,9 @@ class LabelService:
         else:
             require(actor, Permission.MANAGE_PRODUCTS)  # Owner-only (DENY for staff in the matrix)
         models = self.models_for(product_ids, copies=copies)
+        if not models:
+            # An empty job used to render a 0-page PDF / 0-byte ESC/POS file that looked "corrupted" (live run 2).
+            raise ValueError("nothing to print: no (active) products selected")
         if target == "ESCPOS":
             payload, ctype, name = self._renderer.render_escpos_batch(models, paper_mm=paper_mm), "application/octet-stream", "labels.escpos"
         elif target == "PDF":
