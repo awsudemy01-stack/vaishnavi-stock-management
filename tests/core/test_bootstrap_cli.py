@@ -39,6 +39,7 @@ class ParseArgsTest(unittest.TestCase):
             "--reset-owner-password": Mode.RESET_OWNER_PASSWORD,
             "--selftest": Mode.SELFTEST,
             "--uninstall-autostart": Mode.UNINSTALL_AUTOSTART,
+            "--stop": Mode.STOP,
         }
         for flag, mode in cases.items():
             with self.subTest(flag=flag):
