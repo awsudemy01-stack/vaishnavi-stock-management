@@ -263,6 +263,7 @@ pass these caveats on to the owner. Forecasts are also visible without AI on *Re
 | `sales_compare` | `period_a, period_b` | OWNER |
 | `low_stock_items` | `limit` | all |
 | `out_of_stock_items` | `limit` | all |
+| `stock_overview` | `limit` → counts (total / in stock / low / out) + best-stocked items | all |
 | `get_stock` | `query or sku` | all |
 | `item_price` | `query or sku` → price, MRP, unit, pricing unit, active offer (no cost) | all |
 | `search_products` | `query` → code, barcode, category, stock | all |
@@ -323,13 +324,20 @@ deterministic intents **before** the LLM is involved and answers from the same t
 | price of *X* · *X* ka rate | `item_price` | "Pure Ghee: ₹60 per 100 g (MRP ₹65)." |
 | low stock · kam stock | `low_stock_items` | top 10 with quantities |
 | out of stock · khatam | `out_of_stock_items` | list |
+| stock kya hai · stock list · sab stock · kaun sa item … · स्टॉक लिस्ट | `stock_overview` | "12 items · 10 in stock · 2 low · 1 out. Most stock: Camphor (96 pc), …" |
 | today's sale · aaj ka total (Owner only) | `sales_summary(today)` | "₹18,420 · 142 bills · cash 61 %" |
 | how do I … (matches a user-guide heading) | doc lookup | the matching steps from [15](15-user-guide.md) |
 
 Rules: < 100 ms; role rules identical to the LLM path (staff asking "aaj ka total" gets the owner-only
 refusal); every fast-path answer is logged `AI_FASTPATH intent=…`; if no intent matches, the message goes
-to the normal LLM flow. When Ollama is unavailable the fast path is the **only** path and the widget says
-so in one line.
+to the normal LLM flow. An item the fast path cannot find is answered **tentatively** (near names from
+`search_products` are offered) and, when a model is available, handed on to it with the fast text as the
+fallback. When Ollama is unavailable the fast path is the **only** path and the widget says so in one line.
+
+**Grounding guard** (LLM path): a question about shop facts that the model answers without calling any tool is
+sent back once with a system nudge; if it still produces prose from thin air, a fixed honest line replaces the
+answer (`AI_UNGROUNDED_ANSWER`, `AI_UNGROUNDED_FINAL`). Small local models like to invent a product rather than
+admit they have no data — the guard makes that impossible to show.
 
 ## 5. Proactive insights (no question needed)
 
