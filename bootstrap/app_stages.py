@@ -354,7 +354,7 @@ class StartStage:
         message = ctx.t("start.ready", url=url)
         ctx.console.ok(message)
         if self.watchdog:
-            ctx.console.info(ctx.t("start.watchdog_note"))
+            ctx.console.info(ctx.t("start.watchdog_note", url=url))
             wd = Watchdog(launch=lambda: launch_detached(cmd, ctx.paths.install_log_dir), health=fetch_health, url=url)
             wd.adopt(proc)
             try:
