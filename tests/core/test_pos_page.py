@@ -13,7 +13,7 @@ from vaishnavi.core.events import EventBus
 from vaishnavi.core.permissions import Actor, Role
 from vaishnavi.core.settings import Settings
 from vaishnavi.db.ledger_store import SqliteLedgerStore
-from vaishnavi.db.sqlite_stores import SqliteAuditStore, SqliteBillingStore, SqliteCatalogStore, SqliteHardwareStore, SqliteInventoryStore, SqlitePrintQueueStore, SqliteTxn
+from vaishnavi.db.sqlite_stores import SqliteAuditStore, SqliteBillingStore, SqliteCatalogStore, SqliteHardwareStore, SqliteInventoryStore, SqlitePrintQueueStore, SqliteShiftStore, SqliteTxn
 from vaishnavi.hardware import receipts as renderers
 from vaishnavi.platform.paths import AppPaths
 from vaishnavi.platform.printing import PrinterStatus
@@ -26,6 +26,7 @@ from vaishnavi.services.ledger import LedgerService
 from vaishnavi.services.offers import OfferInput, OfferService
 from vaishnavi.services.print_queue import PrintQueueService
 from vaishnavi.services.receipt import ReceiptService
+from vaishnavi.services.shift import ShiftService
 from vaishnavi.ui.i18n import UiTexts
 from vaishnavi.ui.pages import pos
 
@@ -61,6 +62,7 @@ class Base(unittest.TestCase):
         c.inventory = InventoryService(txn, SqliteInventoryStore(), catalog_store, audit, event_bus=self.bus)
         ledger = LedgerService(SqliteLedgerStore())
         billing_store = SqliteBillingStore()
+        c.shifts = ShiftService(txn, SqliteShiftStore(), audit, ledger, event_bus=self.bus)
         c.offers = OfferService(txn, billing_store, catalog_store, audit)
         c.billing = BillingService(txn, billing_store, catalog_store, SqliteInventoryStore(), c.catalog, c.offers, ledger, audit, settings=lambda: self.settings, event_bus=self.bus)
         c.receipts = ReceiptService(txn, billing_store, self.paths, settings=lambda: self.settings, cashier_name=lambda uid: "Ramesh", upi_id=lambda: None, renderer=renderers)
@@ -137,6 +139,18 @@ class ModelTest(Base):
         self.assertEqual([b.kind for b in m.banners], ["scanner", "printer"])
         self.assertEqual(m.scanner_chip.tone, "red")
         self.assertTrue(m.billing_paused)
+
+    def test_no_open_shift_shows_a_banner_and_checkout_names_the_code(self) -> None:
+        """Live run 3: the cashier met "No shift is open" only at Pay; the screen now says so up front."""
+        owner_cart = self.carts.get(self.c.billing, OWNER)
+        m = pos.build_pos(self.c, self.texts, OWNER, owner_cart)
+        self.assertEqual([b.kind for b in m.banners], ["shift"], "the Owner has no open shift in the fixture")
+        self.assertIn("Open your shift", m.banners[0].text)
+        self.c.billing.add_scan(OWNER, owner_cart, CAMPHOR)
+        o = pos.do_checkout(self.c, OWNER, owner_cart, [pos.cash_payment(1000, tendered_paise=1000)])
+        self.assertFalse(o.ok)
+        self.assertEqual(o.error_code, "E-BILL-042", "the page uses the code to jump to /shifts?open=1")
+        self.assertEqual([b.kind for b in pos.build_pos(self.c, self.texts, STAFF, self.carts.get(self.c.billing, STAFF)).banners], [], "staff has shift 1 open")
 
 
 class ScanTest(Base):
