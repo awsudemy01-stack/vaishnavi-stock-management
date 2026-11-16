@@ -96,6 +96,7 @@ leftover = "plain-text secret file still present: {path}"
 ok = "clock in sync · ports {ports} free"
 port_busy = "port {port} is already in use by another program"
 port_busy_hint = "Close the other program (or change server.port in Settings → System) and start again."
+already_running = "Vaishnavi is already running on port {port} (version {version}, up {minutes} min) — it will simply be opened"
 clock_behind = "the computer's clock is behind the last recorded event by {minutes} minutes"
 clock_hint = "Check the date and time in the operating system settings."
 
