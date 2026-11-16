@@ -227,6 +227,7 @@ def run_app(*, settings: Settings, paths: AppPaths, config_dir: Path, serve: Ser
             actions: dict[str, Callable[[], object]] = {
                 "heartbeat": lambda: (state.beat("scheduler"), write_heartbeat(paths, state)),
                 "verify_chain": lambda: _verify_chain_job(services, state),
+                "db_status": lambda: _db_status_job(ctx, state),
                 "backup": lambda: services.backup.snapshot("nightly"),
                 "backup_queue_flush": services.backup.flush_queue,
                 "db_maintenance": lambda: _db_maintenance_job(services),
@@ -335,6 +336,16 @@ def _verify_chain_job(services: AppServices, state: AppState) -> None:
     state.chips["ledger"] = ("green", "Integrity ok") if status.ok else ("red", "Integrity: " + ", ".join(status.codes))
     if not status.ok:
         services.notifications.notify("HIGH", "INTEGRITY", "Integrity check failed: " + ", ".join(status.codes), deep_link="/reports/integrity", source_ref=",".join(status.codes))
+
+
+def _db_status_job(ctx: DoctorContext, state: AppState) -> None:
+    """Keep the DB chip honest: the start-up value said "Owner account not set up yet" until restart (live run 2)."""
+    for check in select_checks(default_checks(), ["database"]):
+        result = check.run(ctx)
+        chip = _chip_for(result.status, "DB ok", f"DB: {result.message}")
+        if state.chips.get("database") != chip:
+            log.info("DB_CHIP_CHANGED status=%s code=%s message=%s", result.status.value, result.error_code or "-", result.message)
+        state.chips["database"] = chip
 
 
 def _ai_health_job(services: AppServices, state: AppState) -> None:
