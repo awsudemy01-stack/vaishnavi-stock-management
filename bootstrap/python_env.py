@@ -298,9 +298,14 @@ class PackagesStage:
             missing = verify_imports(python)
             if not missing:
                 log.info("PACKAGES_VERIFIED cached=true hash_verified=%s", previous_data.get("hash_verified"))
+                # Re-build the data instead of spreading the previous record: it already carries ``verified_only``
+                # from the day before, and ``**previous_data, verified_only=True`` raised TypeError on every
+                # second cached start (live run 3, E-SYS-099 in the packages stage).
+                data = {k: v for k, v in previous_data.items() if k != "verified_only"}
+                data["verified_only"] = True
                 if previous_data.get("hash_verified") is False:
-                    return StageResult.warn(ctx.t("packages.verified", count=len(VERIFY_IMPORTS)), error_code="E-SYS-041", hint=ctx.t("packages.unpinned_hint"), **previous_data, verified_only=True)
-                return StageResult.ok(ctx.t("packages.verified", count=len(VERIFY_IMPORTS)), **previous_data, verified_only=True)
+                    return StageResult.warn(ctx.t("packages.verified", count=len(VERIFY_IMPORTS)), error_code="E-SYS-041", hint=ctx.t("packages.unpinned_hint"), **data)
+                return StageResult.ok(ctx.t("packages.verified", count=len(VERIFY_IMPORTS)), **data)
             log.warning("PACKAGES_REVERIFY_FAILED missing=%s — reinstalling", missing)
         else:
             log.info("PACKAGES_INSTALL_NEEDED rebuilt=%s changed=%s", venv_rebuilt, previous_data.get("inputs_key") != inputs)
