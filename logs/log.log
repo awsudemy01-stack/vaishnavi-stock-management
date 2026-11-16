@@ -16,3 +16,28 @@ rohit@Rohits-MacBook-Pro logs % tree
     └── launchd.out.log
 
 3 directories, 12 files
+
+
+rohit@Rohits-MacBook-Pro logs % tree /Users/rohit/VaishnaviStore/logs 
+/Users/rohit/VaishnaviStore/logs
+├── access
+│   └── http.log
+├── ai
+│   ├── ai.log
+│   └── ai.log.2026-11-15
+├── app
+│   ├── vaishnavi.jsonl
+│   ├── vaishnavi.jsonl.2026-11-15
+│   ├── vaishnavi.log
+│   └── vaishnavi.log.2026-11-15
+├── audit
+│   ├── audit.jsonl
+│   └── audit.jsonl.2026-11-15
+├── errors
+│   ├── errors.log
+│   └── errors.log.2026-11-15
+└── hardware
+    ├── hardware.log
+    └── hardware.log.2026-11-15
+
+7 directories, 13 files
