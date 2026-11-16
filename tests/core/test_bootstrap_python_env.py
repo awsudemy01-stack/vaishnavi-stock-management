@@ -221,6 +221,20 @@ class PackagesStageTest(unittest.TestCase):
         self.assertTrue(second.data["verified_only"])
         self.assertEqual(len(fake.calls), 2, "pip ran only for the first start")
         self.assertEqual(verify.call_count, 2, "imports are really checked on every start")
+        # Third start (live run 3): the previous record already carries verified_only — must not crash with
+        # "got multiple values for keyword argument", for the hash-verified and the unpinned variants alike.
+        ctx.state.record_stage("packages", second, None)
+        with mock.patch.object(pe, "run_streaming", fake), mock.patch.object(pe, "verify_imports", return_value=[]):
+            third_cached = PackagesStage().run(ctx)
+        self.assertIs(third_cached.status, StageStatus.OK)
+        self.assertTrue(third_cached.data["verified_only"])
+        self.assertEqual(len(fake.calls), 2, "still no pip")
+        unpinned = StageResult.warn("x", error_code="E-SYS-041", python=str(self.tmp / ".venv" / "bin" / "python"), hash_verified=False, installed=[], inputs_key=PackagesStage().inputs_key(ctx), verified_only=True)
+        ctx.state.record_stage("packages", unpinned, None)
+        with mock.patch.object(pe, "run_streaming", fake), mock.patch.object(pe, "verify_imports", return_value=[]):
+            unpinned_again = PackagesStage().run(ctx)
+        self.assertEqual((unpinned_again.status, unpinned_again.error_code), (StageStatus.WARN, "E-SYS-041"))
+        self.assertTrue(unpinned_again.data["verified_only"])
         # Rebuilt venv → full reinstall even though nothing else changed.
         ctx.results["venv"] = StageResult.ok(python=str(self.tmp / ".venv" / "bin" / "python"), created=True)
         fake2 = _FakePip([([], 0), ([], 0)])
