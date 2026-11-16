@@ -117,6 +117,13 @@ receipts = "रसीदें (PDF):            {path}"
 secondary = "बैकअप (द्वितीयक):        {path}"
 same_device = "लाइव डेटा और बैकअप एक ही डिस्क पर हैं — डिस्क खराब होने पर दोनों जाएँगे। जब हो सके बैकअप USB डिस्क या दूसरी ड्राइव पर रखें।"
 
+[stop]
+not_running = "एप्लिकेशन चल नहीं रहा ({detail})। रोकने को कुछ नहीं।"
+stopped = "एप्लिकेशन साफ़ तरीके से बंद हो गया ({detail})। दोबारा शुरू करने के लिए Start Vaishnavi / python3 main.py चलाएँ।"
+no_pid = "पोर्ट {port} पर कुछ जवाब दे रहा है, पर एप्लिकेशन की heartbeat फ़ाइल में प्रोसेस id नहीं है — शायद कोई और प्रोग्राम है।"
+no_pid_hint = "ऐप के अंदर: सेटिंग्स → सिस्टम → बंद करें। या प्रोसेस ढूँढें:  lsof -ti :{port}  (macOS/Linux) · Task Manager (Windows)।"
+timeout = "एप्लिकेशन {seconds} सेकंड में बंद नहीं हुआ ({detail})।"
+
 [offline]
 ok = "उपयोग योग्य: {wheels} पैकेज · Ollama इंस्टॉलर: {ollama} · मॉडल: {models}"
 err_missing = "ऑफ़लाइन फ़ोल्डर नहीं मिला: {path}"
