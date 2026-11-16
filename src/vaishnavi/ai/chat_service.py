@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -37,6 +38,30 @@ log = logging.getLogger("vaishnavi.ai.chat")
 LANG_CODES = {"english": "en", "hindi": "hi", "hinglish": "hinglish"}
 DB_PROVIDERS = frozenset({"ollama", "openai", "huggingface", "fastpath"})
 HISTORY_TURNS = 8
+
+_DATA_WORDS = re.compile(
+    r"\b(stock|inventory|qty|quantity|price|rate|mrp|sale|sales|bikri|kamai|collection|total|bill|bills|invoice|item|items|product|products|"
+    r"demand|forecast|reorder|profit|margin|purchase|supplier|cashier|variance|shrinkage|kitna|kitne|kitni|kaun|konsa|khatam|bacha)\b"
+    r"|स्टॉक|कीमत|दाम|बिक्री|कुल|बिल|वस्तु|माँग|पूर्वानुमान|कितना|कितनी|कितने",  # no \b: matras are not \w characters
+    re.IGNORECASE,
+)
+
+GROUNDING_NUDGE = (
+    "Your previous answer used no tool. You have NO knowledge of this shop's items, quantities or sales except through tools. "
+    "Call the right tool now (stock_overview for general stock questions, get_stock / item_price / search_products for one item, "
+    "low_stock_items, out_of_stock_items, sales_summary …). Never invent an item name or a number."
+)
+
+_UNGROUNDED: dict[str, str] = {
+    "english": "I could not check that in the shop's data, so I will not guess. Try \"stock list\", \"low stock\", or name one item — e.g. \"stock of camphor\".",
+    "hindi": "यह दुकान के डेटा में जाँच नहीं हो सका, इसलिए मैं अंदाज़ा नहीं लगाऊँगा। \"स्टॉक लिस्ट\", \"कम स्टॉक\" या किसी एक वस्तु का नाम पूछें — जैसे \"कपूर का स्टॉक\"।",
+    "hinglish": "Yeh shop ke data mein check nahi ho saka, isliye main guess nahi karunga. \"stock list\", \"kam stock\" ya ek item ka naam poochhein — jaise \"camphor kitna hai\".",
+}
+
+
+def needs_data(text: str) -> bool:
+    """True when the question is about shop facts — an answer without a tool call would be a guess (live run 3: the model invented a product)."""
+    return bool(_DATA_WORDS.search(text))
 
 
 class ChatStore(Protocol):
@@ -149,6 +174,10 @@ class ChatService:
         if verdict.decision is not guardrails.Decision.ALLOW:
             return self._refuse(actor, sid, text, lang, verdict, key, started)
         fast = fastpath.answer(text, role=actor.role, language=lang, run_tool=lambda name, **args: self._tools.run(actor, name, args))
+        if fast is not None and fast.tentative and self._provider().name != "none" and not off_topic.is_locked(key):
+            # "match box" was not in the catalogue: let the model search with its tools; the fast text is the fallback.
+            log.debug("AI_FASTPATH_TENTATIVE intent=%s → LLM", fast.intent)
+            return self._llm(actor, sid, text, lang, started, fallback=fast)
         if fast is not None:
             self._persist(sid, "assistant", fast.text, lang, provider="fastpath", model=fast.source)
             return self._reply(sid, fast.text, lang, "fastpath", link=fast.link, started=started)
@@ -201,7 +230,7 @@ class ChatService:
             with self._txn(label="chat.security_alerted") as session:
                 self._store.mark_alerted(session, event_id)
 
-    def _llm(self, actor: Actor, sid: int, text: str, lang: str, started: float) -> ChatReply:
+    def _llm(self, actor: Actor, sid: int, text: str, lang: str, started: float, *, fallback: fastpath.FastAnswer | None = None) -> ChatReply:
         ai = self._settings().ai
         provider = self._provider()
         caps = provider.capabilities()
@@ -230,8 +259,9 @@ class ChatService:
         link: str | None = None
         usage_prompt = usage_completion = requests = 0
         final = ""
+        grounding_retry = False
         try:
-            for round_no in range(ai.max_tool_rounds + 1):
+            for round_no in range(ai.max_tool_rounds + 2):  # +1 for the grounding retry
                 response = provider.chat(messages, tools=specs if caps.tools else (), temperature=ai.temperature)
                 requests += 1
                 usage_prompt += response.prompt_tokens
@@ -241,7 +271,14 @@ class ChatService:
                     parsed = parse_tool_block(response.text)
                     if parsed is not None:
                         calls = [parsed]
-                if not calls or round_no == ai.max_tool_rounds:
+                if not calls and not grounding_retry and not any(t.ok for t in tool_logs) and needs_data(text):
+                    # The model answered a data question from thin air (live run 3: "sandalwood powder ka koi stock nahi").
+                    grounding_retry = True
+                    log.warning("AI_UNGROUNDED_ANSWER session=%d retrying_with_nudge answer=%r", sid, (response.text or "")[:120])
+                    messages.append(ChatMessage("assistant", response.text or ""))
+                    messages.append(ChatMessage("system", GROUNDING_NUDGE))
+                    continue
+                if not calls or round_no >= ai.max_tool_rounds + (1 if grounding_retry else 0):
                     final = response.text
                     break
                 messages.append(ChatMessage("assistant", response.text or "", tool_calls=tuple(calls)))
@@ -253,11 +290,18 @@ class ChatService:
                     messages.append(ChatMessage("tool", json.dumps(entry.result, ensure_ascii=False, default=str), name=call.name, tool_call_id=call.id))
         except AIError as exc:
             self._record_usage(provider, usage_prompt, usage_completion, requests, errors=1)
-            note = fastpath.template(lang, "offline")
-            log.warning("CHAT_PROVIDER_FAILED code=%s detail=%s", exc.code, exc.detail)
+            note = fallback.text if fallback is not None else fastpath.template(lang, "offline")
+            log.warning("CHAT_PROVIDER_FAILED code=%s detail=%s fallback=%s", exc.code, exc.detail, fallback is not None)
             self._persist(sid, "assistant", note, lang, provider="fastpath", model="offline")
-            return self._reply(sid, note, lang, "offline", category=exc.code, tools=tool_logs, started=started)
+            return self._reply(sid, note, lang, "offline", category=exc.code, link=fallback.link if fallback else None, tools=tool_logs, started=started)
         self._record_usage(provider, usage_prompt, usage_completion, requests, errors=0)
+        if not any(t.ok for t in tool_logs) and (grounding_retry or fallback is not None):
+            # Still no data behind the words: a fixed, honest line beats a fluent guess.
+            final = fallback.text if fallback is not None else _UNGROUNDED.get(lang, _UNGROUNDED["english"])
+            link = fallback.link if fallback is not None else None
+            log.warning("AI_UNGROUNDED_FINAL session=%d source=%s", sid, "fastpath_fallback" if fallback is not None else "template")
+            self._persist(sid, "assistant", final, lang, provider="fastpath", model="ungrounded")
+            return self._reply(sid, final, lang, "fastpath", category="UNGROUNDED", link=link, tools=tool_logs, started=started)
         check = output_filter.scan(final, [{"tool": t.name, "result": t.result} for t in tool_logs if t.ok], question=text)
         if not check.ok:
             self._security_event(actor, "OUTPUT_FILTER", "MED", f"{','.join(check.reasons)} :: {final[:120]}", "OUTPUT")
