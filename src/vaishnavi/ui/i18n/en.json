@@ -468,7 +468,9 @@
     "history": "Recent label prints",
     "no_printer": "No printer configured — the file was downloaded instead.",
     "sent": "Sent to the printer.",
-    "select_hint": "Select products in the Products grid, or open this page from a purchase."
+    "select_hint": "Pick products below, select them in the Products grid, or open this page from a purchase.",
+    "products": "Products to label",
+    "nothing_selected": "Choose at least one product first."
   },
   "hardware": {
     "title": "Hardware",
