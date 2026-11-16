@@ -17,3 +17,9 @@ cd ~/VaishnaviStore/logs
 grep -h "UI_ROUTE_MATCH\|UI_ROUTE_UNREACHABLE\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT\|HTTP_404\|UVICORN_LOGGING" app/vaishnavi.log | tail -10
 grep -h "shifts" access/http.log | tail -5
 ~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
+
+rohit@Rohits-MacBook-Pro vaishnavi-stock-management % ~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
+fastapi                 0.163.1
+nicegui                 4.0.0
+starlette               1.10.0
+uvicorn                 0.54.0
