@@ -78,8 +78,11 @@ def open_window(state: Any, client: ClientState, texts: UiTexts) -> None:
     from nicegui import ui  # noqa: PLC0415
 
     m = build_widget_model(state, client, texts)
+    log.debug("CHAT_WINDOW_OPEN user=%s lang=%s offline=%s", client.user.user_id if client.user else "-", m.language, bool(m.offline_note))
     form: dict[str, Any] = {"text": "", "language": m.language, "session": None}
-    with ui.dialog().props("position=bottom-right seamless") as dialog, ui.card().classes("vsm-chat w-96 p-0"):
+    # Quasar's q-dialog accepts only standard/top/right/bottom/left; an unknown position ("bottom-right") throws in the
+    # browser and the dialog never shows. "right" + an auto top margin on the card anchors it bottom-right.
+    with ui.dialog().props("position=right seamless") as dialog, ui.card().classes("vsm-chat w-96 p-0").style("margin-top:auto; margin-bottom:76px; margin-right:12px"):
         with ui.row().classes("w-full items-center justify-between px-3 py-2").style("background:#B4532A;color:white"):
             ui.label(m.title).classes("font-semibold")
             with ui.row().classes("items-center gap-1"):
