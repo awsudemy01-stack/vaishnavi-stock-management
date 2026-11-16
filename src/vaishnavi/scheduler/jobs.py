@@ -35,6 +35,7 @@ def build_jobs(settings: Settings) -> list[JobSpec]:
         JobSpec("session_monitor", "session_monitor", every_s=15, note="closes work sessions whose heartbeat is > 60 s old"),
         JobSpec("hardware_poll", "hardware_poll", every_s=10, note="printer ready? new printer? paired scanner present?"),
         JobSpec("print_queue_flush", "print_queue_flush", every_s=60, note="print queued receipts once the printer is back"),
+        JobSpec("db_status", "db_status", every_s=60, note="re-run the database doctor check → DB chip (owner set up? writable?)"),
         JobSpec("alerts", "alerts", every_s=60, note="evaluate alert rules → notification centre"),
         JobSpec("backup_queue_flush", "backup_queue_flush", every_s=300, note="move queued snapshots to the backup drive when it is back"),
         JobSpec("verify_chain", "verify_chain", every_s=3600, run_immediately=True, note="hash chains + invoice gaps + stock reconciliation"),
