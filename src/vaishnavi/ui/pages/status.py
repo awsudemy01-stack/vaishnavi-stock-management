@@ -98,6 +98,9 @@ class StatusModel:
     logged_in: list[LoggedInView]
     ai: dict[str, Any]
     locations: dict[str, str]
+    routes: list[str] = field(default_factory=list)
+    routes_missing: list[str] = field(default_factory=list)
+    recent_404: list[str] = field(default_factory=list)
     labels: dict[str, str] = field(default_factory=dict)
 
 
@@ -189,6 +192,9 @@ def build_status_model(state: AppState, texts: UiTexts) -> StatusModel:
         logged_in=logged_in,
         ai=dict(status["ai"]),
         locations=dict(status["locations"]),
+        routes=list(state.extra.get("ui_routes") or []),
+        routes_missing=list(state.extra.get("ui_routes_missing") or []),
+        recent_404=list(state.extra.get("recent_404") or []),
         labels=labels,
     )
 
@@ -250,6 +256,15 @@ def register(state: AppState) -> None:
                                 ui.label(f"{loop}: {age:.0f} s").classes("text-sm vsm-mono")
                     ui.label(m.labels["jobs"]).classes("font-semibold mt-2")
                     ui.table(columns=[{"name": k, "label": k, "field": k} for k in ("name", "schedule_text", "next_run_text", "runs", "failures", "last_ms", "last_error")], rows=[j.__dict__ for j in m.jobs]).classes("w-full text-xs")
+                    with ui.card().classes("vsm-card w-full"):
+                        ui.label(f"Pages ({len(m.routes)})").classes("font-semibold")
+                        ui.label(" · ".join(m.routes) or "-").classes("text-xs vsm-mono")
+                        if m.routes_missing:
+                            ui.label("Missing (E-UI-001): " + ", ".join(m.routes_missing)).classes("text-sm text-red-700")
+                        if m.recent_404:
+                            ui.label("Recent 404s (E-UI-002):").classes("text-sm font-semibold mt-1")
+                            for line in m.recent_404:
+                                ui.label(line).classes("text-xs vsm-mono")
 
             render()
             ui.timer(10.0, render)
