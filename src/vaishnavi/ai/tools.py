@@ -147,6 +147,7 @@ class ToolRegistry:
         self._add("item_price", "Selling price, MRP, unit and pricing unit of one item (no cost).", q, ALL, self._item_price, required=["query"])
         self._add("low_stock_items", "Items at or below their minimum stock.", {"limit": {"type": "integer", "default": 20}}, ALL, self._low_stock, link="/reports/low_stock")
         self._add("out_of_stock_items", "Items with zero stock.", {"limit": {"type": "integer", "default": 20}}, ALL, self._out_of_stock, link="/reports/low_stock")
+        self._add("stock_overview", "Whole-shop stock picture: counts of items in stock / low / out, and the items with most stock.", {"limit": {"type": "integer", "default": 10}}, ALL, self._stock_overview, link="/stock")
         self._add("find_invoice", "Look up one bill by invoice number or receipt code (staff: own bills only).", {"invoice_no": {"type": "string"}}, ALL, self._find_invoice, required=["invoice_no"], link="/sales")
         self._add("shop_status", "Scanner, printer and assistant status.", {}, ALL, self._shop_status, link="/status")
         self._add("explain_error", "Plain-language meaning and fix for an E- error code shown on screen.", {"code": {"type": "string"}}, ALL, self._explain_error, required=["code"])
@@ -222,6 +223,22 @@ class ToolRegistry:
         rows = [r for r in self._reports.low_stock(actor) if r.stock_qty <= 0]
         limit = a.get("limit", 20)
         return {"items": [{"product_id": r.product_id, "name": r.name, "min_stock": _q(r.min_stock)} for r in rows[:limit]], "count": len(rows), "limit": limit}
+
+    def _stock_overview(self, actor: Actor, a: dict[str, Any]) -> dict[str, Any]:
+        """"stock kya hai" / "stock list": the shop-wide picture (counts + the best-stocked items) instead of a guess."""
+        limit = a.get("limit", 10)
+        products = [p for p in self._catalog.list_products(limit=5000).items if p.is_active and not p.is_system]
+        low = [p for p in products if p.stock_qty > 0 and p.min_stock > 0 and p.stock_qty <= p.min_stock]
+        out = [p for p in products if p.stock_qty <= 0]
+        top = sorted((p for p in products if p.stock_qty > 0), key=lambda p: p.stock_qty, reverse=True)[:limit]
+        return {
+            "items_total": len(products),
+            "in_stock": len(products) - len(out),
+            "low": len(low),
+            "out": len(out),
+            "top": [{"product_id": p.id, "name": p.name, "qty": _q(p.stock_qty), "unit": p.unit} for p in top],
+            "out_names": [p.name for p in out[:limit]],
+        }
 
     def _find_invoice(self, actor: Actor, a: dict[str, Any]) -> dict[str, Any]:
         sale = self._billing.find_sale(a["invoice_no"])
