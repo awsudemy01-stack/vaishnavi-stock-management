@@ -1,0 +1,18 @@
+rohit@Rohits-MacBook-Pro logs % tree       
+.
+├── install
+│   ├── 2026-11-15_202711_26111520271180ae.log
+│   ├── 2026-11-15_203303_261115203303ab7c.log
+│   ├── 2026-11-15_205708_261115205708264c.log
+│   ├── 2026-11-16_040709_26111604070990d6.log
+│   ├── 2026-11-16_040758_2611160407584c63.log
+│   ├── 2026-11-16_045427_2611160454270ec8.log
+│   ├── 2026-11-16_045739_261116045739d2db.log
+│   ├── app-stdout.log
+│   ├── state.json
+│   └── survey.json
+└── startup
+    ├── launchd.err.log
+    └── launchd.out.log
+
+3 directories, 12 files
