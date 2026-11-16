@@ -1,13 +1,22 @@
-"""``main.py --selftest`` · ``--doctor [--fix]`` · ``--where`` — the owner's first-run / support tools (stdlib only).
+"""``main.py --selftest`` · ``--doctor [--fix]`` · ``--where`` · ``--stop`` — the owner's first-run / support tools (stdlib only).
 
-All three are thin: they locate the venv interpreter, hand over to ``python -m vaishnavi …`` and translate
+All are thin: they locate the venv interpreter, hand over to ``python -m vaishnavi …`` and translate
 the exit code into the installer's OK / WARN / FAIL line (``--where`` needs no app at all — it reads
-``config/locations.toml`` and lists the folders, so it works even when the install never finished).
+``config/locations.toml`` and lists the folders, so it works even when the install never finished;
+``--stop`` asks the running application to shut down cleanly and waits until the port is free).
 """
 
 from __future__ import annotations
 
+import json
 import logging
+import os
+import signal
+import socket
+import subprocess
+import sys
+import time
+from collections.abc import Callable
 from pathlib import Path
 
 from bootstrap import handover, locations
@@ -15,6 +24,8 @@ from bootstrap.cli import Mode, register_mode
 from bootstrap.stages import ExitCode, StageContext
 
 log = logging.getLogger("bootstrap.selftest")
+
+STOP_TIMEOUT_S = 25
 
 
 def _python(ctx: StageContext) -> Path | None:
@@ -104,3 +115,87 @@ def run_where(ctx: StageContext) -> ExitCode:
     if loc.same_device:
         console.warn(ctx.t("where.same_device") + "  (E-SYS-012)")
     return ExitCode.OK
+
+
+# ----------------------------------------------------------------------------- --stop
+def running_pid(config_dir: Path) -> tuple[int | None, str]:
+    """PID of the running application from ``<data>/state/heartbeat.json`` (fallback: the installer's start record)."""
+    loc = locations.read_locations(config_dir / locations.LOCATIONS_FILE)
+    if loc is not None:
+        hb = loc.primary / "state" / "heartbeat.json"
+        try:
+            data = json.loads(hb.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and data.get("pid"):
+                return int(data["pid"]), f"heartbeat {hb}"
+        except (OSError, ValueError):
+            pass
+    return None, "no heartbeat file"
+
+
+def port_in_use(host: str, port: int) -> bool:
+    """True when something accepts connections on ``host:port``."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.5)
+        try:
+            s.connect((host, port))
+        except OSError:
+            return False
+        return True
+
+
+def terminate(pid: int, *, windows: bool | None = None) -> bool:
+    """Ask the process to exit (SIGTERM → uvicorn shuts down → the app's clean-close runs). False when it is gone already."""
+    try:
+        if sys.platform.startswith("win") if windows is None else windows:
+            subprocess.run(["taskkill", "/PID", str(pid)], check=False, capture_output=True)  # polite first; Task Manager for stubborn cases
+        else:
+            os.kill(pid, signal.SIGTERM)
+        return True
+    except (ProcessLookupError, PermissionError, OSError):
+        return False
+
+
+def stop_app(config_dir: Path, *, host: str = "127.0.0.1", port: int = 8080, timeout_s: float = STOP_TIMEOUT_S, sleep: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic, terminate_fn: Callable[[int], bool] = terminate, in_use: Callable[[str, int], bool] | None = None) -> tuple[str, str]:
+    """``(outcome, detail)``: ``not_running`` · ``stopped`` · ``no_pid`` · ``timeout``."""
+    busy = in_use or port_in_use
+    if not busy(host, port):
+        return "not_running", f"{host}:{port} is free"
+    pid, source = running_pid(config_dir)
+    if pid is None:
+        return "no_pid", source
+    log.info("APP_STOP_REQUESTED pid=%d source=%s", pid, source)
+    if not terminate_fn(pid):
+        return "not_running", f"process {pid} was already gone"
+    deadline = clock() + timeout_s
+    while clock() < deadline:
+        if not busy(host, port):
+            log.info("APP_STOPPED pid=%d", pid)
+            return "stopped", f"pid {pid}"
+        sleep(0.5)
+    log.warning("APP_STOP_TIMEOUT pid=%d after=%ss", pid, timeout_s)
+    return "timeout", f"pid {pid}"
+
+
+@register_mode(Mode.STOP)
+def run_stop(ctx: StageContext) -> ExitCode:
+    """``--stop``: shut the running application down cleanly (the owner's way to restart after copying new code)."""
+    from bootstrap.app_stages import app_url  # noqa: PLC0415
+
+    url = app_url(ctx.paths.config_dir)
+    host, _, port_text = url.rsplit("://", 1)[-1].partition(":")
+    port = int(port_text or 8080)
+    outcome, detail = stop_app(ctx.paths.config_dir, host=host or "127.0.0.1", port=port)
+    console = ctx.console
+    if outcome == "not_running":
+        console.info(ctx.t("stop.not_running", detail=detail))
+        return ExitCode.OK
+    if outcome == "no_pid":
+        console.warn(ctx.t("stop.no_pid", port=port))
+        console.hint(ctx.t("stop.no_pid_hint", port=port))
+        return ExitCode.WARN
+    if outcome == "stopped":
+        console.ok(ctx.t("stop.stopped", detail=detail))
+        return ExitCode.OK
+    console.fail(ctx.t("stop.timeout", detail=detail, seconds=STOP_TIMEOUT_S))
+    console.hint(ctx.t("stop.no_pid_hint", port=port))
+    return ExitCode.FAIL
