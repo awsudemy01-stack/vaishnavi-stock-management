@@ -214,6 +214,30 @@ class EnvironmentChecksTest(unittest.TestCase):
         self.assertIn(str(port), result.message)
         result = c_network.NetworkCheck().run(_ctx(self.tmp, settings=settings, app_running=True))
         self.assertIsNot(result.status, Status.FAIL, "when the running app asks, its own port is not a problem")
+
+    def test_network_check_passes_when_the_port_is_held_by_a_running_vaishnavi(self) -> None:
+        """Live run 3: yesterday's instance was still up; the doctor called it 'another program' and refused the day."""
+        import json
+
+        srv = socket.socket()
+        srv.bind(("127.0.0.1", 0))
+        srv.listen(8)  # three probes connect without anyone accepting; a backlog of 1 would refuse the later ones
+        port = srv.getsockname()[1]
+        settings = Settings()
+        settings.server.port = port
+        health = json.dumps({"ok": True, "app": "vaishnavi", "version": "1.2.3", "uptime_s": 7260, "heartbeats": {}})
+        try:
+            ours = c_network.NetworkCheck().run(_ctx(self.tmp, settings=settings, health_fetch=lambda url: health))
+            other = c_network.NetworkCheck().run(_ctx(self.tmp, settings=settings, health_fetch=lambda url: "<html>nginx</html>"))
+            dead = c_network.NetworkCheck().run(_ctx(self.tmp, settings=settings, health_fetch=lambda url: (_ for _ in ()).throw(OSError("refused"))))
+        finally:
+            srv.close()
+        self.assertIs(ours.status, Status.PASS)
+        self.assertTrue(ours.data.get("already_running"))
+        self.assertIn("1.2.3", ours.message)
+        self.assertIn("121 min", ours.message)
+        self.assertEqual((other.status, other.error_code), (Status.FAIL, "E-SYS-017"))
+        self.assertEqual((dead.status, dead.error_code), (Status.FAIL, "E-SYS-017"))
         clock = FrozenClock(T0 - timedelta(hours=2))
         prev = set_clock(clock)
         try:
