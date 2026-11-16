@@ -104,7 +104,7 @@ class Chip:
 class Banner:
     """Full-width notice above the tiles."""
 
-    kind: str  # printer | scanner
+    kind: str  # shift | printer | scanner
     text: str
     tone: str
 
@@ -209,6 +209,8 @@ def build_pos(c: Any, texts: UiTexts, actor: Actor, cart: Cart) -> PosModel:
     printer_label = "Printer" + (f"{DOT}{chip_p.pending} queued" if chip_p.pending else "")
     printer_chip = Chip(printer_label, chip_p.tone, chip_p.detail)
     banners: list[Banner] = []
+    if c.shifts.current(actor.user_id) is None:
+        banners.append(Banner("shift", texts.t("pos.shift_banner"), "amber"))
     if paused:
         banners.append(Banner("scanner", texts.t("pos.scanner_banner"), "red"))
     if chip_p.pending or (chip_p.configured and not chip_p.ready):
@@ -665,7 +667,10 @@ def register(state: Any) -> None:
                         ui.button(f"F4 {m.labels['discount']}", on_click=lambda: open_discount(selected["line_id"])).props("outline").tooltip(m.labels["discount_hint"])
                         ui.button(f"Esc {m.labels['clear']}", on_click=clear).props("flat color=negative")
                     for b in m.banners:
-                        ui.label(b.text).classes("w-full p-2 rounded text-sm").style(f"background:{'#FFEBEE' if b.tone == 'red' else '#FFF3E0'}")
+                        with ui.row().classes("w-full p-2 rounded text-sm items-center gap-3").style(f"background:{'#FFEBEE' if b.tone == 'red' else '#FFF3E0'}"):
+                            ui.label(b.text).classes("flex-1")
+                            if b.kind == "shift":
+                                ui.button(texts.t("pos.open_shift"), icon="point_of_sale", on_click=lambda: ui.navigate.to("/shifts?open=1")).props("unelevated color=primary dense no-caps")
                     ui.label(m.tiles_hint).classes("text-xs text-gray-500")
                     with ui.grid(columns=5).classes("w-full gap-2"):
                         for t in m.tiles:
@@ -922,6 +927,12 @@ def register(state: Any) -> None:
                     payments = make_payments(pm, mode=str(form["mode"]), tendered_paise=int(form["tendered"]), cash_paise=int(form["cash"]) or None, upi_paise=int(form["upi"]) or None, card_paise=int(form["card"]) or None, reference=form["ref"] or None)
                     o = do_checkout(services, actor, cart, payments)
                     if not o.ok:
+                        if o.error_code == "E-BILL-042":
+                            # No shift: the cart stays; take the cashier straight to the drawer-open form (live run 3).
+                            ui.notify(o.message, type="warning")
+                            dlg.close()
+                            ui.navigate.to("/shifts?open=1")
+                            return
                         ui.notify(o.message, type="negative")
                         return
                     dlg.close()
