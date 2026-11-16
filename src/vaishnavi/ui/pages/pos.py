@@ -670,7 +670,7 @@ def register(state: Any) -> None:
                         with ui.row().classes("w-full p-2 rounded text-sm items-center gap-3").style(f"background:{'#FFEBEE' if b.tone == 'red' else '#FFF3E0'}"):
                             ui.label(b.text).classes("flex-1")
                             if b.kind == "shift":
-                                ui.button(texts.t("pos.open_shift"), icon="point_of_sale", on_click=lambda: ui.navigate.to("/shifts?open=1")).props("unelevated color=primary dense no-caps")
+                                ui.button(texts.t("pos.open_shift"), icon="point_of_sale", on_click=lambda: ui.navigate.to("/shifts?then_pos=1")).props("unelevated color=primary dense no-caps")
                     ui.label(m.tiles_hint).classes("text-xs text-gray-500")
                     with ui.grid(columns=5).classes("w-full gap-2"):
                         for t in m.tiles:
@@ -931,7 +931,7 @@ def register(state: Any) -> None:
                             # No shift: the cart stays; take the cashier straight to the drawer-open form (live run 3).
                             ui.notify(o.message, type="warning")
                             dlg.close()
-                            ui.navigate.to("/shifts?open=1")
+                            ui.navigate.to("/shifts?then_pos=1")
                             return
                         ui.notify(o.message, type="negative")
                         return
