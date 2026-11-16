@@ -14,3 +14,11 @@ cd ~/VaishnaviStore/logs
 grep -h "UI_ROUTE_MATCH\|UI_ROUTE_UNREACHABLE\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT\|HTTP_404\|UVICORN_LOGGING" app/vaishnavi.log | tail -10
 grep -h "shifts" access/http.log | tail -5
 
+cd ~/Documents/vaishnavi-stock-management
+git pull
+git status --short src/            # ← any line here means a locally changed file; paste it
+python3 main.py --stop             # (or: kill $(lsof -ti :8080))
+.venv/bin/python tools/probe_routes.py
+python3 main.py
+
+grep -h "UI_PAGE_REGISTERED\|UI_ROUTE_MATCH" ~/VaishnaviStore/logs/app/vaishnavi.log | tail -17
