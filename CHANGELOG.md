@@ -793,6 +793,13 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   owner kept talking to *yesterday's* process ("already running on port 8080, up 138 min") and saw none of the
   fixes. `--stop` reads the pid from `state/heartbeat.json`, sends SIGTERM (uvicorn shuts down → clean close),
   waits for the port to free, and says what happened (`stop.*` messages EN+HI). Documented in docs/17 §5.
+- **`/shifts` 404 — narrowed, not yet explained**: with the probes in place the shop PC's log shows all 15 page
+  modules registering, every page present in FastAPI's table **except `/shifts`** (absent already at
+  `stage=registered`, so nothing removes it later), and no exception. `register_pages` now logs one line per
+  module (`UI_PAGE_REGISTERED module=shifts added=… removed=…`), `tools/probe_routes.py` registers five
+  parameter variants against the installed NiceGUI/FastAPI and prints which survive, and the page's query
+  parameter `open` (a builtin name; the page's only peculiarity) was renamed `then_pos` — `/login?next=` also
+  shadows a builtin and works, so this is hygiene, not the proven cause.
 
 ### Removed — Phase 7
 - Never-imported Phase-1 placeholders: `db/repositories/` (ORM twins of `sqlite_stores`), `hardware/scanner.py`,
