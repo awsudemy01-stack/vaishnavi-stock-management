@@ -720,6 +720,32 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
 - `SqliteTxn` closed the connection only after `BEGIN` succeeded; a damaged file leaked the handle (Windows kept
   the file busy). It now closes on any failure.
 
+### Fixed — live run 2 (macOS 15-Nov, app running, owner walked the screens)
+- **Sahayak bubble did nothing** (no server log either): the chat dialog asked Quasar for `position=bottom-right`,
+  which is not a `q-dialog` position (standard/top/right/bottom/left). Quasar's default-transition lookup threw in
+  the browser and the dialog never rendered. Now `position=right` with the card pushed to the bottom corner;
+  `NiceGuiCompatibilityTest` rejects any other `position=` value. `CHAT_WINDOW_OPEN` is logged on every open.
+- **DB chip stayed amber ("Owner account not set up yet") after the Owner finished setup**: the chip was set once
+  from the start-up doctor and never refreshed. New 60-second `db_status` job re-runs only the database check and
+  logs `DB_CHIP_CHANGED` when the colour moves.
+- **"A required setting is missing or invalid: shop.gstin … The app cannot start without it" banner** when the
+  Tax step's *GST registered* switch was flipped: the wizard had no GSTIN field and the generic `E-CFG-001` text
+  was alarming. The Tax step now has a GSTIN input (validated, 15 characters), refuses *registered* without one
+  with a field-level hint, never wipes a stored GSTIN, and the rule has its own friendly code `E-CFG-003`
+  ("GST registered needs the shop's GSTIN … Nothing was changed").
+- **Label downloads "corrupted"** (`labels.pdf` = valid PDF with 0 pages, `labels.escpos` = 0 bytes): the grid's
+  *Labels* button opened `/labels` with nothing selected and *Print* rendered an empty job. `LabelService.print_job`
+  now refuses an empty job (`ValueError`, nothing logged); the Labels page has its own product picker (multi-select
+  with search, live preview and count), honours `?purchase=<id>` (products received in that purchase — the Stock
+  page already linked there), and the Products grid lets the Owner tick rows and send exactly those to Labels.
+- **Staff got NiceGUI's 404 on *Shifts*** — root cause not reproducible here (the route registers, verified by the
+  new `RouteRegistrationTest` against a stub NiceGUI; NiceGUI 4 only 404s on a genuine route miss). Made the
+  failure impossible to miss on the next run: a page module that fails to import is logged at ERROR with its
+  traceback (`UI_PAGE_IMPORT_FAILED`, `E-UI-001`) instead of a quiet debug line; the full route list is logged at
+  start (`UI_ROUTES`) and every shell link is checked against it (`UI_ROUTE_MISSING`); every 404 is logged with
+  path, query and referer (`HTTP_404`, `E-UI-002`) and answered by a small bilingual page with a *Home* link.
+  New `UiError` area; docs/08 §5 lists the codes.
+
 ### Removed — Phase 7
 - Never-imported Phase-1 placeholders: `db/repositories/` (ORM twins of `sqlite_stores`), `hardware/scanner.py`,
   `hardware/scale.py`, `hardware/printer/{discovery,os_print}.py`, `api/{auth,data}.py`,
