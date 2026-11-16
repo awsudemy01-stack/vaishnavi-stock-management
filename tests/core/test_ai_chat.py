@@ -83,7 +83,7 @@ class ToolRegistryTest(Base):
     def test_role_filtering_matches_the_blueprint_table(self) -> None:
         staff = {t.name for t in self.c.tools.for_role(Role.STAFF)}
         owner = {t.name for t in self.c.tools.for_role(Role.OWNER)}
-        self.assertEqual(staff, {"get_stock", "search_products", "low_stock_items", "out_of_stock_items", "item_price", "find_invoice", "explain_screen", "explain_error", "shop_status"})
+        self.assertEqual(staff, {"get_stock", "search_products", "low_stock_items", "out_of_stock_items", "stock_overview", "item_price", "find_invoice", "explain_screen", "explain_error", "shop_status"})
         self.assertFalse(staff & STAFF_ONLY_FORBIDDEN, "no sales/profit/forecast tool exists for staff")
         self.assertTrue(STAFF_ONLY_FORBIDDEN <= owner)
         self.assertGreaterEqual(len(owner), 26)
@@ -104,6 +104,9 @@ class ToolRegistryTest(Base):
         self.assertEqual(s["net"], "₹40.00")
         low = self.c.tools.run(STAFF, "low_stock_items", {"limit": 500})
         self.assertEqual(low["limit"], 50, "limit is clamped")
+        overview = self.c.tools.run(STAFF, "stock_overview", {})
+        self.assertEqual((overview["items_total"], overview["in_stock"], overview["out"]), (1, 1, 0))
+        self.assertEqual(overview["top"][0]["name"], "Camphor 50g")
         with self.assertRaises(ToolError):
             self.c.tools.run(STAFF, "get_stock", {"nope": 1})
         with self.assertRaises(ToolError):
@@ -231,13 +234,57 @@ class ChatServiceTest(Base):
         usage = self._q("SELECT provider, model, requests, prompt_tokens FROM ai_usage")
         self.assertEqual(len(usage), 1)
         self.assertEqual((usage[0][0], usage[0][2]), ("fake", 2))
-        # hallucinated figure → output filter blocks, security event layer OUTPUT
-        self.fake._replies = ["Sales today were ₹99,999 with 500 bills."]
-        self.fake._tool_calls = []
+        # hallucinated figure *after* a real tool call → output filter blocks, security event layer OUTPUT
+        self.fake.calls = []
+        self.fake._replies = ["", "Sales today were ₹99,999 with 500 bills."]
+        self.fake._tool_calls = [[ToolCall("call_2", "sales_summary", {"period": "today"})], []]
         r = self.c.chat.ask(OWNER, r.session_id, "what were sales today in words", language="english")
         self.assertEqual((r.source, r.category), ("refusal", "OUTPUT_FILTER"))
         self.assertIn("withheld", r.text)
         self.assertEqual(self._q("SELECT layer FROM chat_security_event ORDER BY id")[-1][0], "OUTPUT")
+
+    def test_ungrounded_answers_are_retried_then_replaced(self) -> None:
+        """Live run 3: "stock kya hai" → the 7b model invented "sandalwood powder" without calling any tool."""
+        self.fake._replies = ["Aaj tak sandalwood powder ka koi stock nahi hai.", ""]
+        self.fake._tool_calls = [[], [ToolCall("c1", "stock_overview", {})], []]
+        self.fake._replies.append("Camphor 50g: 96 pc. Source: stock_overview.")
+        r = self.c.chat.ask(OWNER, None, "which products does the shop sell, describe them", language="hinglish")
+        self.assertEqual(r.source, "fake")
+        self.assertEqual(r.tool_calls_made, 1, "the nudge made the model call a tool")
+        self.assertIn("Camphor", r.text)
+        nudge = self.fake.calls[1]
+        self.assertEqual((nudge[-1].role, nudge[-2].role), ("system", "assistant"))
+        self.assertIn("Never invent", nudge[-1].content)
+        # Model ignores the nudge too → fixed honest line, never the invented text.
+        self.fake._replies = ["Sandalwood powder nahi hai.", "Sandalwood powder nahi hai, kitna chahiye?"]
+        self.fake._tool_calls = [[], []]
+        r = self.c.chat.ask(OWNER, None, "which products does the shop sell, describe them", language="hinglish")
+        self.assertEqual((r.source, r.category), ("fastpath", "UNGROUNDED"))
+        self.assertNotIn("Sandalwood", r.text)
+        self.assertIn("guess", r.text.lower())
+        from vaishnavi.ai.chat_service import needs_data
+
+        self.assertTrue(needs_data("stock kya hai"))
+        self.assertTrue(needs_data("आज की बिक्री"))
+        self.assertFalse(needs_data("explain the Z report screen"), "how-to questions are not forced through data tools")
+
+    def test_fastpath_overview_and_unknown_item_falls_through_to_the_model(self) -> None:
+        for q in ("stock kya hai", "stock list", "kaun sa item or stock hai abhi", "sab stock dikhao"):
+            r = self.c.chat.ask(STAFF, None, q, language="hinglish")
+            self.assertEqual(r.source, "fastpath", q)
+            self.assertIn("Camphor 50g", r.text, q)
+            self.assertEqual(r.link, "/stock")
+        # unknown item: the fast path's "not found" is tentative → the model searches with its tools
+        self.fake._replies = ["", "Match box nahi mila; sabse kareeb Camphor hai. Source: search_products."]
+        self.fake._tool_calls = [[ToolCall("c1", "search_products", {"query": "match"})], []]
+        r = self.c.chat.ask(STAFF, None, "match box ka price kya hai", language="hinglish")
+        self.assertEqual(r.source, "fake")
+        self.assertEqual(r.tool_calls_made, 1)
+        # … but with no provider the fast text is the answer
+        self.c.set_ai_provider(NullProvider())
+        r = self.c.chat.ask(STAFF, None, "match box ka price kya hai", language="hinglish")
+        self.assertEqual(r.source, "fastpath")
+        self.assertIn("match box", r.text)
 
     def test_provider_down_and_limits(self) -> None:
         self.c.set_ai_provider(NullProvider())
