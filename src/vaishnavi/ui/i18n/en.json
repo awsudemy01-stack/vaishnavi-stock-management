@@ -563,6 +563,8 @@
     "left": "left",
     "printer_banner": "Printer not connected — bills are saved as PDF and will print when a printer is set up ({n} waiting). Billing continues.",
     "scanner_banner": "Barcode scanner not detected. Plug it in — selling continues as soon as it is found. Owner can allow a temporary override in Settings → Hardware.",
+    "shift_banner": "No shift is open for you. Open your shift (count the float) before taking payment — items can be scanned meanwhile.",
+    "open_shift": "Open shift",
     "unknown_code": "Unknown barcode {code} — Ask Owner (F3 Find by name, or the owner adds the item)",
     "typed_rejected": "Typed codes are not accepted — scan the item, or use F3 Find for a damaged label",
     "receipt_scanned": "Bill {invoice} opened",
