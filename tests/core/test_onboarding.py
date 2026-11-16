@@ -104,6 +104,23 @@ class WizardStepsTest(Base):
         denied = wizard.submit_payments(self.services, STAFF, {"upi_id": "x@upi"})
         self.assertFalse(denied.ok)
 
+    def test_tax_step_asks_for_gstin_instead_of_a_config_error(self) -> None:
+        """Live run 2: flipping "GST registered" with no GSTIN produced the E-CFG-001 "app cannot start" banner."""
+        missing = wizard.submit_tax(self.services, OWNER, {"registered": True, "default_rate": "5"})
+        self.assertFalse(missing.ok)
+        self.assertEqual(missing.error_code, "E-CFG-003")
+        self.assertIn("gstin", missing.problems)
+        self.assertFalse(self.services.settings_service.effective().tax.registered, "nothing was stored")
+        bad = wizard.submit_tax(self.services, OWNER, {"registered": True, "default_rate": "5", "gstin": "short"})
+        self.assertIn("gstin", bad.problems)
+        ok = wizard.submit_tax(self.services, OWNER, {"registered": True, "default_rate": "5", "gstin": "09abcde1234f1z5"})
+        self.assertTrue(ok.ok, ok.message)
+        eff = self.services.settings_service.effective()
+        self.assertEqual((eff.tax.registered, eff.shop.gstin), (True, "09ABCDE1234F1Z5"))
+        off = wizard.submit_tax(self.services, OWNER, {"registered": False, "default_rate": "0"})
+        self.assertTrue(off.ok, off.message)
+        self.assertEqual(self.services.settings_service.effective().shop.gstin, "09ABCDE1234F1Z5", "an empty GSTIN field never wipes the stored one")
+
     def test_staff_and_opening_stock_steps(self) -> None:
         staff = wizard.submit_staff(self.services, OWNER, {"username": "sunita", "display_name": "Sunita", "password": "135790"})
         self.assertTrue(staff.ok, staff.message)
