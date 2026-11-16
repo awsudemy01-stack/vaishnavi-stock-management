@@ -90,7 +90,7 @@ def healthz(state: AppState) -> dict[str, Any]:
     ages = {name: round((now - at).total_seconds(), 1) for name, at in state.heartbeats.items()}
     stale = sorted(name for name, age in ages.items() if age > STALE_AFTER_S)
     ok = not stale
-    return {"ok": ok, "status": "ok" if ok else "stale", "version": __version__, "at": iso_utc(now), "heartbeats": ages, "stale": stale, "uptime_s": int((now - state.started_at).total_seconds())}
+    return {"ok": ok, "app": "vaishnavi", "status": "ok" if ok else "stale", "version": __version__, "at": iso_utc(now), "heartbeats": ages, "stale": stale, "uptime_s": int((now - state.started_at).total_seconds())}
 
 
 def http_status_for(health: dict[str, Any]) -> int:
