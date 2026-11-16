@@ -42,4 +42,12 @@ rohit@Rohits-MacBook-Pro logs % tree /Users/rohit/VaishnaviStore/logs
 
 7 directories, 13 files
 
-grep -h "UI_ROUTES\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT_FAILED\|UI_PAGES_REGISTERED" app/vaishnavi.log | tail -5
+rohit@Rohits-MacBook-Pro logs % grep -h "HTTP_404\|not found" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log
+2026-11-16 10:26:57.960 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 10:28:01.533 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 10:33:02.078 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts?open=1 not found
+rohit@Rohits-MacBook-Pro logs % grep -h "HTTP_404\|not found" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log
+
+rohit@Rohits-MacBook-Pro logs % grep -h "UI_ROUTES\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT_FAILED\|UI_PAGES_REGISTERED" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log | tail -5
+2026-11-16 10:27:43.866 IST | INFO  | vaishnavi.ui.server | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | UI_PAGES_REGISTERED count=15
+
