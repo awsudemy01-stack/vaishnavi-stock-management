@@ -124,7 +124,7 @@ class SchedulerTest(unittest.TestCase):
     def test_documented_job_table_is_built_from_settings(self) -> None:
         settings = Settings()
         names = {j.name for j in jobs_module.build_jobs(settings)}
-        for expected in ("backup_nightly", "verify_chain", "session_monitor", "hardware_poll", "alerts", "heartbeat", "restore_drill", "db_maintenance", "log_prune", "backup_queue_flush"):
+        for expected in ("backup_nightly", "verify_chain", "session_monitor", "hardware_poll", "alerts", "heartbeat", "restore_drill", "db_maintenance", "log_prune", "backup_queue_flush", "db_status"):
             self.assertIn(expected, names)
         settings.backup.interval_minutes = 15
         self.assertIn("backup_interval", {j.name for j in jobs_module.build_jobs(settings)})
