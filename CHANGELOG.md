@@ -762,6 +762,34 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
 - Installer `state.json` now keeps each stage's `detail` (the crash repr) so a failed run is diagnosable from the
   state file alone.
 
+### Fixed — live run 3b (16-Nov, the owner used the app)
+- **Assistant hallucinated** ("Aaj tak sandalwood powder ka koi stock nahi hai" for "stock kya hai"; "list" /
+  "kaun sa or abhi" treated as item names; "match box" → flat "not found"):
+  - Fast path: new **`stock_overview`** tool + intent ("stock kya hai", "stock list", "sab stock", "kaun sa item …",
+    "स्टॉक लिस्ट") answers with counts and the best-stocked items instead of guessing or extracting nonsense;
+    question words (kaun/sa/or/abhi/list/sab …) are stop words; an unknown item first tries `search_products`
+    ("Did you mean: Match stick (12)?") and the answer is **tentative** — when a model is available the question
+    goes on to it with the fast text as fallback.
+  - **Grounding guard** in `ChatService`: a data question (stock/price/sales/items … EN/HI/Hinglish) answered with
+    **no tool call** is sent back once with a system nudge ("you have no knowledge of this shop except through
+    tools — call one now"); if the model still refuses to look, a fixed honest line replaces its text
+    (`AI_UNGROUNDED_ANSWER` / `AI_UNGROUNDED_FINAL` in `ai.log`, category `UNGROUNDED`). Core prompt rule 2 now says
+    item names, not only numbers, must come from tools.
+- **Billing page said nothing about the missing shift until Pay**: amber banner "No shift is open for you … Open
+  shift" with a button on the POS screen when the cashier has no open shift; the Pay dialog's `E-BILL-042` now
+  closes and jumps to `/shifts?open=1` instead of leaving the cashier at a dead end.
+- **Status page** lists the registered pages, any missing shell route (`E-UI-001`) and the last ten 404s with
+  their referer (`E-UI-002`) — the owner can read them without opening log files.
+- Installer "this window keeps watch" note now says the setup log console (port 8081) closes with the window and
+  where the app's own log viewer is (the owner saw "Safari cannot open the page" after closing it).
+- **`access/http.log` was empty**: uvicorn gives `uvicorn.access` its own stderr handler with `propagate=False`,
+  so not one request line reached our file. `server.capture_uvicorn_access()` (startup hook) removes those
+  handlers and lets the records propagate — every `GET /path … 404` now lands in `http.log`.
+- **Route-matching probe**: `server.match_report()` asks the Starlette router which endpoint a GET for each shell
+  path would really reach and logs `UI_ROUTE_MATCH` at registration *and* again once uvicorn is serving;
+  a path with no match logs `UI_ROUTE_UNREACHABLE` (`E-UI-001`) and shows on the status page. The Mac log proved
+  `/shifts` is registered by the decorator yet unknown to the router at request time; this pins down which.
+
 ### Removed — Phase 7
 - Never-imported Phase-1 placeholders: `db/repositories/` (ORM twins of `sqlite_stores`), `hardware/scanner.py`,
   `hardware/scale.py`, `hardware/printer/{discovery,os_print}.py`, `api/{auth,data}.py`,
