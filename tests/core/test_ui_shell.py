@@ -364,7 +364,98 @@ class NiceGuiCompatibilityTest(unittest.TestCase):
                 problems.append(f"{path.name}: legacy ui.download(...) — use ui.download.content/file")
             if "e.content.read()" in text:
                 problems.append(f"{path.name}: UploadEventArguments.content is gone — use await e.file.read()")
+            for m in re.finditer(r"position=([a-z-]+)", text):
+                if m.group(1) not in {"standard", "top", "right", "bottom", "left"}:
+                    problems.append(f"{path.name}: q-dialog position={m.group(1)} is not a Quasar position — the dialog throws in the browser and never opens (live run 2)")
         self.assertEqual(problems, [])
+
+
+class RouteRegistrationTest(unittest.TestCase):
+    """Every page module registers against a stub NiceGUI; a page that fails to import would 404 in the shop (live run 2)."""
+
+    def setUp(self) -> None:
+        import sys
+        import types
+
+        self._saved = sys.modules.get("nicegui")
+        self.routes: list[tuple[str, str]] = []
+
+        class _Any:
+            def __init__(self, *a: object, **k: object) -> None:
+                pass
+
+            def __getattr__(self, name: str) -> "_Any":
+                return _Any()
+
+            def __call__(self, *a: object, **k: object) -> "_Any":
+                return _Any()
+
+            def __enter__(self) -> "_Any":
+                return self
+
+            def __exit__(self, *a: object) -> bool:
+                return False
+
+        routes = self.routes
+
+        def page(path: str, **kw: object):  # noqa: ANN202
+            def deco(fn):  # noqa: ANN001, ANN202
+                routes.append((path, fn.__name__))
+                return fn
+
+            return deco
+
+        ui = _Any()
+        ui.page = page
+        stub = types.ModuleType("nicegui")
+        stub.ui = ui  # type: ignore[attr-defined]
+        stub.app = _Any()  # type: ignore[attr-defined]
+        sys.modules["nicegui"] = stub
+        self._any = _Any
+
+    def tearDown(self) -> None:
+        import sys
+
+        if self._saved is None:
+            sys.modules.pop("nicegui", None)
+        else:
+            sys.modules["nicegui"] = self._saved
+
+    def test_all_shell_routes_are_registered(self) -> None:
+        from unittest import mock
+
+        from vaishnavi.app_services import AppServices
+        from vaishnavi.core.events import EventBus
+        from vaishnavi.ui import server
+
+        from tests.core.test_services_foundation import ReversibleBox
+
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            paths = AppPaths(root / "p", root / "s")
+            paths.ensure()
+            make_live_db(paths.database)
+            settings = Settings()
+            services = AppServices.build(settings, paths, root / "config", box=ReversibleBox(), event_bus=EventBus())
+            state = AppState(settings=settings, paths=paths, config_dir=root / "config", started_at=T0)
+            state.extra["services"] = services
+            with mock.patch.object(server, "frame", lambda *a, **k: self._any()), self.assertNoLogs("vaishnavi.ui.server", level="ERROR"):
+                server._register_frame_pages(state)
+                server.register_pages(state)
+        paths_seen = [p for p, _ in self.routes]
+        self.assertEqual(server.missing_routes(paths_seen), [], f"registered: {sorted(paths_seen)}")
+        self.assertIn("/shifts", paths_seen)
+        self.assertIn("/sales/review", paths_seen)
+        self.assertLess(paths_seen.index("/sales/review"), paths_seen.index("/sales/{sale_id}"), "the literal route must be registered before the parameterised one")
+
+    def test_missing_routes_and_not_found_page(self) -> None:
+        from vaishnavi.ui import server
+
+        self.assertEqual(server.missing_routes(["/", "/pos"], required=("/", "/pos", "/shifts")), ["/shifts"])
+        html = server.not_found_html("/shifts?open=<1>")
+        self.assertIn("404", html)
+        self.assertIn("&lt;1&gt;", html, "path is escaped")
+        self.assertIn("href='/'", html)
 
 
 if __name__ == "__main__":
