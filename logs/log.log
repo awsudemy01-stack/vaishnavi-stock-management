@@ -1,128 +1,16 @@
-# 1. copy the new code (src/, bootstrap/, tests/), then verify the copy landed:
-shasum -a 256 ~/Documents/vaishnavi-stock-management/src/vaishnavi/ui/server.py | cut -c1-16
-#    must print: 18c2e52539abfa40
+# 1. stop the old instance cleanly (SIGTERM → the app closes its DB and logs properly)
+kill $(lsof -ti :8080)
 
-# 2. restart via Start Vaishnavi, click Shifts once, then:
-cd ~/VaishnaviStore/logs
-grep -h "UI_ROUTE_MATCH\|UI_ROUTE_UNREACHABLE\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT\|HTTP_404" app/vaishnavi.log | tail -8
-grep -h "shifts" access/http.log | tail -5
+# 2. confirm it's gone (should print nothing)
+lsof -ti :8080
 
-# 3. the exact library versions, so I can read the matching code:
-~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
+# 3. start fresh
+cd ~/Documents/vaishnavi-stock-management && python3 main.py
 
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % shasum -a 256 ~/Documents/vaishnavi-stock-management/src/vaishnavi/ui/server.py | cut -c1-16
-6ceede36e5fce8d0
+python3 main.py --stop      # "The application was shut down cleanly (pid 6416)…"
+python3 main.py             # start again
 
 cd ~/VaishnaviStore/logs
 grep -h "UI_ROUTE_MATCH\|UI_ROUTE_UNREACHABLE\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT\|HTTP_404\|UVICORN_LOGGING" app/vaishnavi.log | tail -10
 grep -h "shifts" access/http.log | tail -5
-~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
 
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % ~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
-fastapi                 0.163.1
-nicegui                 4.0.0
-starlette               1.10.0
-uvicorn                 0.54.0
-
-From https://github.com/awsudemy01-stack/vaishnavi-stock-management
-   ed53c63..e07c6b9  main       -> origin/main
-Updating ed53c63..e07c6b9
-Fast-forward
- CHANGELOG.md                       |  28 ++++++++++++++++++++++++++++
- bootstrap/app_stages.py            |   2 +-
- bootstrap/messages/en.toml         |   2 +-
- bootstrap/messages/hi.toml         |   2 +-
- docs/06-ai-assistant.md            |  12 ++++++++++--
- logs/Image 16-11-2026 at 05.00.png | Bin 0 -> 260670 bytes
- logs/Image 16-11-2026 at 05.03.png | Bin 0 -> 271844 bytes
- logs/log.log                       |  11 +++++++++++
- src/vaishnavi/ai/chat_service.py   |  56 ++++++++++++++++++++++++++++++++++++++++++++++++++------
- src/vaishnavi/ai/fastpath.py       |  52 ++++++++++++++++++++++++++++++++++++++++++++++++----
- src/vaishnavi/ai/prompts/core.md   |  15 ++++++++-------
- src/vaishnavi/ai/tools.py          |  17 +++++++++++++++++
- src/vaishnavi/ui/i18n/en.json      |   2 ++
- src/vaishnavi/ui/i18n/hi.json      |   2 ++
- src/vaishnavi/ui/pages/pos.py      |  15 +++++++++++++--
- src/vaishnavi/ui/pages/status.py   |  15 +++++++++++++++
- src/vaishnavi/ui/server.py         | 120 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
- tests/core/test_ai_chat.py         |  55 +++++++++++++++++++++++++++++++++++++++++++++++++++----
- tests/core/test_ai_guardrails.py   |  29 +++++++++++++++++++++++++++++
- tests/core/test_pos_page.py        |  16 +++++++++++++++-
- tests/core/test_ui_shell.py        |  43 +++++++++++++++++++++++++++++++++++++++++++
- 21 files changed, 460 insertions(+), 34 deletions(-)
- create mode 100644 logs/Image 16-11-2026 at 05.00.png
- create mode 100644 logs/Image 16-11-2026 at 05.03.png
- create mode 100644 logs/log.log
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % shasum -a 256 ~/Documents/vaishnavi-stock-management/src/vaishnavi/ui/server.py | cut -c1-16
-6ceede36e5fce8d0
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % grep -h "UI_ROUTES\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT_FAILED\|UI_PAGES_REGISTERED" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log | tail -5
-2026-11-16 10:27:43.866 IST | INFO  | vaishnavi.ui.server | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | UI_PAGES_REGISTERED count=15
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % grep -h "HTTP_404\|not found" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log                                                              
-2026-11-16 10:26:57.960 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
-2026-11-16 10:28:01.533 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
-2026-11-16 10:33:02.078 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts?open=1 not found
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % ~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
-fastapi                 0.163.1
-nicegui                 4.0.0
-starlette               1.10.0
-uvicorn                 0.54.0
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % python3 main.py 
-Vaishnavi Store Manager Setup       Log: logs/install/2026-11-16_071559_2611160715590972.log
-────────────────────────────────────────────────────────────────────────────────────────────
- ✔  Log console — watch at http://192.168.0.190:8081/
- i  Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे? → English  (from your saved answers)
- ✔  Language — English
- –  Computer — already done
- –  Offline bundle — not needed on this computer
- ✔  Python — Python 3.13 found
- ✔  Private Python environment — ready (.venv)
- !  Software packages — verified (7 packages load correctly)  (E-SYS-041)
-      requirements.lock is missing from this release folder, so package versions could not be hash-verified. The app will run; ask for a release that includes the lock file.
- ✔  System components — all 3 present
- i  This computer can run the AI locally (model size: 7b).
- i  Which AI engine should the assistant use? → Local — Ollama on this PC  (from your saved answers)
- ✔  AI assistant — Ollama ready — qwen2.5:7b-instruct · bge-m3
- !  Data locations — primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups  (E-SYS-012)
-      Move the backups to another disk when you can: Settings → Backups → Secondary location.
- ✔  Start automatically — already set up
- ✔  Shop database — database is ready.
- i     DB_UNCLEAN_CLOSE last_open=2026-11-16T04:57:43Z last_close=2026-11-16T04:57:13Z code=E-DB-022
- i     DOCTOR_CHECK key=database status=WARN code=E-DB-022 ms=12 msg=did not close properly last time — all saved data is intact detail=last_open=2026-11-16T04:57:43Z fixed=False
- i     DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=7 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
- i     DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
- i     DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
- i     Vaishnavi Store Manager Health Check — 16-Nov-2026 12:46  (ref 01M7HKCZBCPTW1S96B6VC7F28Z)
- i     ──────────────────────────────────────────────────────────────────────────────────────────
- i      ✔    Python                 Python 3.13 in the private environment         3 ms
- i      ✔    Software packages      13 packages load correctly       851 ms
- i      ✔    Folders & disk         51.7 GB free · data in /Users/rohit/VaishnaviStore         6 ms
- i      ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
- i      !    Shop database          did not close properly last time — all saved data is intact  (E-DB-022)        12 ms
- i      ✔    Sales integrity        0 bills verified · no gaps · stock matches         2 ms
- i      ✔    Backup                 last backup 11 h ago · verified · /Users/rohit/VaishnaviStore-Backups         1 ms
- i      ✔    Secure key store       computer key store in use        11 ms
- i      ✔    Clock & ports          Vaishnavi is already running on port 8080 (version 0.1.0, up 138 min) — it will simply be opened        28 ms
- i      ✔    Start automatically    will start when the computer is switched on         0 ms
- i      !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)         7 ms
- i           → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
- i      !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
- i           → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
- i      ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)        49 ms
- i      !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
- i           → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
- i     ──────────────────────────────────────────────────────────────────────────────────────────
- i      RESULT: Ready to open the shop (4 note(s) to look at).
- !  Health check — finished with notes — the shop can open; see the lines marked '!' above.
-      Fix the notes when convenient; they are also shown on the Status page inside the app.
- ✔  Start Vaishnavi — Ready to open the shop:  http://127.0.0.1:8080 (it was already running)
-────────────────────────────────────────────────────────────────────────────────────────────
- !  Setup steps complete, with 3 note(s) to look at — see the lines marked '!' above.
-Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-16_071559_2611160715590972.log
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % grep -h "HTTP_404\|not found" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log
-2026-11-16 10:26:57.960 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
-2026-11-16 10:28:01.533 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
-2026-11-16 10:33:02.078 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts?open=1 not found
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % grep -h "UI_ROUTES\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT_FAILED\|UI_PAGES_REGISTERED" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log | tail -5
-2026-11-16 10:27:43.866 IST | INFO  | vaishnavi.ui.server | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | UI_PAGES_REGISTERED count=15
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % cat /Users/rohit/VaishnaviStore/logs/access/http.log
-rohit@R
