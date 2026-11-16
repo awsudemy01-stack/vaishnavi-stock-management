@@ -267,6 +267,7 @@ class StateStore:
             "message": result.message,
             "error_code": result.error_code,
             "elapsed_ms": result.elapsed_ms,
+            "detail": (result.detail or "")[:500],  # a crash's repr(exc) is then visible in state.json, not only in the run log
             "data": result.data,
         }
 
