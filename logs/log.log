@@ -41,3 +41,5 @@ rohit@Rohits-MacBook-Pro logs % tree /Users/rohit/VaishnaviStore/logs
     └── hardware.log.2026-11-15
 
 7 directories, 13 files
+
+grep -h "UI_ROUTES\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT_FAILED\|UI_PAGES_REGISTERED" app/vaishnavi.log | tail -5
