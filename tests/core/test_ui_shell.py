@@ -457,6 +457,49 @@ class RouteRegistrationTest(unittest.TestCase):
         self.assertIn("&lt;1&gt;", html, "path is escaped")
         self.assertIn("href='/'", html)
 
+    def test_match_report_asks_the_router_not_the_registry(self) -> None:
+        """A route can be registered yet unreachable; the probe reports what a GET would really hit (live run 3)."""
+        import enum
+        import re
+
+        from vaishnavi.ui import server
+
+        class Match(enum.Enum):
+            NONE = 0
+            PARTIAL = 1
+            FULL = 2
+
+        class Route:
+            def __init__(self, pattern: str, name: str, methods: set[str] = {"GET"}) -> None:  # noqa: B006
+                self.path, self.endpoint, self._re, self._methods = pattern, type(name, (), {})(), re.compile(pattern.replace("{x}", "[^/]+") + "$"), methods
+                self.endpoint.__qualname__ = name
+
+            def matches(self, scope: dict) -> tuple[Match, dict]:  # type: ignore[type-arg]
+                if not self._re.match(scope["path"]):
+                    return Match.NONE, {}
+                return (Match.FULL if scope["method"] in self._methods else Match.PARTIAL), {}
+
+        class App:
+            routes = [Route("/sales/{x}", "sale_page"), Route("/sales/review", "review_page"), Route("/pos", "pos_page", {"POST"}), Route("/", "home")]
+
+        report = server.match_report(App(), ("/", "/sales/review", "/pos", "/shifts"))
+        self.assertTrue(report["/"].endswith("home"))
+        self.assertTrue(report["/sales/review"].endswith("sale_page"), "first FULL match wins — the parameterised route shadows the literal one")
+        self.assertIsNone(report["/pos"], "method mismatch is only a PARTIAL match")
+        self.assertIsNone(report["/shifts"])
+
+    def test_uvicorn_access_logger_propagates_after_capture(self) -> None:
+        import logging
+
+        from vaishnavi.ui import server
+
+        access = logging.getLogger("uvicorn.access")
+        access.addHandler(logging.NullHandler())
+        access.propagate = False
+        server.capture_uvicorn_access()
+        self.assertTrue(access.propagate)
+        self.assertEqual(access.handlers, [])
+
 
 if __name__ == "__main__":
     unittest.main()
