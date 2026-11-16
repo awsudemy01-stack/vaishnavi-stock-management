@@ -25,19 +25,122 @@ log = logging.getLogger("vaishnavi.ui.server")
 PAGE_REGISTRARS: list[Callable[[AppState], None]] = []
 """Units append ``register(state)`` callables here (import side effect of ``vaishnavi.ui.pages.<page>``)."""
 
+PAGE_MODULES: tuple[str, ...] = ("login", "onboarding", "dashboard", "notifications", "pos", "sales_history", "shifts", "day_close", "products", "stock", "labels", "reports", "status", "logs", "settings")
+
+REQUIRED_ROUTES: tuple[str, ...] = tuple(item.path for item in guards.NAV_ITEMS) + ("/login", "/lock", "/end-work", "/onboarding", "/labels", "/shifts/day-close")
+"""Paths the shell links to; a missing one is logged as ``E-UI-001`` right after registration (it would 404)."""
+
 
 def register_pages(state: AppState) -> None:
-    """Import every page module and let it register its routes."""
+    """Import every page module and let it register its routes. A page that fails to import is an ERROR, not silence."""
     import importlib  # noqa: PLC0415
 
-    for name in ("login", "onboarding", "dashboard", "notifications", "pos", "sales_history", "shifts", "day_close", "products", "stock", "labels", "reports", "status", "logs", "settings"):
+    for name in PAGE_MODULES:
         try:
             importlib.import_module(f"vaishnavi.ui.pages.{name}")
-        except ImportError as exc:
-            log.debug("page module %s not available: %s", name, exc)
+        except Exception as exc:  # noqa: BLE001 - one broken page must not hide behind a quiet debug line
+            log.error("UI_PAGE_IMPORT_FAILED page=%s error=%r code=E-UI-001", name, exc, exc_info=True)
     for registrar in PAGE_REGISTRARS:
         registrar(state)
     log.info("UI_PAGES_REGISTERED count=%d", len(PAGE_REGISTRARS))
+
+
+def registered_paths(app: Any) -> list[str]:
+    """Every HTTP route path NiceGUI/FastAPI currently knows (for the start-up log and the route check)."""
+    return sorted({str(p) for p in (getattr(route, "path", None) for route in app.routes) if p})
+
+
+def missing_routes(paths: list[str], required: tuple[str, ...] = REQUIRED_ROUTES) -> list[str]:
+    """Required shell routes that are not registered."""
+    have = set(paths)
+    return [p for p in required if p not in have]
+
+
+def match_report(app: Any, paths: tuple[str, ...] = REQUIRED_ROUTES) -> dict[str, str | None]:
+    """Ask the router itself which endpoint a GET for each path would reach (``None`` → the browser would get a 404).
+
+    A registered route can still be unreachable (shadowed, removed, cached); this answers the real question.
+    """
+    out: dict[str, str | None] = {}
+    for path in paths:
+        scope = {"type": "http", "method": "GET", "path": path, "headers": [], "root_path": "", "query_string": b""}
+        hit: str | None = None
+        for route in app.routes:
+            try:
+                match, _ = route.matches(scope)
+            except Exception:  # noqa: BLE001 - foreign route types
+                continue
+            if getattr(match, "name", str(match)).upper().endswith("FULL"):
+                endpoint = getattr(route, "endpoint", None)
+                hit = f"{getattr(endpoint, '__module__', '?')}.{getattr(endpoint, '__qualname__', getattr(endpoint, '__name__', type(route).__name__))}"
+                break
+        out[path] = hit
+    return out
+
+
+def _log_routes(app: Any, state: AppState, *, stage: str = "registered") -> None:
+    paths = registered_paths(app)
+    pages = [p for p in paths if not p.startswith("/_nicegui") and not p.startswith("/api/")]
+    missing = missing_routes(paths)
+    state.extra["ui_routes"], state.extra["ui_routes_missing"] = pages, missing  # shown on /system/status
+    log.info("UI_ROUTES stage=%s count=%d pages=%s", stage, len(paths), ",".join(pages))
+    for path in missing:
+        log.error("UI_ROUTE_MISSING path=%s code=E-UI-001 — its page module did not register (see UI_PAGE_IMPORT_FAILED above)", path)
+    report = match_report(app)
+    unreachable = [p for p, hit in report.items() if hit is None]
+    log.info("UI_ROUTE_MATCH stage=%s %s", stage, " ".join(f"{p}->{(hit or 'NONE').rsplit('.', 1)[-1]}" for p, hit in report.items()))
+    for path in unreachable:
+        log.error("UI_ROUTE_UNREACHABLE path=%s code=E-UI-001 — registered=%s but no route matches a GET; the browser gets 404", path, path in paths)
+    state.extra["ui_routes_missing"] = sorted(set(missing) | set(unreachable))
+
+
+def _install_not_found_handler(app: Any, state: AppState) -> None:
+    """Log every 404 with its path/referer (``E-UI-002``), remember the last few for the status page, show a bilingual page."""
+    from fastapi import Request  # noqa: PLC0415
+    from fastapi.responses import HTMLResponse  # noqa: PLC0415
+
+    @app.exception_handler(404)
+    async def _not_found(request: Request, exc: Exception) -> HTMLResponse:
+        path = request.url.path
+        if path.startswith("/_nicegui") or path.startswith("/favicon"):
+            log.debug("HTTP_404_ASSET path=%s", path)
+        else:
+            log.warning("HTTP_404 path=%s query=%s referer=%s code=E-UI-002", path, request.url.query or "-", request.headers.get("referer", "-"))
+            recent = state.extra.setdefault("recent_404", [])
+            recent.append(f"{path}{'?' + request.url.query if request.url.query else ''}  ←  {request.headers.get('referer', '-')}")
+            del recent[:-10]
+        return HTMLResponse(status_code=404, content=not_found_html(path))
+
+
+def capture_uvicorn_access() -> None:
+    """Route uvicorn's access lines (``GET /shifts … 404``) into our ``http.log``.
+
+    uvicorn's default dictConfig gives ``uvicorn.access`` its own stderr handler with ``propagate=False``, so our
+    file handlers never saw a single request — the owner's ``access/http.log`` stayed empty (live run 3).
+    """
+    for name in ("uvicorn.access", "uvicorn.error", "uvicorn"):
+        logger = logging.getLogger(name)
+        for handler in list(logger.handlers):
+            logger.removeHandler(handler)
+        logger.propagate = True
+        logger.setLevel(logging.INFO)
+    log.info("UVICORN_LOGGING_CAPTURED families=access")
+
+
+def not_found_html(path: str) -> str:
+    """The 404 body (pure, tested)."""
+    from html import escape  # noqa: PLC0415
+
+    return (
+        "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><title>404</title>"
+        "<style>body{font-family:system-ui,sans-serif;background:#FBF7EF;color:#2B2118;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}"
+        ".c{text-align:center;max-width:520px;padding:24px}h1{color:#B4532A;font-size:48px;margin:0 0 8px}code{background:#F4EDE2;padding:2px 6px;border-radius:4px}"
+        "a{display:inline-block;margin-top:18px;padding:10px 18px;background:#B4532A;color:#fff;border-radius:8px;text-decoration:none}</style></head>"
+        f"<body><div class='c'><h1>404</h1><p>This page does not exist: <code>{escape(path)}</code></p>"
+        "<p>यह पेज मौजूद नहीं है। बाईं ओर के मेन्यू का उपयोग करें।</p>"
+        "<p style='font-size:13px;color:#7A4A1E'>If a button brought you here, tell the owner — the address is recorded in the app log (E-UI-002).</p>"
+        "<a href='/'>Home · होम</a></div></body></html>"
+    )
 
 
 def frame(state: AppState, *, current_path: str, denied: str | None = None) -> Callable[[], Any]:
@@ -248,6 +351,8 @@ def serve(state: AppState, on_ready: Callable[[], None]) -> None:
         api_session.mount(app, services.sessions)
     _register_frame_pages(state)
     register_pages(state)
+    _log_routes(app, state)
+    _install_not_found_handler(app, state)
 
     def heartbeat() -> None:
         state.beat("request")
@@ -255,7 +360,12 @@ def serve(state: AppState, on_ready: Callable[[], None]) -> None:
             log.warning("APP_STOPPING restart=%s", bool(state.extra.get("restart_requested")))
             app.shutdown()
 
-    app.on_startup(on_ready)
+    def on_startup() -> None:
+        capture_uvicorn_access()
+        _log_routes(app, state, stage="serving")  # NiceGUI/uvicorn may add or reorder routes while starting
+        on_ready()
+
+    app.on_startup(on_startup)
     # app.timer, not ui.timer: a UI element in global scope makes NiceGUI >= 3 refuse to start with @ui.page routes.
     app.timer(10.0, heartbeat)
     tls = state.extra.get("tls")  # (cert_path, key_path) prepared by startup when server.https_enabled
