@@ -159,6 +159,29 @@ class LabelsPageTest(Base):
         history = labels_page.build_labels_model(self.services, EN, selected=[], copies=1, target="ESCPOS").history
         self.assertEqual(history[0]["sku"], self.p.sku)
 
+    def test_empty_selection_never_produces_an_empty_file(self) -> None:
+        """Live run 2: the grid's Labels button arrived with no ids and Print gave a 0-page PDF / 0-byte ESC/POS file."""
+        for target in ("ESCPOS", "PDF"):
+            result = labels_page.print_selected(self.services, OWNER, selected=[], copies=1, target=target)
+            self.assertFalse(result.ok)
+            self.assertEqual(result.payload, b"")
+        with self.assertRaises(ValueError):
+            self.services.labels.print_job(OWNER, product_ids=[999_999], copies=1, target="PDF", reason="NEW")
+        self.assertEqual(self.services.labels.recent(limit=5), [], "nothing was logged for the refused jobs")
+
+    def test_selection_resolves_ids_and_purchase_and_picker_hides_system_products(self) -> None:
+        from vaishnavi.services.inventory import PurchaseLine
+
+        self.assertEqual(labels_page.resolve_selection(self.services, ids="10,abc,,7"), [10, 7])
+        purchase = self.services.inventory.record_purchase(OWNER, supplier_name="Sharma Traders", invoice_no="ST/1", lines=[PurchaseLine(self.p.id, Decimal("12"), 1800), PurchaseLine(10, Decimal("5"), 700)])
+        self.assertEqual(sorted(labels_page.resolve_selection(self.services, purchase=str(purchase.id))), sorted([self.p.id, 10]))
+        self.assertEqual(labels_page.resolve_selection(self.services, ids=str(self.p.id), purchase=str(purchase.id)), [self.p.id, 10], "ids first, then the purchase's products without duplicates")
+        self.assertEqual(labels_page.resolve_selection(self.services, purchase="999999"), [])
+        options = labels_page.picker_options(self.services)
+        self.assertIn(self.p.id, options)
+        self.assertTrue(options[self.p.id].endswith("Camphor Tablets 100g"))
+        self.assertFalse(any("OPEN-ITEM" in label for label in options.values()), "the system open-item product is not labelled")
+
 
 class HardwarePageTest(Base):
     def test_printer_list_selection_and_test_print_payloads(self) -> None:
