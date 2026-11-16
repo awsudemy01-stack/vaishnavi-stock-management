@@ -1,0 +1,63 @@
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.logsetup: install log opened: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-16_040758_2611160407584c63.log
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.i18n: i18n: loaded lang=en keys=304 fallback_keys=304
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console: unicode=True encoding=utf-8
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: state: loaded 14 stage records, 3 runs
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.wizard: answers: loaded 5 answers from /Users/rohit/Documents/vaishnavi-stock-management/config/install-answers.toml
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.cli: RUN_START run=2611160407584c63 mode=install-run argv=
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.cli: ENV python=3.13.5 exe=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 os=macOS-27.2.1-arm64-arm-64bit-Mach-O arch=arm64 program_dir=/Users/rohit/Documents/vaishnavi-stock-management
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console: Vaishnavi Store Manager Setup       Log: logs/install/2026-11-16_040758_2611160407584c63.log
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: INSTALL_LOCK_ACQUIRED pid=5587
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: pipeline: 14 stages registered (install_only=False)
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: PIPELINE_START run=2611160407584c63 stages=14
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=log_console index=1/14
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_START key=log_console title=Log console
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.minilog: MINILOG_STARTED url=http://192.168.0.190:8081/ dir=/Users/rohit/Documents/vaishnavi-stock-management/logs/install
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_OK key=log_console ms=9 code=- msg=watch at http://192.168.0.190:8081/ detail=-
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[ok]: Log console — watch at http://192.168.0.190:8081/
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=language index=2/14
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_START key=language title=Language
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.wizard: WIZARD_ANSWER key=language source=answers_file value=en
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[info]: Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे? → English  (from your saved answers)
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.wizard: LANGUAGE_SELECTED lang=en source=wizard
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_OK key=language ms=0 code=- msg=English detail=-
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[ok]: Language — English
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=survey index=3/14
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_SKIP key=survey ms=0 code=- msg=already done detail=-
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[skip]: Computer — already done
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=offline_bundle index=4/14
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_SKIP key=offline_bundle ms=0 code=- msg=not needed on this computer detail=-
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[skip]: Offline bundle — not needed on this computer
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=python_check index=5/14
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_START key=python_check title=Python
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_OK key=python_check ms=3 code=- msg=Python 3.13 found detail=-
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[ok]: Python — Python 3.13 found
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=venv index=6/14
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_START key=venv title=Private Python environment
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_OK key=venv ms=0 code=- msg=ready (.venv) detail=-
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.console: console[ok]: Private Python environment — ready (.venv)
+2026-11-16 04:07:58 DEBUG   run=2611160407584c63 bootstrap.stages: STAGE_PREPARE key=packages index=7/14
+2026-11-16 04:07:58 INFO    run=2611160407584c63 bootstrap.stages: STAGE_START key=packages title=Software packages
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.python_env: VERIFY_IMPORTS checked=7 missing=-
+2026-11-16 04:07:59 INFO    run=2611160407584c63 bootstrap.python_env: PACKAGES_VERIFIED cached=true hash_verified=False
+2026-11-16 04:07:59 ERROR   run=2611160407584c63 bootstrap.stages: STAGE_CRASH key=packages ms=900 error=TypeError("bootstrap.stages.StageResult.warn() got multiple values for keyword argument 'verified_only'")
+Traceback (most recent call last):
+  File "/Users/rohit/Documents/vaishnavi-stock-management/bootstrap/stages.py", line 398, in run
+    result = stage.run(ctx)
+  File "/Users/rohit/Documents/vaishnavi-stock-management/bootstrap/python_env.py", line 302, in run
+    return StageResult.warn(ctx.t("packages.verified", count=len(VERIFY_IMPORTS)), error_code="E-SYS-041", hint=ctx.t("packages.unpinned_hint"), **previous_data, verified_only=True)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: bootstrap.stages.StageResult.warn() got multiple values for keyword argument 'verified_only'
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:59 WARNING run=2611160407584c63 bootstrap.stages: STAGE_FAIL key=packages ms=900 code=E-SYS-099 msg=Unexpected installer error detail=TypeError("bootstrap.stages.StageResult.warn() got multiple values for keyword argument 'verified_only'")
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.console: console[fail]: Software packages — Unexpected installer error  (E-SYS-099)
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:59 INFO    run=2611160407584c63 bootstrap.minilog: MINILOG_STOPPED port=8081
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.stages: INSTALL_LOCK_RELEASED
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.console: console: Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-16_040758_2611160407584c63.log
+2026-11-16 04:07:59 DEBUG   run=2611160407584c63 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:07:59 INFO    run=2611160407584c63 bootstrap.cli: RUN_END run=2611160407584c63 exit=4

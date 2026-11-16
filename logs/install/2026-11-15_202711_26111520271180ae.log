@@ -1,0 +1,695 @@
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.logsetup: install log opened: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-15_202711_26111520271180ae.log
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.i18n: i18n: loaded lang=en keys=304 fallback_keys=304
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console: unicode=True encoding=utf-8
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.stages: state: no previous state at /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.cli: RUN_START run=26111520271180ae mode=install-run argv=
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.cli: ENV python=3.13.5 exe=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 os=macOS-27.2.1-arm64-arm-64bit-Mach-O arch=arm64 program_dir=/Users/rohit/Documents/vaishnavi-stock-management
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console: Vaishnavi Store Manager Setup       Log: logs/install/2026-11-15_202711_26111520271180ae.log
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.stages: INSTALL_LOCK_ACQUIRED pid=1976
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.stages: pipeline: 14 stages registered (install_only=False)
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.stages: PIPELINE_START run=26111520271180ae stages=14
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=log_console index=1/14
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=log_console title=Log console
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.minilog: MINILOG_STARTED url=http://192.168.0.190:8081/ dir=/Users/rohit/Documents/vaishnavi-stock-management/logs/install
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=log_console ms=92 code=- msg=watch at http://192.168.0.190:8081/ detail=-
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Log console — watch at http://192.168.0.190:8081/
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=language index=2/14
+2026-11-15 20:27:11 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=language title=Language
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे?
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console:       [1] English  (recommended)
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console:       [2] हिंदी (Hindi)
+2026-11-15 20:27:11 DEBUG   run=26111520271180ae bootstrap.console: console:       (q = quit)
+2026-11-15 20:27:34 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:34 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET /favicon.ico HTTP/1.1" 404 -
+2026-11-15 20:27:37 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:40 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:43 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:46 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:50 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:53 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:56 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:27:59 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:02 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:05 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:08 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:12 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:15 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:18 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:21 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:22 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=language source=typed value=en
+2026-11-15 20:28:22 INFO    run=26111520271180ae bootstrap.wizard: LANGUAGE_SELECTED lang=en source=wizard
+2026-11-15 20:28:22 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:28:22 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=language ms=71267 code=- msg=English detail=-
+2026-11-15 20:28:22 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Language — English
+2026-11-15 20:28:22 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=survey index=3/14
+2026-11-15 20:28:22 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=survey title=Computer
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.survey: survey: lpstat exit=1 stderr=lpstat: No destinations added.
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.survey: SURVEY os=macOS/27.2.1 arch=arm64 ram=16.0 gpus=1 printers=0 serial=0 internet=True pkg=['brew'] ollama=True errors=0
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.survey: SURVEY_DETAIL {"os_family": "macos", "os_name": "macOS", "os_version": "27.2.1", "arch": "arm64", "hostname": "Rohits-MacBook-Pro.local", "python_version": "3.13.5", "python_executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3", "in_venv": false, "cpu_count": 10, "cpu_name": "arm", "ram_gib": 16.0, "gpus": [{"name": "Apple silicon GPU", "vram_gib": null, "vendor": "apple"}], "apple_silicon": true, "disk_free_program_gib": 57.1, "disk_free_home_gib": 57.1, "printers": [], "serial_ports": [], "usb_hid_devices": [], "internet": true, "package_managers": ["brew"], "ollama_found": true, "probe_errors": {}, "surveyed_on": "2026-11-15"}
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.survey: AI_RECOMMENDATION provider=ollama tier=7b reason=survey.ai.local_ok local_possible=True
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=survey ms=794 code=- msg=macOS 27.2.1, 16 GB memory, Apple silicon → local AI will work on this PC detail=-
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Computer — macOS 27.2.1, 16 GB memory, Apple silicon → local AI will work on this PC
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=offline_bundle index=4/14
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.stages: STAGE_SKIP key=offline_bundle ms=0 code=- msg=not needed on this computer detail=-
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.console: console[skip]: Offline bundle — not needed on this computer
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=python_check index=5/14
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=python_check title=Python
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=python_check ms=21 code=- msg=Python 3.13 found detail=-
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Python — Python 3.13 found
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=venv index=6/14
+2026-11-15 20:28:23 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=venv title=Private Python environment
+2026-11-15 20:28:23 DEBUG   run=26111520271180ae bootstrap.console: console[busy]: Creating the private Python environment (.venv) — first time only …
+2026-11-15 20:28:24 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:27 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:27 INFO    run=26111520271180ae bootstrap.python_env: VENV_CREATED path=/Users/rohit/Documents/vaishnavi-stock-management/.venv python=/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python
+2026-11-15 20:28:27 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:28:27 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=venv ms=4121 code=- msg=created (.venv) detail=-
+2026-11-15 20:28:27 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Private Python environment — created (.venv)
+2026-11-15 20:28:27 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=packages index=7/14
+2026-11-15 20:28:27 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=packages title=Software packages
+2026-11-15 20:28:27 INFO    run=26111520271180ae bootstrap.python_env: PACKAGES_INSTALL_NEEDED rebuilt=True changed=True
+2026-11-15 20:28:27 DEBUG   run=26111520271180ae bootstrap.console: console[busy]: Installing software packages (first time only, 2–5 minutes) …
+2026-11-15 20:28:27 INFO    run=26111520271180ae bootstrap.python_env: EXEC /Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python -m pip install --disable-pip-version-check --no-input -e /Users/rohit/Documents/vaishnavi-stock-management
+2026-11-15 20:28:29 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Obtaining file:///Users/rohit/Documents/vaishnavi-stock-management
+2026-11-15 20:28:29 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Installing build dependencies: started
+2026-11-15 20:28:30 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Installing build dependencies: finished with status 'done'
+2026-11-15 20:28:30 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Checking if build backend supports build_editable: started
+2026-11-15 20:28:30 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:30 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Checking if build backend supports build_editable: finished with status 'done'
+2026-11-15 20:28:30 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Getting requirements to build editable: started
+2026-11-15 20:28:31 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Getting requirements to build editable: finished with status 'done'
+2026-11-15 20:28:31 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Preparing editable metadata (pyproject.toml): started
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting nicegui>=2.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading nicegui-4.0.0-py3-none-any.whl.metadata (12 kB)
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting sqlalchemy>=2.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading sqlalchemy-2.1.8-cp313-cp313-macosx_11_0_arm64.whl.metadata (9.7 kB)
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting alembic>=1.13 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:32 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading alembic-1.20.1-py3-none-any.whl.metadata (7.3 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pydantic>=2.6 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pydantic-settings>=2.2 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pydantic_settings-2.16.3-py3-none-any.whl.metadata (4.0 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting cryptography>=42.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading cryptography-50.0.2-cp311-abi3-macosx_11_0_arm64.whl.metadata (4.4 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting keyring>=25.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading keyring-25.7.0-py3-none-any.whl.metadata (21 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pillow>=10.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pillow-13.0.0-cp313-cp313-macosx_11_0_arm64.whl.metadata (9.1 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-barcode>=0.15 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_barcode-0.16.1-py3-none-any.whl.metadata (2.7 kB)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting qrcode>=7.4 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:33 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading qrcode-8.2-py3-none-any.whl.metadata (17 kB)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting reportlab>=4.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading reportlab-5.1.0-py3-none-any.whl.metadata (1.6 kB)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting jinja2>=3.1 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting openpyxl>=3.1 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading openpyxl-3.1.5-py2.py3-none-any.whl.metadata (2.5 kB)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting matplotlib>=3.8 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading matplotlib-3.11.2-cp313-cp313-macosx_11_0_arm64.whl.metadata (80 kB)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-escpos>=3.0 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_escpos-3.1-py3-none-any.whl.metadata (5.6 kB)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pyusb>=1.2 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:34 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pyusb-1.3.1-py3-none-any.whl.metadata (2.5 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting hidapi>=0.14 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading hidapi-0.15.0-cp313-cp313-macosx_11_0_arm64.whl.metadata (3.7 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pyserial>=3.5 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pyserial-3.5-py2.py3-none-any.whl.metadata (1.6 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting ollama>=0.3 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading ollama-0.6.3-py3-none-any.whl.metadata (7.6 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting openai>=1.40 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading openai-3.51.0-py3-none-any.whl.metadata (45 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting httpx>=0.27 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting numpy>=1.26 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading numpy-2.5.4-cp313-cp313-macosx_14_0_arm64.whl.metadata (6.6 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting requests>=2.31 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting apscheduler<4,>=3.10 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:35 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading apscheduler-3.11.3-py3-none-any.whl.metadata (6.5 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-ulid>=2.2 (from vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_ulid-4.1.0-py3-none-any.whl.metadata (8.7 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting tzlocal>=3.0 (from apscheduler<4,>=3.10->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading tzlocal-5.4.5-py3-none-any.whl.metadata (7.7 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting Mako (from alembic>=1.13->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading mako-1.4.3-py3-none-any.whl.metadata (2.9 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting typing-extensions>=4.12 (from alembic>=1.13->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting cffi>=2.0.0 (from cryptography>=42.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading cffi-2.1.1-cp313-cp313-macosx_11_0_arm64.whl.metadata (2.5 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pycparser (from cffi>=2.0.0->cryptography>=42.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting anyio (from httpx>=0.27->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting certifi (from httpx>=0.27->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting httpcore==1.* (from httpx>=0.27->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-11-15 20:28:36 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting idna (from httpx>=0.27->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.27->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting MarkupSafe>=2.0 (from jinja2>=3.1->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading markupsafe-3.0.4-cp313-cp313-macosx_11_0_arm64.whl.metadata (2.7 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting jaraco.classes (from keyring>=25.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting jaraco.functools (from keyring>=25.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading jaraco_functools-4.6.0-py3-none-any.whl.metadata (2.9 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting jaraco.context (from keyring>=25.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading jaraco_context-6.1.2-py3-none-any.whl.metadata (4.2 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting contourpy>=1.0.1 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading contourpy-1.4.0-cp313-cp313-macosx_11_0_arm64.whl.metadata (3.8 kB)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting cycler>=0.10 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:37 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting fonttools>=4.28.2 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading fonttools-4.68.0-cp313-cp313-macosx_10_13_universal2.whl.metadata (139 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting kiwisolver>=1.3.1 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading kiwisolver-1.5.1-cp313-cp313-macosx_11_0_arm64.whl.metadata (5.2 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting packaging>=20.0 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pyparsing>=3 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-dateutil>=2.7 (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting Pygments<3.0.0,>=2.20.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting aiofiles>=23.1.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:38 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading aiofiles-25.1.0-py3-none-any.whl.metadata (6.3 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting aiohttp>=3.14.4 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading aiohttp-3.14.5-cp313-cp313-macosx_11_0_arm64.whl.metadata (8.3 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting docutils>=0.19.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading docutils-0.23-py3-none-any.whl.metadata (15 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting fastapi>=0.143.1 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading fastapi-0.163.1-py3-none-any.whl.metadata (27 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting httpx2>=2.12.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading httpx2-2.16.0-py3-none-any.whl.metadata (10 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting ifaddr>=0.2.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading ifaddr-0.2.0-py3-none-any.whl.metadata (4.9 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting itsdangerous<3,>=2.1.2 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting markdown2!=2.4.11,>=2.4.7 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:39 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading markdown2-2.5.5-py3-none-any.whl.metadata (2.1 kB)
+2026-11-15 20:28:40 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:40 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting multidict>=6.9.1 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:40 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading multidict-7.2.1-cp313-cp313-macosx_11_0_arm64.whl.metadata (6.1 kB)
+2026-11-15 20:28:40 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting orjson>=3.11.5 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:40 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading orjson-3.13.0-cp313-cp313-macosx_15_0_arm64.whl.metadata (42 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting pydantic-core>=2.35.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pydantic_core-2.50.4-cp313-cp313-macosx_11_0_arm64.whl.metadata (6.6 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-dotenv>=1.2.2 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-multipart>=0.0.31 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_multipart-0.0.33-py3-none-any.whl.metadata (6.3 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-socketio>=5.16.2 (from python-socketio[asyncio-client]>=5.16.2->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_socketio-5.18.1-py3-none-any.whl.metadata (3.6 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting starlette>=1.3.1 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting tinycss2<2,>=1.4.0 (from nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading tinycss2-1.5.1-py3-none-any.whl.metadata (3.0 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting uvicorn>=0.22.0 (from uvicorn[standard]>=0.22.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting webencodings>=0.4 (from tinycss2<2,>=1.4.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading webencodings-0.6.1-py3-none-any.whl.metadata (3.4 kB)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.14.4->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:41 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting aiosignal>=1.4.0 (from aiohttp>=3.14.4->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting attrs>=17.3.0 (from aiohttp>=3.14.4->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting frozenlist>=1.1.1 (from aiohttp>=3.14.4->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading frozenlist-1.8.0-cp313-cp313-macosx_11_0_arm64.whl.metadata (20 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting propcache>=0.2.0 (from aiohttp>=3.14.4->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading propcache-0.5.4-cp313-cp313-macosx_11_0_arm64.whl.metadata (25 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting yarl<2.0,>=1.25.1 (from aiohttp>=3.14.4->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading yarl-1.25.1-cp313-cp313-macosx_11_0_arm64.whl.metadata (111 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting typing-inspection>=0.4.2 (from fastapi>=0.143.1->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting annotated-doc>=0.0.2 (from fastapi>=0.143.1->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:42 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading annotated_doc-0.0.6-py3-none-any.whl.metadata (6.5 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.143.1->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting httpcore2==2.16.0 (from httpx2>=2.12.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading httpcore2-2.16.0-py3-none-any.whl.metadata (27 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting truststore>=0.10 (from httpx2>=2.12.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting jiter<1,>=0.16.0 (from openai>=1.40->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading jiter-0.19.0-cp313-cp313-macosx_11_0_arm64.whl.metadata (5.2 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting sniffio (from openai>=1.40->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting annotated-types>=0.6.0 (from pydantic>=2.6->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting et-xmlfile (from openpyxl>=3.1->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading et_xmlfile-2.0.0-py3-none-any.whl.metadata (2.7 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting tzdata (from python-dateutil>=2.7->matplotlib>=3.8->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting PyYAML (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:43 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading pyyaml-6.0.3-cp313-cp313-macosx_11_0_arm64.whl.metadata (2.4 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting appdirs (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading appdirs-1.4.4-py2.py3-none-any.whl.metadata (9.0 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting argcomplete (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading argcomplete-3.7.2-py3-none-any.whl.metadata (16 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting importlib-resources (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading importlib_resources-7.1.0-py3-none-any.whl.metadata (4.0 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting setuptools (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting six (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting bidict>=0.21.0 (from python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading bidict-0.24.1-py3-none-any.whl.metadata (8.7 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting python-engineio>=4.15.1 (from python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading python_engineio-4.15.1-py3-none-any.whl.metadata (2.6 kB)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting simple-websocket>=0.10.0 (from python-engineio>=4.15.1->python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:44 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading simple_websocket-1.1.0-py3-none-any.whl.metadata (1.5 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting charset-normalizer (from reportlab>=4.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading charset_normalizer-3.5.2-cp313-cp313-macosx_10_13_universal2.whl.metadata (46 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting urllib3<3,>=1.26 (from requests>=2.31->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting wsproto (from simple-websocket>=0.10.0->python-engineio>=4.15.1->python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading wsproto-1.3.2-py3-none-any.whl.metadata (5.2 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting click>=7.0 (from uvicorn>=0.22.0->uvicorn[standard]>=0.22.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.22.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading httptools-0.9.0-cp313-cp313-macosx_11_0_arm64.whl.metadata (3.5 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.22.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading uvloop-0.23.0-cp313-cp313-macosx_10_13_universal2.whl.metadata (5.1 kB)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.22.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:45 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading watchfiles-1.3.0-cp310-abi3-macosx_11_0_arm64.whl.metadata (4.9 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting websockets>=13.0 (from uvicorn[standard]>=0.22.0->nicegui>=2.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading websockets-17.4-cp313-cp313-macosx_11_0_arm64.whl.metadata (6.3 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Collecting more-itertools (from jaraco.classes->keyring>=25.0->vaishnavi-store-manager==0.1.0)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Downloading more_itertools-11.2.1-py3-none-any.whl.metadata (42 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading apscheduler-3.11.3-py3-none-any.whl (66 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading alembic-1.20.1-py3-none-any.whl (270 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading cryptography-50.0.2-cp311-abi3-macosx_11_0_arm64.whl (3.9 MB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 45.3 MB/s eta 0:00:00
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading cffi-2.1.1-cp313-cp313-macosx_11_0_arm64.whl (184 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading hidapi-0.15.0-cp313-cp313-macosx_11_0_arm64.whl (68 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading markupsafe-3.0.4-cp313-cp313-macosx_11_0_arm64.whl (12 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading matplotlib-3.11.2-cp313-cp313-macosx_11_0_arm64.whl (9.3 MB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 51.4 MB/s eta 0:00:00
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading contourpy-1.4.0-cp313-cp313-macosx_11_0_arm64.whl (285 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+2026-11-15 20:28:46 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading fonttools-4.68.0-cp313-cp313-macosx_10_13_universal2.whl (3.1 MB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 46.5 MB/s eta 0:00:00
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading kiwisolver-1.5.1-cp313-cp313-macosx_11_0_arm64.whl (64 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading nicegui-4.0.0-py3-none-any.whl (8.2 MB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.2/8.2 MB 47.4 MB/s eta 0:00:00
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 28.9 MB/s eta 0:00:00
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading tinycss2-1.5.1-py3-none-any.whl (28 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading aiofiles-25.1.0-py3-none-any.whl (14 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading aiohttp-3.14.5-cp313-cp313-macosx_11_0_arm64.whl (545 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 545.8/545.8 kB 16.2 MB/s eta 0:00:00
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading multidict-7.2.1-cp313-cp313-macosx_11_0_arm64.whl (103 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading yarl-1.25.1-cp313-cp313-macosx_11_0_arm64.whl (103 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading docutils-0.23-py3-none-any.whl (634 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 15.9 MB/s eta 0:00:00
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading fastapi-0.163.1-py3-none-any.whl (154 kB)
+2026-11-15 20:28:47 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading annotated_doc-0.0.6-py3-none-any.whl (5.3 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading frozenlist-1.8.0-cp313-cp313-macosx_11_0_arm64.whl (49 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading httpx2-2.16.0-py3-none-any.whl (97 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading httpcore2-2.16.0-py3-none-any.whl (85 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading ifaddr-0.2.0-py3-none-any.whl (12 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading markdown2-2.5.5-py3-none-any.whl (56 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading numpy-2.5.4-cp313-cp313-macosx_14_0_arm64.whl (5.4 MB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 50.2 MB/s eta 0:00:00
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading ollama-0.6.3-py3-none-any.whl (16 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading openai-3.51.0-py3-none-any.whl (2.4 MB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 31.1 MB/s eta 0:00:00
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading jiter-0.19.0-cp313-cp313-macosx_11_0_arm64.whl (315 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pydantic_core-2.50.4-cp313-cp313-macosx_11_0_arm64.whl (2.1 MB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 34.6 MB/s eta 0:00:00
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading orjson-3.13.0-cp313-cp313-macosx_15_0_arm64.whl (123 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Using cached packaging-26.3-py3-none-any.whl (129 kB)
+2026-11-15 20:28:48 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pillow-13.0.0-cp313-cp313-macosx_11_0_arm64.whl (4.9 MB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 49.6 MB/s eta 0:00:00
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading propcache-0.5.4-cp313-cp313-macosx_11_0_arm64.whl (51 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pydantic_settings-2.16.3-py3-none-any.whl (82 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pyserial-3.5-py2.py3-none-any.whl (90 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_barcode-0.16.1-py3-none-any.whl (228 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_escpos-3.1-py3-none-any.whl (69 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_multipart-0.0.33-py3-none-any.whl (32 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_socketio-5.18.1-py3-none-any.whl (83 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading bidict-0.24.1-py3-none-any.whl (36 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_engineio-4.15.1-py3-none-any.whl (60 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading python_ulid-4.1.0-py3-none-any.whl (14 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pyusb-1.3.1-py3-none-any.whl (58 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading qrcode-8.2-py3-none-any.whl (45 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading reportlab-5.1.0-py3-none-any.whl (2.0 MB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 36.8 MB/s eta 0:00:00
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading charset_normalizer-3.5.2-cp313-cp313-macosx_10_13_universal2.whl (366 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading simple_websocket-1.1.0-py3-none-any.whl (13 kB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading sqlalchemy-2.1.8-cp313-cp313-macosx_11_0_arm64.whl (2.5 MB)
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 39.7 MB/s eta 0:00:00
+2026-11-15 20:28:49 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading tzlocal-5.4.5-py3-none-any.whl (18 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading click-8.5.1-py3-none-any.whl (126 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading httptools-0.9.0-cp313-cp313-macosx_11_0_arm64.whl (117 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pyyaml-6.0.3-cp313-cp313-macosx_11_0_arm64.whl (173 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading uvloop-0.23.0-cp313-cp313-macosx_10_13_universal2.whl (1.4 MB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip|    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 29.3 MB/s eta 0:00:00
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading watchfiles-1.3.0-cp310-abi3-macosx_11_0_arm64.whl (397 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading webencodings-0.6.1-py3-none-any.whl (8.7 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading websockets-17.4-cp313-cp313-macosx_11_0_arm64.whl (216 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading appdirs-1.4.4-py2.py3-none-any.whl (9.6 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading argcomplete-3.7.2-py3-none-any.whl (43 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading importlib_resources-7.1.0-py3-none-any.whl (37 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading mako-1.4.3-py3-none-any.whl (80 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+2026-11-15 20:28:50 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Downloading wsproto-1.3.2-py3-none-any.whl (24 kB)
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Building wheels for collected packages: vaishnavi-store-manager
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Building editable for vaishnavi-store-manager (pyproject.toml): started
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Building editable for vaishnavi-store-manager (pyproject.toml): finished with status 'done'
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Created wheel for vaishnavi-store-manager: filename=vaishnavi_store_manager-0.1.0-0.editable-py3-none-any.whl size=8478 sha256=fe963074ae5d350ee6541977cc9d1d53590efbf7a1b9cf2e6e2b5556ee9ac0f8
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip|   Stored in directory: /private/var/folders/zt/8mmcldt910356h8zcd6tbz5c0000gn/T/pip-ephem-wheel-cache-9g_w8ua9/wheels/6f/7c/df/066bc7bc11ba2701a79b886bc246536b82d6df47810fc36184
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Successfully built vaishnavi-store-manager
+2026-11-15 20:28:51 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Installing collected packages: pyserial, ifaddr, hidapi, appdirs, websockets, webencodings, uvloop, urllib3, tzlocal, tzdata, typing-extensions, truststore, sniffio, six, setuptools, qrcode, PyYAML, pyusb, python-ulid, python-multipart, python-dotenv, python-barcode, pyparsing, Pygments, pycparser, propcache, pillow, packaging, orjson, numpy, multidict, more-itertools, MarkupSafe, markdown2, kiwisolver, jiter, jaraco.context, itsdangerous, importlib-resources, idna, httptools, h11, frozenlist, fonttools, et-xmlfile, docutils, cycler, click, charset-normalizer, certifi, bidict, attrs, argcomplete, annotated-types, annotated-doc, aiohappyeyeballs, aiofiles, yarl, wsproto, uvicorn, typing-inspection, tinycss2, sqlalchemy, requests, reportlab, python-escpos, python-dateutil, pydantic-core, opentelemetry-api, openpyxl, Mako, jinja2, jaraco.functools, jaraco.classes, httpcore2, httpcore, contourpy, cffi, apscheduler, anyio, aiosignal, watchfiles, starlette, simple-websocket, pydantic, matplotlib, keyring, httpx2, httpx, cryptography, alembic, aiohttp, python-engineio, pydantic-settings, openai, ollama, fastapi, python-socketio, nicegui, vaishnavi-store-manager
+2026-11-15 20:28:52 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:55 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:28:58 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:01 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:05 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:08 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:11 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:14 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:17 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:20 DEBUG   run=26111520271180ae bootstrap.python_env: pip| Successfully installed Mako-1.4.3 MarkupSafe-3.0.4 PyYAML-6.0.3 Pygments-2.21.0 aiofiles-25.1.0 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 alembic-1.20.1 annotated-doc-0.0.6 annotated-types-0.8.0 anyio-4.16.0 appdirs-1.4.4 apscheduler-3.11.3 argcomplete-3.7.2 attrs-26.1.0 bidict-0.24.1 certifi-2026.10.23 cffi-2.1.1 charset-normalizer-3.5.2 click-8.5.1 contourpy-1.4.0 cryptography-50.0.2 cycler-0.12.1 docutils-0.23 et-xmlfile-2.0.0 fastapi-0.163.1 fonttools-4.68.0 frozenlist-1.8.0 h11-0.16.0 hidapi-0.15.0 httpcore-1.0.9 httpcore2-2.16.0 httptools-0.9.0 httpx-0.28.1 httpx2-2.16.0 idna-3.20 ifaddr-0.2.0 importlib-resources-7.1.0 itsdangerous-2.2.0 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 jinja2-3.1.6 jiter-0.19.0 keyring-25.7.0 kiwisolver-1.5.1 markdown2-2.5.5 matplotlib-3.11.2 more-itertools-11.2.1 multidict-7.2.1 nicegui-4.0.0 numpy-2.5.4 ollama-0.6.3 openai-3.51.0 openpyxl-3.1.5 opentelemetry-api-1.45.2 orjson-3.13.0 packaging-26.3 pillow-13.0.0 propcache-0.5.4 pycparser-3.12 pydantic-2.14.3 pydantic-core-2.50.4 pydantic-settings-2.16.3 pyparsing-3.3.3 pyserial-3.5 python-barcode-0.16.1 python-dateutil-4.0.0 python-dotenv-1.2.4 python-engineio-4.15.1 python-escpos-3.1 python-multipart-0.0.33 python-socketio-5.18.1 python-ulid-4.1.0 pyusb-1.3.1 qrcode-8.2 reportlab-5.1.0 requests-2.34.2 setuptools-84.2.1 simple-websocket-1.1.0 six-1.17.0 sniffio-1.3.1 sqlalchemy-2.1.8 starlette-1.10.0 tinycss2-1.5.1 truststore-0.10.5 typing-extensions-4.16.0 typing-inspection-0.4.5 tzdata-2026.6 tzlocal-5.4.5 urllib3-2.8.0 uvicorn-0.54.0 uvloop-0.23.0 vaishnavi-store-manager-0.1.0 watchfiles-1.3.0 webencodings-0.6.1 websockets-17.4 wsproto-1.3.2 yarl-1.25.1
+2026-11-15 20:29:20 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:21 INFO    run=26111520271180ae bootstrap.python_env: EXEC_EXIT code=0
+2026-11-15 20:29:23 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:26 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.python_env: VERIFY_IMPORTS checked=7 missing=-
+2026-11-15 20:29:29 INFO    run=26111520271180ae bootstrap.python_env: PACKAGES_INSTALLED count=100 hash_verified=False offline=False
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:29:29 WARNING run=26111520271180ae bootstrap.stages: STAGE_WARN key=packages ms=61517 code=E-SYS-041 msg=100 packages installed — but not from the verified list detail=-
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.console: console[warn]: Software packages — 100 packages installed — but not from the verified list  (E-SYS-041)
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.console: console:       requirements.lock is missing from this release folder, so package versions could not be hash-verified. The app will run; ask for a release that includes the lock file.
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=system_components index=8/14
+2026-11-15 20:29:29 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=system_components title=System components
+2026-11-15 20:29:29 INFO    run=26111520271180ae bootstrap.pkg_manager: SYSCOMP os=macos checked=['libusb', 'cups', 'fonts'] missing=['libusb']
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.console: console[info]: Missing: USB library (libusb). Vaishnavi Store Manager would like to install them with this command:
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.console: console:       brew install libusb
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Install these system components now?
+2026-11-15 20:29:29 DEBUG   run=26111520271180ae bootstrap.console: console:       (b = back, q = quit)
+2026-11-15 20:29:30 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:33 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:36 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:39 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:42 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:44 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=install_system_components source=typed value=yes
+2026-11-15 20:29:44 DEBUG   run=26111520271180ae bootstrap.console: console[busy]: Installing USB library (libusb) …
+2026-11-15 20:29:44 INFO    run=26111520271180ae bootstrap.pkg_manager: EXEC brew install libusb
+2026-11-15 20:29:45 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:48 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:52 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:55 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:29:58 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ==> Pouring libusb--1.0.30.arm64_golden_gate.bottle.tar.gz
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| 🍺  /opt/homebrew/Cellar/libusb/1.0.30: 23 files, 623.8KB
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ==> Auto-updating Homebrew...
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Adjust how often this is run with `$HOMEBREW_AUTO_UPDATE_SECS` or disable with
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| `$HOMEBREW_NO_AUTO_UPDATE=1`. Hide these hints with `$HOMEBREW_NO_ENV_HINTS=1` (see `man brew`).
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ==> Auto-updated Homebrew!
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Updated 1 tap (homebrew/core).
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ==> New Formulae
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| globus-cli: Command-line interface to Globus
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| 
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| You have 28 outdated formulae and 2 outdated casks installed.
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| 
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Warning: Skipping gromgit/fuse because it is not trusted. Run `brew trust gromgit/fuse` to trust it.
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Warning: Skipping gromgit/fuse because it is not trusted. Run `brew trust gromgit/fuse` to trust it.
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Warning: The following taps are not trusted:
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   adrianmihalko/ch340g-ch34g-ch34x-mac-os-x-driver
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   gromgit/fuse
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   hashicorp/tap
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| 
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Homebrew is currently ignoring formulae, casks and commands
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| from these taps because tap trust is required.
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Prefer trusting only the specific formulae, casks or commands you need.
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Trust installed formulae from these taps with:
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   brew trust --formula gromgit/fuse/ntfs-3g-mac
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Trust other specific casks and commands with:
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   brew trust --cask <user>/<tap>/<cask>
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   brew trust --command <user>/<tap>/<command>
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Whole-tap trust is broader and includes all current and future formulae,
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| casks and commands from the listed taps. Trust whole taps with:
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   brew trust adrianmihalko/ch340g-ch34g-ch34x-mac-os-x-driver gromgit/fuse hashicorp/tap
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| Untap them with:
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   brew untap adrianmihalko/ch340g-ch34g-ch34x-mac-os-x-driver gromgit/fuse hashicorp/tap
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| For more information, see:
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg|   https://docs.brew.sh/Tap-Trust
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| 
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ==> Downloading bottle manifests
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ✔︎ Bottle Manifest libusb (1.0.30)
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ==> Fetching downloads for: libusb
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.pkg_manager: pkg| ✔︎ Bottle libusb (1.0.30)
+2026-11-15 20:30:01 INFO    run=26111520271180ae bootstrap.pkg_manager: EXEC_EXIT code=0
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:30:01 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=system_components ms=32573 code=- msg=installed: USB library (libusb) detail=-
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: System components — installed: USB library (libusb)
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=ai_provider index=9/14
+2026-11-15 20:30:01 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=ai_provider title=AI assistant
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console[info]: This computer can run the AI locally (model size: 7b).
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Which AI engine should the assistant use?
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console:       You can change this later in Settings → Assistant. Billing never depends on it.
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console:       [1] Local — Ollama on this PC  · private, free, ~3 GB download once  (recommended)
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console:       [2] OpenAI API (internet)  · fastest and best quality; pay per use; data sent to OpenAI
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console:       [3] Hugging Face API (internet)  · open models hosted remotely; free tier is limited
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console:       [4] No AI assistant for now  · stock/price questions still answered from the database
+2026-11-15 20:30:01 DEBUG   run=26111520271180ae bootstrap.console: console:       (b = back, q = quit)
+2026-11-15 20:30:04 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:07 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:10 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:13 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=ai_provider source=typed value=ollama
+2026-11-15 20:30:13 INFO    run=26111520271180ae bootstrap.ai_provider: AI_PROVIDER_SELECTED provider=ollama recommended=ollama tier=7b
+2026-11-15 20:30:13 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:13 INFO    run=26111520271180ae bootstrap.ollama: OLLAMA_PULL model=qwen2.5:7b-instruct
+2026-11-15 20:30:17 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:20 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:23 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:26 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:29 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:33 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:36 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:39 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:42 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:45 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:48 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:52 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:55 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:30:58 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:01 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:04 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:07 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:11 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:14 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:17 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:20 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:23 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:26 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:30 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:33 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:36 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:39 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:42 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:45 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:49 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:52 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:55 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:31:57 INFO    run=26111520271180ae bootstrap.ollama: OLLAMA_PULL_DONE model=qwen2.5:7b-instruct ok=True status=success
+2026-11-15 20:31:57 INFO    run=26111520271180ae bootstrap.ai_provider: AI_SETTINGS_WRITTEN provider=ollama path=/Users/rohit/Documents/vaishnavi-stock-management/config/settings.toml
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:31:57 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=ai_provider ms=115919 code=- msg=Ollama ready — qwen2.5:7b-instruct · bge-m3 detail=-
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: AI assistant — Ollama ready — qwen2.5:7b-instruct · bge-m3
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=locations index=10/14
+2026-11-15 20:31:57 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=locations title=Data locations
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.console: console[info]: Where should Vaishnavi Store Manager keep its data? Two folders are needed: the live data, and a separate place for backups.
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Primary folder (live database, receipts, images, logs)
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.console: console:       Any folder on this computer with at least 2 GB free. Press Enter for the suggested one.
+2026-11-15 20:31:57 DEBUG   run=26111520271180ae bootstrap.console: console:       (q = quit)
+2026-11-15 20:31:58 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:01 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:04 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:07 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:10 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:14 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:17 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:20 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:23 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:23 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=primary_location source=typed value=/Users/rohit/VaishnaviStore
+2026-11-15 20:32:23 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Secondary folder (backup copies)
+2026-11-15 20:32:23 DEBUG   run=26111520271180ae bootstrap.console: console:       Best on ANOTHER disk: a USB drive, a second hard disk, or a folder synced to the cloud. At least 5 GB free.
+2026-11-15 20:32:23 DEBUG   run=26111520271180ae bootstrap.console: console:       (q = quit)
+2026-11-15 20:32:26 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:29 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=secondary_location source=typed value=/Users/rohit/VaishnaviStore-Backups
+2026-11-15 20:32:29 DEBUG   run=26111520271180ae bootstrap.console: console[warn]: Both folders are on the same disk. Backups there protect against mistakes, but NOT against a disk failure.
+2026-11-15 20:32:29 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Use the same disk anyway? (you can plug in a USB drive and change this later in Settings → Backups)
+2026-11-15 20:32:29 DEBUG   run=26111520271180ae bootstrap.console: console:       (q = quit)
+2026-11-15 20:32:29 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:32 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:36 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:37 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=accept_same_device source=typed value=yes
+2026-11-15 20:32:37 INFO    run=26111520271180ae bootstrap.locations: LOCATIONS_WRITTEN primary=/Users/rohit/VaishnaviStore secondary=/Users/rohit/VaishnaviStore-Backups same_device=True
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:32:37 WARNING run=26111520271180ae bootstrap.stages: STAGE_WARN key=locations ms=39607 code=E-SYS-012 msg=primary /Users/rohit/VaishnaviStore (52.4 GB free) · backups /Users/rohit/VaishnaviStore-Backups (52.4 GB free) detail=-
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.console: console[warn]: Data locations — primary /Users/rohit/VaishnaviStore (52.4 GB free) · backups /Users/rohit/VaishnaviStore-Backups (52.4 GB free)  (E-SYS-012)
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.console: console:       Move the backups to another disk when you can: Settings → Backups → Secondary location.
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=autostart index=11/14
+2026-11-15 20:32:37 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=autostart title=Start automatically
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.console: console[ask]: Start Vaishnavi Store Manager automatically when you log in to this computer?
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.console: console:       Recommended for the shop PC — the app is ready when the shop opens. No administrator password ***
+2026-11-15 20:32:37 DEBUG   run=26111520271180ae bootstrap.console: console:       (q = quit)
+2026-11-15 20:32:39 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:42 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:45 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:48 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:51 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:54 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:57 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.wizard: WIZARD_ANSWER key=autostart source=typed value=yes
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.autostart: EXEC launchctl bootout gui/501 /Users/rohit/Library/LaunchAgents/com.vaishnavi.store.plist
+2026-11-15 20:32:59 DEBUG   run=26111520271180ae bootstrap.autostart: autostart| Boot-out failed: 5: Input/output error
+2026-11-15 20:32:59 DEBUG   run=26111520271180ae bootstrap.autostart: autostart| Try re-running the command as root for richer errors.
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.autostart: EXEC launchctl bootstrap gui/501 /Users/rohit/Library/LaunchAgents/com.vaishnavi.store.plist
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.autostart: AUTOSTART_REGISTERED family=macos detail=
+2026-11-15 20:32:59 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=autostart ms=21685 code=- msg=will start at log-in detail=-
+2026-11-15 20:32:59 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Start automatically — will start at log-in
+2026-11-15 20:32:59 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=database index=12/14
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=database title=Shop database
+2026-11-15 20:32:59 INFO    run=26111520271180ae bootstrap.handover: APP_EXEC init-db --json secrets=0
+2026-11-15 20:33:01 DEBUG   run=26111520271180ae bootstrap.handover: app| {"created": true, "seeded_rows": 32, "migrated": false, "revision": "0001_initial", "secrets_stored": [], "secrets_failed": [], "owner_setup_pending": true, "database": "/Users/rohit/VaishnaviStore/data/vaishnavi.db"}
+2026-11-15 20:33:01 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:33:01 INFO    run=26111520271180ae bootstrap.handover: APP_EXIT args=init-db --json code=0 ms=1923 timed_out=False
+2026-11-15 20:33:01 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:33:01 INFO    run=26111520271180ae bootstrap.stages: STAGE_OK key=database ms=2048 code=- msg=new database created and prepared. The Owner password *** be set in the browser on first start. detail=-
+2026-11-15 20:33:01 DEBUG   run=26111520271180ae bootstrap.console: console[ok]: Shop database — new database created and prepared. The Owner password *** be set in the browser on first start.
+2026-11-15 20:33:01 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=doctor index=13/14
+2026-11-15 20:33:01 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=doctor title=Health check
+2026-11-15 20:33:01 INFO    run=26111520271180ae bootstrap.handover: APP_EXEC doctor --lang en secrets=0
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| DOCTOR_CHECK key=database status=WARN code=E-AUTH-005 ms=6 msg=Owner account not set up yet detail=- fixed=False
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| DOCTOR_CHECK key=backup status=WARN code=- ms=1 msg=no backup has been made yet detail=- fixed=False
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=15 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| Vaishnavi Store Manager Health Check — 16-Nov-2026 02:03  (ref 01M7GEKKNA5TV55EZKAYFE6P8D)
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Python                 Python 3.13 in the private environment         6 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Software packages      13 packages load correctly      2170 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Folders & disk         52.3 GB free · data in /Users/rohit/VaishnaviStore         6 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         3 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  !    Shop database          Owner account not set up yet  (E-AUTH-005)         6 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|       → Open the app and complete Owner setup (choose the Owner password *** PIN).
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Sales integrity        0 bills verified · no gaps · stock matches         2 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  !    Backup                 no backup has been made yet         1 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|       → Make one now: Settings → Backups → Backup now (or run the doctor with --fix).
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Secure key store       computer key store in use        16 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Clock & ports          clock in sync · ports 8080/8443 free         2 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    Start automatically    will start when the computer is switched on         0 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)        15 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|       → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|       → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)        94 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|       → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app| ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:33:03 DEBUG   run=26111520271180ae bootstrap.handover: app|  RESULT: Ready to open the shop (5 note(s) to look at).
+2026-11-15 20:33:04 INFO    run=26111520271180ae bootstrap.handover: APP_EXIT args=doctor --lang en code=1 ms=2898 timed_out=False
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    DOCTOR_CHECK key=database status=WARN code=E-AUTH-005 ms=6 msg=Owner account not set up yet detail=- fixed=False
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    DOCTOR_CHECK key=backup status=WARN code=- ms=1 msg=no backup has been made yet detail=- fixed=False
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=15 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    Vaishnavi Store Manager Health Check — 16-Nov-2026 02:03  (ref 01M7GEKKNA5TV55EZKAYFE6P8D)
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Python                 Python 3.13 in the private environment         6 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Software packages      13 packages load correctly      2170 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Folders & disk         52.3 GB free · data in /Users/rohit/VaishnaviStore         6 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         3 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     !    Shop database          Owner account not set up yet  (E-AUTH-005)         6 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:          → Open the app and complete Owner setup (choose the Owner password *** PIN).
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Sales integrity        0 bills verified · no gaps · stock matches         2 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     !    Backup                 no backup has been made yet         1 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:          → Make one now: Settings → Backups → Backup now (or run the doctor with --fix).
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Secure key store       computer key store in use        16 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Clock & ports          clock in sync · ports 8080/8443 free         2 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    Start automatically    will start when the computer is switched on         0 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)        15 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:          → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:          → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)        94 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:          → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:    ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]:     RESULT: Ready to open the shop (5 note(s) to look at).
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:33:04 WARNING run=26111520271180ae bootstrap.stages: STAGE_WARN key=doctor ms=2979 code=- msg=finished with notes — the shop can open; see the lines marked '!' above. detail=-
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[warn]: Health check — finished with notes — the shop can open; see the lines marked '!' above.
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console:       Fix the notes when convenient; they are also shown on the Status page inside the app.
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.stages: STAGE_PREPARE key=start index=14/14
+2026-11-15 20:33:04 INFO    run=26111520271180ae bootstrap.stages: STAGE_START key=start title=Start Vaishnavi
+2026-11-15 20:33:04 INFO    run=26111520271180ae bootstrap.app_stages: APP_LAUNCH /Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python -m vaishnavi run --lang en
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.console: console[info]: Starting the application … (this takes a few seconds)
+2026-11-15 20:33:04 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:33:07 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:33:10 DEBUG   run=26111520271180ae bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:33:11 ERROR   run=26111520271180ae bootstrap.app_stages: APP_EXITED_EARLY code=4
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:33:11 WARNING run=26111520271180ae bootstrap.stages: STAGE_FAIL key=start ms=7120 code=E-SYS-099 msg=the application stopped right after starting (code 4) detail=-
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.console: console[fail]: Start Vaishnavi — the application stopped right after starting (code 4)  (E-SYS-099)
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.console: console:       Look at the newest file in /Users/rohit/Documents/vaishnavi-stock-management/logs/app — the last ERROR line says why.
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:33:11 INFO    run=26111520271180ae bootstrap.stages: PIPELINE_END run=26111520271180ae exit=2 worst=FAIL stopped_at=start
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.console: console[fail]: Stopped: something essential is not right. Follow the 'What to do' hint above, then run Start Vaishnavi again.
+2026-11-15 20:33:11 INFO    run=26111520271180ae bootstrap.minilog: MINILOG_STOPPED port=8081
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.stages: INSTALL_LOCK_RELEASED
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.console: console: Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-15_202711_26111520271180ae.log
+2026-11-15 20:33:11 DEBUG   run=26111520271180ae bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:33:11 INFO    run=26111520271180ae bootstrap.cli: RUN_END run=26111520271180ae exit=2

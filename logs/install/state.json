@@ -1,0 +1,236 @@
+{
+  "schema": 1,
+  "runs": [
+    {
+      "run_id": "26111520271180ae",
+      "started_at": "2026-11-15T20:27:11",
+      "argv": [],
+      "exit_code": 2,
+      "finished_at": "2026-11-15T20:33:11"
+    },
+    {
+      "run_id": "261115205708264c",
+      "started_at": "2026-11-15T20:57:08",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T04:06:27"
+    },
+    {
+      "run_id": "26111604070990d6",
+      "started_at": "2026-11-16T04:07:09",
+      "argv": [],
+      "exit_code": 2,
+      "finished_at": "2026-11-16T04:07:13"
+    },
+    {
+      "run_id": "2611160407584c63",
+      "started_at": "2026-11-16T04:07:58",
+      "argv": [],
+      "exit_code": 4,
+      "finished_at": "2026-11-16T04:07:59"
+    }
+  ],
+  "stages": {
+    "log_console": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:58",
+      "cache_key": null,
+      "message": "watch at http://192.168.0.190:8081/",
+      "error_code": "",
+      "elapsed_ms": 9,
+      "data": {
+        "url": "http://192.168.0.190:8081/",
+        "port": 8081
+      }
+    },
+    "language": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:58",
+      "cache_key": null,
+      "message": "English",
+      "error_code": "",
+      "elapsed_ms": 0,
+      "data": {
+        "lang": "en"
+      }
+    },
+    "survey": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:09",
+      "cache_key": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3|2026-W47",
+      "message": "macOS 27.2.1, 16 GB memory, Apple silicon → local AI will work on this PC",
+      "error_code": "",
+      "elapsed_ms": 297,
+      "data": {
+        "survey": {
+          "os_family": "macos",
+          "os_name": "macOS",
+          "os_version": "27.2.1",
+          "arch": "arm64",
+          "hostname": "Rohits-MacBook-Pro.local",
+          "python_version": "3.13.5",
+          "python_executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
+          "in_venv": false,
+          "cpu_count": 10,
+          "cpu_name": "arm",
+          "ram_gib": 16.0,
+          "gpus": [
+            {
+              "name": "Apple silicon GPU",
+              "vram_gib": null,
+              "vendor": "apple"
+            }
+          ],
+          "apple_silicon": true,
+          "disk_free_program_gib": 51.9,
+          "disk_free_home_gib": 51.9,
+          "printers": [],
+          "serial_ports": [],
+          "usb_hid_devices": [],
+          "internet": true,
+          "package_managers": [
+            "brew"
+          ],
+          "ollama_found": true,
+          "probe_errors": {},
+          "surveyed_on": "2026-11-16"
+        },
+        "ai_provider": "ollama",
+        "ai_local_tier": "7b",
+        "ai_local_possible": true,
+        "ai_reason_key": "survey.ai.local_ok"
+      }
+    },
+    "offline_bundle": {
+      "status": "SKIP",
+      "at": "2026-11-16T04:07:58",
+      "cache_key": null,
+      "message": "not needed on this computer",
+      "error_code": "",
+      "elapsed_ms": 0,
+      "data": {}
+    },
+    "python_check": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:58",
+      "cache_key": null,
+      "message": "Python 3.13 found",
+      "error_code": "",
+      "elapsed_ms": 3,
+      "data": {
+        "version": "3.13",
+        "executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3"
+      }
+    },
+    "venv": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:58",
+      "cache_key": null,
+      "message": "ready (.venv)",
+      "error_code": "",
+      "elapsed_ms": 0,
+      "data": {
+        "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
+        "created": false
+      }
+    },
+    "packages": {
+      "status": "FAIL",
+      "at": "2026-11-16T04:07:59",
+      "cache_key": null,
+      "message": "Unexpected installer error",
+      "error_code": "E-SYS-099",
+      "elapsed_ms": 900,
+      "data": {}
+    },
+    "system_components": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:10",
+      "cache_key": null,
+      "message": "all 3 present",
+      "error_code": "",
+      "elapsed_ms": 6,
+      "data": {
+        "missing": []
+      }
+    },
+    "ai_provider": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:10",
+      "cache_key": null,
+      "message": "Ollama ready — qwen2.5:7b-instruct · bge-m3",
+      "error_code": "",
+      "elapsed_ms": 96,
+      "data": {
+        "provider": "ollama",
+        "ready": true,
+        "chat_model": "qwen2.5:7b-instruct",
+        "embed_model": "bge-m3",
+        "pulled": [],
+        "version": "0.40.16"
+      }
+    },
+    "locations": {
+      "status": "WARN",
+      "at": "2026-11-16T04:07:10",
+      "cache_key": null,
+      "message": "primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups",
+      "error_code": "E-SYS-012",
+      "elapsed_ms": 1,
+      "data": {
+        "primary": "/Users/rohit/VaishnaviStore",
+        "secondary": "/Users/rohit/VaishnaviStore-Backups",
+        "same_device": true
+      }
+    },
+    "autostart": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:10",
+      "cache_key": null,
+      "message": "already set up",
+      "error_code": "",
+      "elapsed_ms": 0,
+      "data": {
+        "registered": true
+      }
+    },
+    "database": {
+      "status": "OK",
+      "at": "2026-11-16T04:07:11",
+      "cache_key": null,
+      "message": "database is ready.",
+      "error_code": "",
+      "elapsed_ms": 554,
+      "data": {
+        "created": false,
+        "migrated": false,
+        "revision": "0001_initial",
+        "owner_setup_pending": false,
+        "secrets_stored": 0
+      }
+    },
+    "doctor": {
+      "status": "FAIL",
+      "at": "2026-11-16T04:07:12",
+      "cache_key": null,
+      "message": "something essential is not right.",
+      "error_code": "E-SYS-099",
+      "elapsed_ms": 1378,
+      "data": {
+        "exit_code": 2
+      }
+    },
+    "start": {
+      "status": "OK",
+      "at": "2026-11-16T04:06:27",
+      "cache_key": null,
+      "message": "Ready to open the shop:  http://127.0.0.1:8080",
+      "error_code": "",
+      "elapsed_ms": 3193154,
+      "data": {
+        "url": "http://127.0.0.1:8080",
+        "pid": 3977
+      }
+    }
+  }
+}

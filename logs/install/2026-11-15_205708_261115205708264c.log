@@ -1,0 +1,1204 @@
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.logsetup: install log opened: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-15_205708_261115205708264c.log
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.i18n: i18n: loaded lang=en keys=304 fallback_keys=304
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.console: console: unicode=True encoding=utf-8
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.stages: state: loaded 14 stage records, 1 runs
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.wizard: answers: loaded 5 answers from /Users/rohit/Documents/vaishnavi-stock-management/config/install-answers.toml
+2026-11-15 20:57:08 INFO    run=261115205708264c bootstrap.cli: RUN_START run=261115205708264c mode=install-run argv=
+2026-11-15 20:57:08 INFO    run=261115205708264c bootstrap.cli: ENV python=3.13.5 exe=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 os=macOS-27.2.1-arm64-arm-64bit-Mach-O arch=arm64 program_dir=/Users/rohit/Documents/vaishnavi-stock-management
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.console: console: Vaishnavi Store Manager Setup       Log: logs/install/2026-11-15_205708_261115205708264c.log
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.stages: INSTALL_LOCK_ACQUIRED pid=3959
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.stages: pipeline: 14 stages registered (install_only=False)
+2026-11-15 20:57:08 INFO    run=261115205708264c bootstrap.stages: PIPELINE_START run=261115205708264c stages=14
+2026-11-15 20:57:08 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=log_console index=1/14
+2026-11-15 20:57:08 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=log_console title=Log console
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.minilog: MINILOG_STARTED url=http://192.168.0.190:8081/ dir=/Users/rohit/Documents/vaishnavi-stock-management/logs/install
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=log_console ms=2549 code=- msg=watch at http://192.168.0.190:8081/ detail=-
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Log console — watch at http://192.168.0.190:8081/
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=language index=2/14
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=language title=Language
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.wizard: WIZARD_ANSWER key=language source=answers_file value=en
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[info]: Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे? → English  (from your saved answers)
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.wizard: LANGUAGE_SELECTED lang=en source=wizard
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=language ms=0 code=- msg=English detail=-
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Language — English
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=survey index=3/14
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_SKIP key=survey ms=0 code=- msg=already done detail=-
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[skip]: Computer — already done
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=offline_bundle index=4/14
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_SKIP key=offline_bundle ms=0 code=- msg=not needed on this computer detail=-
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[skip]: Offline bundle — not needed on this computer
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=python_check index=5/14
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=python_check title=Python
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=python_check ms=5 code=- msg=Python 3.13 found detail=-
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Python — Python 3.13 found
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=venv index=6/14
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=venv title=Private Python environment
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=venv ms=0 code=- msg=ready (.venv) detail=-
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Private Python environment — ready (.venv)
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=packages index=7/14
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=packages title=Software packages
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.python_env: PACKAGES_INSTALL_NEEDED rebuilt=False changed=True
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.console: console[busy]: Installing software packages (first time only, 2–5 minutes) …
+2026-11-15 20:57:11 INFO    run=261115205708264c bootstrap.python_env: EXEC /Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python -m pip install --disable-pip-version-check --no-input -e /Users/rohit/Documents/vaishnavi-stock-management
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.python_env: pip| Obtaining file:///Users/rohit/Documents/vaishnavi-stock-management
+2026-11-15 20:57:11 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Installing build dependencies: started
+2026-11-15 20:57:13 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Installing build dependencies: finished with status 'done'
+2026-11-15 20:57:13 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Checking if build backend supports build_editable: started
+2026-11-15 20:57:13 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Checking if build backend supports build_editable: finished with status 'done'
+2026-11-15 20:57:13 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Getting requirements to build editable: started
+2026-11-15 20:57:14 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Getting requirements to build editable: finished with status 'done'
+2026-11-15 20:57:14 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Preparing editable metadata (pyproject.toml): started
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: nicegui<5,>=3.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (4.0.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: sqlalchemy>=2.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (2.1.8)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: alembic>=1.13 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (1.20.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pydantic>=2.6 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (2.14.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pydantic-settings>=2.2 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (2.16.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: cryptography>=42.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (50.0.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: keyring>=25.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (25.7.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pillow>=10.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (13.0.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-barcode>=0.15 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (0.16.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: qrcode>=7.4 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (8.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: reportlab>=4.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (5.1.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: jinja2>=3.1 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.1.6)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: openpyxl>=3.1 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.1.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: matplotlib>=3.8 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.11.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-escpos>=3.0 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pyusb>=1.2 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (1.3.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: hidapi>=0.14 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (0.15.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pyserial>=3.5 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: ollama>=0.3 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (0.6.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: openai>=1.40 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.51.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: httpx>=0.27 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (0.28.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: numpy>=1.26 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (2.5.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: requests>=2.31 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (2.34.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: apscheduler<4,>=3.10 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (3.11.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-ulid>=2.2 in ./.venv/lib/python3.13/site-packages (from vaishnavi-store-manager==0.1.0) (4.1.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: tzlocal>=3.0 in ./.venv/lib/python3.13/site-packages (from apscheduler<4,>=3.10->vaishnavi-store-manager==0.1.0) (5.4.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: Pygments<3.0.0,>=2.20.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.21.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: aiofiles>=23.1.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (25.1.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: aiohttp>=3.14.4 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (3.14.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: anyio>=4.14.2 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (4.16.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: certifi>=2026.10.19 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2026.10.23)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: docutils>=0.19.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.23)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: fastapi>=0.143.1 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.163.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: h11>=0.16.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.16.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: httpx2>=2.12.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.16.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: idna>=3.15 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (3.20)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: ifaddr>=0.2.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.2.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: itsdangerous<3,>=2.1.2 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.2.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: markdown2!=2.4.11,>=2.4.7 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.5.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: multidict>=6.9.1 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (7.2.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: orjson>=3.11.5 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (3.13.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pydantic-core>=2.35.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.50.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-dotenv>=1.2.2 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.2.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-multipart>=0.0.31 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.0.33)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-socketio>=5.16.2 in ./.venv/lib/python3.13/site-packages (from python-socketio[asyncio-client]>=5.16.2->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (5.18.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: starlette>=1.3.1 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.10.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: tinycss2<2,>=1.4.0 in ./.venv/lib/python3.13/site-packages (from nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.5.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: uvicorn>=0.22.0 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]>=0.22.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.54.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.13/site-packages (from jinja2>=3.1->vaishnavi-store-manager==0.1.0) (3.0.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: webencodings>=0.4 in ./.venv/lib/python3.13/site-packages (from tinycss2<2,>=1.4.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.6.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: aiohappyeyeballs>=2.5.0 in ./.venv/lib/python3.13/site-packages (from aiohttp>=3.14.4->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.7.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: aiosignal>=1.4.0 in ./.venv/lib/python3.13/site-packages (from aiohttp>=3.14.4->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.4.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: attrs>=17.3.0 in ./.venv/lib/python3.13/site-packages (from aiohttp>=3.14.4->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (26.1.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: frozenlist>=1.1.1 in ./.venv/lib/python3.13/site-packages (from aiohttp>=3.14.4->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.8.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: propcache>=0.2.0 in ./.venv/lib/python3.13/site-packages (from aiohttp>=3.14.4->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.5.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: yarl<2.0,>=1.25.1 in ./.venv/lib/python3.13/site-packages (from aiohttp>=3.14.4->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.25.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: Mako in ./.venv/lib/python3.13/site-packages (from alembic>=1.13->vaishnavi-store-manager==0.1.0) (1.4.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: typing-extensions>=4.12 in ./.venv/lib/python3.13/site-packages (from alembic>=1.13->vaishnavi-store-manager==0.1.0) (4.16.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: cffi>=2.0.0 in ./.venv/lib/python3.13/site-packages (from cryptography>=42.0->vaishnavi-store-manager==0.1.0) (2.1.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pycparser in ./.venv/lib/python3.13/site-packages (from cffi>=2.0.0->cryptography>=42.0->vaishnavi-store-manager==0.1.0) (3.12)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: typing-inspection>=0.4.2 in ./.venv/lib/python3.13/site-packages (from fastapi>=0.143.1->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.4.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: annotated-doc>=0.0.2 in ./.venv/lib/python3.13/site-packages (from fastapi>=0.143.1->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.0.6)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: opentelemetry-api>=1.44.0 in ./.venv/lib/python3.13/site-packages (from fastapi>=0.143.1->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.45.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: httpcore==1.* in ./.venv/lib/python3.13/site-packages (from httpx>=0.27->vaishnavi-store-manager==0.1.0) (1.0.9)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: httpcore2==2.16.0 in ./.venv/lib/python3.13/site-packages (from httpx2>=2.12.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (2.16.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: truststore>=0.10 in ./.venv/lib/python3.13/site-packages (from httpx2>=2.12.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.10.5)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: jaraco.classes in ./.venv/lib/python3.13/site-packages (from keyring>=25.0->vaishnavi-store-manager==0.1.0) (3.4.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: jaraco.functools in ./.venv/lib/python3.13/site-packages (from keyring>=25.0->vaishnavi-store-manager==0.1.0) (4.6.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: jaraco.context in ./.venv/lib/python3.13/site-packages (from keyring>=25.0->vaishnavi-store-manager==0.1.0) (6.1.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: contourpy>=1.0.1 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (1.4.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: cycler>=0.10 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (0.12.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: fonttools>=4.28.2 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (4.68.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: kiwisolver>=1.3.1 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (1.5.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: packaging>=20.0 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (26.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: pyparsing>=3 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (3.3.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-dateutil>=2.7 in ./.venv/lib/python3.13/site-packages (from matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (4.0.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: jiter<1,>=0.16.0 in ./.venv/lib/python3.13/site-packages (from openai>=1.40->vaishnavi-store-manager==0.1.0) (0.19.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: sniffio in ./.venv/lib/python3.13/site-packages (from openai>=1.40->vaishnavi-store-manager==0.1.0) (1.3.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: annotated-types>=0.6.0 in ./.venv/lib/python3.13/site-packages (from pydantic>=2.6->vaishnavi-store-manager==0.1.0) (0.8.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: et-xmlfile in ./.venv/lib/python3.13/site-packages (from openpyxl>=3.1->vaishnavi-store-manager==0.1.0) (2.0.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: tzdata in ./.venv/lib/python3.13/site-packages (from python-dateutil>=2.7->matplotlib>=3.8->vaishnavi-store-manager==0.1.0) (2026.6)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: PyYAML in ./.venv/lib/python3.13/site-packages (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0) (6.0.3)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: appdirs in ./.venv/lib/python3.13/site-packages (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0) (1.4.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: argcomplete in ./.venv/lib/python3.13/site-packages (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0) (3.7.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: importlib-resources in ./.venv/lib/python3.13/site-packages (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0) (7.1.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: setuptools in ./.venv/lib/python3.13/site-packages (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0) (84.2.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: six in ./.venv/lib/python3.13/site-packages (from python-escpos>=3.0->vaishnavi-store-manager==0.1.0) (1.17.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: bidict>=0.21.0 in ./.venv/lib/python3.13/site-packages (from python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.24.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: python-engineio>=4.15.1 in ./.venv/lib/python3.13/site-packages (from python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (4.15.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: simple-websocket>=0.10.0 in ./.venv/lib/python3.13/site-packages (from python-engineio>=4.15.1->python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.1.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: charset-normalizer in ./.venv/lib/python3.13/site-packages (from reportlab>=4.0->vaishnavi-store-manager==0.1.0) (3.5.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: urllib3<3,>=1.26 in ./.venv/lib/python3.13/site-packages (from requests>=2.31->vaishnavi-store-manager==0.1.0) (2.8.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: wsproto in ./.venv/lib/python3.13/site-packages (from simple-websocket>=0.10.0->python-engineio>=4.15.1->python-socketio>=5.16.2->python-socketio[asyncio-client]>=5.16.2->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.3.2)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: click>=7.0 in ./.venv/lib/python3.13/site-packages (from uvicorn>=0.22.0->uvicorn[standard]>=0.22.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (8.5.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: httptools>=0.8.0 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]>=0.22.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.9.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: uvloop>=0.15.1 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]>=0.22.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (0.23.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: watchfiles>=0.20 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]>=0.22.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (1.3.0)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: websockets>=13.0 in ./.venv/lib/python3.13/site-packages (from uvicorn[standard]>=0.22.0->nicegui<5,>=3.0->vaishnavi-store-manager==0.1.0) (17.4)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Requirement already satisfied: more-itertools in ./.venv/lib/python3.13/site-packages (from jaraco.classes->keyring>=25.0->vaishnavi-store-manager==0.1.0) (11.2.1)
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Building wheels for collected packages: vaishnavi-store-manager
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Building editable for vaishnavi-store-manager (pyproject.toml): started
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Building editable for vaishnavi-store-manager (pyproject.toml): finished with status 'done'
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Created wheel for vaishnavi-store-manager: filename=vaishnavi_store_manager-0.1.0-0.editable-py3-none-any.whl size=8482 sha256=c8c1e9cead7c7194ff073fbe411a72b6b11419af972a190a1363a9c4d5507f22
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Stored in directory: /private/var/folders/zt/8mmcldt910356h8zcd6tbz5c0000gn/T/pip-ephem-wheel-cache-ts1716wy/wheels/6f/7c/df/066bc7bc11ba2701a79b886bc246536b82d6df47810fc36184
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Successfully built vaishnavi-store-manager
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Installing collected packages: vaishnavi-store-manager
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|   Attempting uninstall: vaishnavi-store-manager
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|     Found existing installation: vaishnavi-store-manager 0.1.0
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|     Uninstalling vaishnavi-store-manager-0.1.0:
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip|       Successfully uninstalled vaishnavi-store-manager-0.1.0
+2026-11-15 20:57:15 DEBUG   run=261115205708264c bootstrap.python_env: pip| Successfully installed vaishnavi-store-manager-0.1.0
+2026-11-15 20:57:16 INFO    run=261115205708264c bootstrap.python_env: EXEC_EXIT code=0
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.python_env: VERIFY_IMPORTS checked=7 missing=-
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.python_env: PACKAGES_INSTALLED count=1 hash_verified=False offline=False
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:17 WARNING run=261115205708264c bootstrap.stages: STAGE_WARN key=packages ms=6351 code=E-SYS-041 msg=1 packages installed — but not from the verified list detail=-
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[warn]: Software packages — 1 packages installed — but not from the verified list  (E-SYS-041)
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console:       requirements.lock is missing from this release folder, so package versions could not be hash-verified. The app will run; ask for a release that includes the lock file.
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=system_components index=8/14
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=system_components title=System components
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.pkg_manager: SYSCOMP os=macos checked=['libusb', 'cups', 'fonts'] missing=[]
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=system_components ms=3 code=- msg=all 3 present detail=-
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[ok]: System components — all 3 present
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=ai_provider index=9/14
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=ai_provider title=AI assistant
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[info]: This computer can run the AI locally (model size: 7b).
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.wizard: WIZARD_ANSWER key=ai_provider source=answers_file value=ollama
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[info]: Which AI engine should the assistant use? → Local — Ollama on this PC  (from your saved answers)
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.ai_provider: AI_PROVIDER_SELECTED provider=ollama recommended=ollama tier=7b
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.ai_provider: AI_SETTINGS_WRITTEN provider=ollama path=/Users/rohit/Documents/vaishnavi-stock-management/config/settings.toml
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=ai_provider ms=110 code=- msg=Ollama ready — qwen2.5:7b-instruct · bge-m3 detail=-
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[ok]: AI assistant — Ollama ready — qwen2.5:7b-instruct · bge-m3
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=locations index=10/14
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=locations title=Data locations
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.locations: LOCATIONS_REUSED primary=/Users/rohit/VaishnaviStore secondary=/Users/rohit/VaishnaviStore-Backups same_device=True
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:17 WARNING run=261115205708264c bootstrap.stages: STAGE_WARN key=locations ms=1 code=E-SYS-012 msg=primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups detail=-
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[warn]: Data locations — primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups  (E-SYS-012)
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console:       Move the backups to another disk when you can: Settings → Backups → Secondary location.
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=autostart index=11/14
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=autostart title=Start automatically
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=autostart ms=0 code=- msg=already set up detail=-
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Start automatically — already set up
+2026-11-15 20:57:17 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=database index=12/14
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=database title=Shop database
+2026-11-15 20:57:17 INFO    run=261115205708264c bootstrap.handover: APP_EXEC init-db --json secrets=0
+2026-11-15 20:57:18 DEBUG   run=261115205708264c bootstrap.handover: app| {"created": false, "seeded_rows": 0, "migrated": false, "revision": "0001_initial", "secrets_stored": [], "secrets_failed": [], "owner_setup_pending": true, "database": "/Users/rohit/VaishnaviStore/data/vaishnavi.db"}
+2026-11-15 20:57:18 INFO    run=261115205708264c bootstrap.handover: APP_EXIT args=init-db --json code=0 ms=461 timed_out=False
+2026-11-15 20:57:18 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:18 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=database ms=556 code=- msg=database is ready. The Owner password *** be set in the browser on first start. detail=-
+2026-11-15 20:57:18 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Shop database — database is ready. The Owner password *** be set in the browser on first start.
+2026-11-15 20:57:18 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=doctor index=13/14
+2026-11-15 20:57:18 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=doctor title=Health check
+2026-11-15 20:57:18 INFO    run=261115205708264c bootstrap.handover: APP_EXEC doctor --lang en secrets=0
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| DOCTOR_CHECK key=database status=WARN code=E-AUTH-005 ms=10 msg=Owner account not set up yet detail=- fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=4 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| Vaishnavi Store Manager Health Check — 16-Nov-2026 02:27  (ref 01M7GG02F300YQVJ74X44Y9Q9K)
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Python                 Python 3.13 in the private environment         3 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Software packages      13 packages load correctly       835 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Folders & disk         52.0 GB free · data in /Users/rohit/VaishnaviStore        10 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  !    Shop database          Owner account not set up yet  (E-AUTH-005)        10 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|       → Open the app and complete Owner setup (choose the Owner password *** PIN).
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Sales integrity        0 bills verified · no gaps · stock matches         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Backup                 last backup 24 min ago · verified · /Users/rohit/VaishnaviStore-Backups         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Secure key store       computer key store in use        15 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Clock & ports          clock in sync · ports 8080/8443 free         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    Start automatically    will start when the computer is switched on         0 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)         4 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|       → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|       → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)       125 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|       → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app| ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.handover: app|  RESULT: Ready to open the shop (4 note(s) to look at).
+2026-11-15 20:57:19 INFO    run=261115205708264c bootstrap.handover: APP_EXIT args=doctor --lang en code=1 ms=1451 timed_out=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    DOCTOR_CHECK key=database status=WARN code=E-AUTH-005 ms=10 msg=Owner account not set up yet detail=- fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=4 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    Vaishnavi Store Manager Health Check — 16-Nov-2026 02:27  (ref 01M7GG02F300YQVJ74X44Y9Q9K)
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Python                 Python 3.13 in the private environment         3 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Software packages      13 packages load correctly       835 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Folders & disk         52.0 GB free · data in /Users/rohit/VaishnaviStore        10 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     !    Shop database          Owner account not set up yet  (E-AUTH-005)        10 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:          → Open the app and complete Owner setup (choose the Owner password *** PIN).
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Sales integrity        0 bills verified · no gaps · stock matches         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Backup                 last backup 24 min ago · verified · /Users/rohit/VaishnaviStore-Backups         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Secure key store       computer key store in use        15 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Clock & ports          clock in sync · ports 8080/8443 free         1 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    Start automatically    will start when the computer is switched on         0 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)         4 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:          → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:          → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)       125 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:          → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:    ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]:     RESULT: Ready to open the shop (4 note(s) to look at).
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-15 20:57:19 WARNING run=261115205708264c bootstrap.stages: STAGE_WARN key=doctor ms=1543 code=- msg=finished with notes — the shop can open; see the lines marked '!' above. detail=-
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[warn]: Health check — finished with notes — the shop can open; see the lines marked '!' above.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console:       Fix the notes when convenient; they are also shown on the Status page inside the app.
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.stages: STAGE_PREPARE key=start index=14/14
+2026-11-15 20:57:19 INFO    run=261115205708264c bootstrap.stages: STAGE_START key=start title=Start Vaishnavi
+2026-11-15 20:57:19 INFO    run=261115205708264c bootstrap.app_stages: APP_LAUNCH /Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python -m vaishnavi run --lang en
+2026-11-15 20:57:19 DEBUG   run=261115205708264c bootstrap.console: console[info]: Starting the application … (this takes a few seconds)
+2026-11-15 20:57:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:22 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Ready to open the shop:  http://127.0.0.1:8080
+2026-11-15 20:57:22 DEBUG   run=261115205708264c bootstrap.console: console[info]: This window keeps watch over the application; you can minimise it. Closing it does not close the shop.
+2026-11-15 20:57:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:57:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:58:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 20:59:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:00:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:01:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:02:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:03:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:04:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:05:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:06:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:07:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:08:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:09:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:10:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET / HTTP/1.1" 200 -
+2026-11-15 21:11:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=INFO HTTP/1.1" 200 -
+2026-11-15 21:11:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=WARNING HTTP/1.1" 200 -
+2026-11-15 21:12:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG HTTP/1.1" 200 -
+2026-11-15 21:12:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=CRITICAL HTTP/1.1" 200 -
+2026-11-15 21:12:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=ERROR HTTP/1.1" 200 -
+2026-11-15 21:12:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?file=2026-11-15_205708_261115205708264c.log&level=ERROR HTTP/1.1" 200 -
+2026-11-15 21:12:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?file=app-stdout.log&level=ERROR HTTP/1.1" 200 -
+2026-11-15 21:12:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?file=2026-11-15_202711_26111520271180ae.log&level=ERROR HTTP/1.1" 200 -
+2026-11-15 21:12:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?file=2026-11-15_202711_26111520271180ae.log&level=ERROR HTTP/1.1" 200 -
+2026-11-15 21:12:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?file=2026-11-15_203303_261115203303ab7c.log&level=ERROR HTTP/1.1" 200 -
+2026-11-15 21:12:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /raw?level=ERROR&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /state HTTP/1.1" 200 -
+2026-11-15 21:12:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:12:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:13:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:14:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:15:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:16:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:17:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:18:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:19:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:20:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:21:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:22:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:23:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:24:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:25:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:26:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:27:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:28:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:29:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:30:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:31:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:32:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:33:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:34:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:35:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:08 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:12 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:36:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:37:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:26 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:38:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:39:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:39:05 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:15 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:42:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:43:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:44:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:46:56 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:11 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:18 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:21 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:28 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:40 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:44 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:47 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:47:57 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:00 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:19 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:22 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:25 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:29 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:32 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:54 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:48:58 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:01 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:04 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:07 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:10 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:14 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:17 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:33 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:36 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:39 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:49 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:49:53 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:35 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:42 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:52 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:53:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:23 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:30 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:37 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:41 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:45 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:48 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:51 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:55 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:54:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:02 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:06 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:09 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:13 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:16 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:20 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:24 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:27 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:31 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:34 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:38 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:43 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:46 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:50 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:55:59 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-15 21:56:03 DEBUG   run=261115205708264c bootstrap.minilog: minilog: 192.168.0.190 - "GET /?level=DEBUG&file=2026-11-15_203303_261115203303ab7c.log HTTP/1.1" 200 -
+2026-11-16 04:06:27 INFO    run=261115205708264c bootstrap.app_stages: WATCHDOG_INTERRUPTED (app keeps running)
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:06:27 INFO    run=261115205708264c bootstrap.stages: STAGE_OK key=start ms=3193154 code=- msg=Ready to open the shop:  http://127.0.0.1:8080 detail=-
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.console: console[ok]: Start Vaishnavi — Ready to open the shop:  http://127.0.0.1:8080
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:06:27 INFO    run=261115205708264c bootstrap.stages: PIPELINE_END run=261115205708264c exit=1 worst=WARN stopped_at=None
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.console: console[warn]: Setup steps complete, with 3 note(s) to look at — see the lines marked '!' above.
+2026-11-16 04:06:27 INFO    run=261115205708264c bootstrap.minilog: MINILOG_STOPPED port=8081
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.stages: INSTALL_LOCK_RELEASED
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.console: console: Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-15_205708_261115205708264c.log
+2026-11-16 04:06:27 DEBUG   run=261115205708264c bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 04:06:27 INFO    run=261115205708264c bootstrap.cli: RUN_END run=261115205708264c exit=1
