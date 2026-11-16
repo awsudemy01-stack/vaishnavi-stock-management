@@ -73,7 +73,7 @@ launch_failed = "the application could not be started"
 exited = "the application stopped right after starting (code {code})"
 exited_hint = "Look at the newest file in {path} — the last ERROR line says why."
 not_ready = "the application did not answer within {seconds} seconds"
-watchdog_note = "This window keeps watch over the application; you can minimise it. Closing it does not close the shop."
+watchdog_note = "This window keeps watch over the application; you can minimise it. Closing it does not close the shop — but the setup log console (port 8081) closes with it; the app's own logs stay at {url}/system/logs (Owner → Settings → System → Logs)."
 gave_up = "the application kept stopping; it was restarted several times and will not be restarted again this hour"
 
 [selftest]
