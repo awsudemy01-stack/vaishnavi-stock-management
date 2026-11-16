@@ -40,9 +40,26 @@ def register_pages(state: AppState) -> None:
             importlib.import_module(f"vaishnavi.ui.pages.{name}")
         except Exception as exc:  # noqa: BLE001 - one broken page must not hide behind a quiet debug line
             log.error("UI_PAGE_IMPORT_FAILED page=%s error=%r code=E-UI-001", name, exc, exc_info=True)
+    app = _nicegui_app()
     for registrar in PAGE_REGISTRARS:
+        before = set(registered_paths(app)) if app is not None else set()
         registrar(state)
+        after = set(registered_paths(app)) if app is not None else set()
+        added, removed = sorted(after - before), sorted(before - after)
+        # One line per module: "shifts added=/shifts" — the live-run-3 404 showed a registrar that ran yet left nothing behind.
+        log.info("UI_PAGE_REGISTERED module=%s added=%s removed=%s", registrar.__module__.rsplit(".", 1)[-1], ",".join(added) or "-", ",".join(removed) or "-")
     log.info("UI_PAGES_REGISTERED count=%d", len(PAGE_REGISTRARS))
+
+
+def _nicegui_app() -> Any | None:
+    """NiceGUI's FastAPI app when its route table is readable (tests stub ``nicegui`` with a dummy)."""
+    try:
+        from nicegui import app  # noqa: PLC0415
+
+        list(app.routes)
+    except (ImportError, TypeError, AttributeError):
+        return None
+    return app
 
 
 def registered_paths(app: Any) -> list[str]:
