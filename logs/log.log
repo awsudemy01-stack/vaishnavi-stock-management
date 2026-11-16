@@ -9,3 +9,6 @@ grep -h "shifts" access/http.log | tail -5
 
 # 3. the exact library versions, so I can read the matching code:
 ~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
+
+rohit@Rohits-MacBook-Pro vaishnavi-stock-management % shasum -a 256 ~/Documents/vaishnavi-stock-management/src/vaishnavi/ui/server.py | cut -c1-16
+6ceede36e5fce8d0
