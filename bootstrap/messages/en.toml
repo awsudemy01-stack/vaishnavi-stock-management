@@ -95,6 +95,13 @@ receipts = "Receipts (PDF):        {path}"
 secondary = "Backups (secondary):   {path}"
 same_device = "Live data and backups are on the same disk — a disk failure would take both. Move the backups to a USB disk or another drive when you can."
 
+[stop]
+not_running = "The application is not running ({detail}). Nothing to stop."
+stopped = "The application was shut down cleanly ({detail}). Start it again with Start Vaishnavi / python3 main.py."
+no_pid = "Something answers on port {port}, but the application's heartbeat file has no process id — it may be a different program."
+no_pid_hint = "Inside the app: Settings → System → Shut down. Or find the process:  lsof -ti :{port}  (macOS/Linux) · Task Manager (Windows)."
+timeout = "The application did not stop within {seconds} seconds ({detail})."
+
 [offline]
 ok = "usable: {wheels} packages · Ollama installer: {ollama} · models: {models}"
 err_missing = "the offline folder was not found: {path}"
