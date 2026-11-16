@@ -95,7 +95,7 @@ class ShiftsPageTest(Base):
         self.c.shifts.close(OWNER, 1, counted_cash_paise=4000, note="")
         result = sign_in(self.c.users, self.c.sessions, self.client, username="ramesh", password="ramesh#2026", client_label="test")
         self.assertTrue(result.ok, result.message)
-        self.assertEqual(result.next_path, "/shifts?open=1", "no open shift → open one first (docs/05 §6)")
+        self.assertEqual(result.next_path, "/shifts?then_pos=1", "no open shift → open one first (docs/05 §6)")
         self.c.shifts.open(STAFF, opening_float_paise=50000)
         self.client = ClientState.anonymous("en")
         again = sign_in(self.c.users, self.c.sessions, self.client, username="ramesh", password="ramesh#2026", client_label="test")
