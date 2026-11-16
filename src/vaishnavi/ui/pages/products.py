@@ -289,11 +289,18 @@ def register(state: Any) -> None:
                     ui.button(model.labels["new"], icon="add", on_click=lambda: ui.navigate.to("/products/new")).props("unelevated color=primary")
                     ui.button(model.labels["import"], icon="upload", on_click=lambda: ui.navigate.to("/products/import")).props("outline")
                     ui.button(model.labels["export"], icon="download", on_click=lambda: ui.download.content(services.import_export.export_csv().encode("utf-8"), "products.csv")).props("outline")
-                    ui.button(model.labels["labels"], icon="label", on_click=lambda: ui.navigate.to("/labels")).props("outline")
+                    labels_button = ui.button(model.labels["labels"], icon="label").props("outline")
             columns = [{"name": k, "label": texts.t(f"products.{k}") if texts.has(f"products.{k}") else k, "field": k, "sortable": True} for k in ("sku", "name", "name_hi", "category", "price_text", "stock_text", "barcode")]
-            table = ui.table(columns=columns, rows=[r.__dict__ for r in model.rows], row_key="id", pagination=model.page_size).classes("w-full")
+            table = ui.table(columns=columns, rows=[r.__dict__ for r in model.rows], row_key="id", pagination=model.page_size, selection="multiple" if can_edit else None).classes("w-full")
             if can_edit:
                 table.on("rowClick", lambda e: ui.navigate.to(f"/products/{e.args[1]['id']}"))
+
+                def to_labels() -> None:
+                    # Ticked rows → /labels?ids=…; nothing ticked → the page's own picker.
+                    ids = ",".join(str(r["id"]) for r in (table.selected or []))
+                    ui.navigate.to(f"/labels?ids={ids}" if ids else "/labels")
+
+                labels_button.on_click(to_labels)
             ui.label(f"{model.total}").classes("text-xs text-gray-500")
 
     @ui.page("/products/import")
