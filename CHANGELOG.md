@@ -789,6 +789,10 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   path would really reach and logs `UI_ROUTE_MATCH` at registration *and* again once uvicorn is serving;
   a path with no match logs `UI_ROUTE_UNREACHABLE` (`E-UI-001`) and shows on the status page. The Mac log proved
   `/shifts` is registered by the decorator yet unknown to the router at request time; this pins down which.
+- **`main.py --stop`**: the application deliberately outlives the installer window, so after copying new code the
+  owner kept talking to *yesterday's* process ("already running on port 8080, up 138 min") and saw none of the
+  fixes. `--stop` reads the pid from `state/heartbeat.json`, sends SIGTERM (uvicorn shuts down → clean close),
+  waits for the port to free, and says what happened (`stop.*` messages EN+HI). Documented in docs/17 §5.
 
 ### Removed — Phase 7
 - Never-imported Phase-1 placeholders: `db/repositories/` (ORM twins of `sqlite_stores`), `hardware/scanner.py`,
