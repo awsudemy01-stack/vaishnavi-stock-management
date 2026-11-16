@@ -202,6 +202,7 @@ Same on every OS. Options can be combined. Run `python3 main.py --help` for the 
 | `main.py --selftest` | after install/update, or when asked by support | runs the shipped test suite on this PC **plus** the live health check; exit 0 ok · 1 notes · 2 failed; the report is kept in `<primary>/logs/selftest/` |
 | `main.py --logs` | you want to look at logs without starting the app | opens the mini log console on `:8081` only |
 | `main.py --uninstall-autostart` | you no longer want the app to start on log-on | removes the Task Scheduler / launchd / systemd entry; nothing else is removed |
+| `main.py --stop` | you copied new code, or want a clean restart | asks the running application to shut down (SIGTERM → clean close), waits until port 8080 is free; then start again with `main.py` / *Start Vaishnavi*. The app survives closing the installer window on purpose, so this is the owner's "turn it off" switch from the terminal (inside the app: Settings → System → Shut down) |
 | `main.py --where` | "where is my data?" | prints program folder, setup logs, configuration, primary location (database, logs, receipts) and the backups folder — works even before the setup finished |
 
 Inside the app the same actions are available to the Owner under *Settings → System* (Run health check,
