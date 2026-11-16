@@ -317,12 +317,20 @@ class AlertError(VaishnaviError):
     severity = Severity.WARN
 
 
+class UiError(VaishnaviError):
+    """E-UI — the browser shell: a page module that failed to register, a path no page serves."""
+
+    area = "UI"
+    default_code = "E-UI-001"
+    severity = Severity.WARN
+
+
 AREAS: Final[dict[str, type[VaishnaviError]]] = {
     cls.area: cls
     for cls in (
         ConfigError, DatabaseError, AuthError, CatalogError, InventoryError, BillingError, MeasureError, ShiftError, LedgerError,
         PrinterError, ScannerError, ScaleError, PublishError, ForecastError, AIError, GuardrailError, SecretsError,
-        BackupError, SystemError_, MoneyError_, LogApiError, AlertError,
+        BackupError, SystemError_, MoneyError_, LogApiError, AlertError, UiError,
     )
 }
 
