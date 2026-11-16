@@ -96,7 +96,7 @@ class LoadTest(unittest.TestCase):
         self._write("[tax]\nregistered = true\n")
         with self.assertRaises(ConfigError) as cm:
             Settings.load(self.cfg, environ={})
-        self.assertEqual(cm.exception.params["key"], "shop.gstin")
+        self.assertEqual((cm.exception.code, cm.exception.params["key"]), ("E-CFG-003", "shop.gstin"))
         self._write("[server]\nport = 8443\n")
         with self.assertRaises(ConfigError):
             Settings.load(self.cfg, environ={})
