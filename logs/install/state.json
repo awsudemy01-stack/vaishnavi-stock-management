@@ -28,16 +28,31 @@
       "argv": [],
       "exit_code": 4,
       "finished_at": "2026-11-16T04:07:59"
+    },
+    {
+      "run_id": "2611160454270ec8",
+      "started_at": "2026-11-16T04:54:27",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T04:54:42"
+    },
+    {
+      "run_id": "261116045739d2db",
+      "started_at": "2026-11-16T04:57:39",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T05:04:58"
     }
   ],
   "stages": {
     "log_console": {
       "status": "OK",
-      "at": "2026-11-16T04:07:58",
+      "at": "2026-11-16T04:57:39",
       "cache_key": null,
       "message": "watch at http://192.168.0.190:8081/",
       "error_code": "",
       "elapsed_ms": 9,
+      "detail": "",
       "data": {
         "url": "http://192.168.0.190:8081/",
         "port": 8081
@@ -45,11 +60,12 @@
     },
     "language": {
       "status": "OK",
-      "at": "2026-11-16T04:07:58",
+      "at": "2026-11-16T04:57:39",
       "cache_key": null,
       "message": "English",
       "error_code": "",
-      "elapsed_ms": 0,
+      "elapsed_ms": 1,
+      "detail": "",
       "data": {
         "lang": "en"
       }
@@ -103,20 +119,22 @@
     },
     "offline_bundle": {
       "status": "SKIP",
-      "at": "2026-11-16T04:07:58",
+      "at": "2026-11-16T04:57:39",
       "cache_key": null,
       "message": "not needed on this computer",
       "error_code": "",
       "elapsed_ms": 0,
+      "detail": "",
       "data": {}
     },
     "python_check": {
       "status": "OK",
-      "at": "2026-11-16T04:07:58",
+      "at": "2026-11-16T04:57:39",
       "cache_key": null,
       "message": "Python 3.13 found",
       "error_code": "",
-      "elapsed_ms": 3,
+      "elapsed_ms": 4,
+      "detail": "",
       "data": {
         "version": "3.13",
         "executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3"
@@ -124,43 +142,55 @@
     },
     "venv": {
       "status": "OK",
-      "at": "2026-11-16T04:07:58",
+      "at": "2026-11-16T04:57:39",
       "cache_key": null,
       "message": "ready (.venv)",
       "error_code": "",
       "elapsed_ms": 0,
+      "detail": "",
       "data": {
         "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
         "created": false
       }
     },
     "packages": {
-      "status": "FAIL",
-      "at": "2026-11-16T04:07:59",
+      "status": "WARN",
+      "at": "2026-11-16T04:57:40",
       "cache_key": null,
-      "message": "Unexpected installer error",
-      "error_code": "E-SYS-099",
-      "elapsed_ms": 900,
-      "data": {}
+      "message": "verified (7 packages load correctly)",
+      "error_code": "E-SYS-041",
+      "elapsed_ms": 1036,
+      "detail": "",
+      "data": {
+        "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
+        "hash_verified": false,
+        "installed": [
+          "vaishnavi-store-manager-0.1.0"
+        ],
+        "inputs_key": "|ab930faa77501a6a|/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python||",
+        "verified_only": true
+      }
     },
     "system_components": {
       "status": "OK",
-      "at": "2026-11-16T04:07:10",
+      "at": "2026-11-16T04:57:40",
       "cache_key": null,
       "message": "all 3 present",
       "error_code": "",
       "elapsed_ms": 6,
+      "detail": "",
       "data": {
         "missing": []
       }
     },
     "ai_provider": {
       "status": "OK",
-      "at": "2026-11-16T04:07:10",
+      "at": "2026-11-16T04:57:40",
       "cache_key": null,
       "message": "Ollama ready — qwen2.5:7b-instruct · bge-m3",
       "error_code": "",
-      "elapsed_ms": 96,
+      "elapsed_ms": 89,
+      "detail": "",
       "data": {
         "provider": "ollama",
         "ready": true,
@@ -172,11 +202,12 @@
     },
     "locations": {
       "status": "WARN",
-      "at": "2026-11-16T04:07:10",
+      "at": "2026-11-16T04:57:40",
       "cache_key": null,
       "message": "primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups",
       "error_code": "E-SYS-012",
       "elapsed_ms": 1,
+      "detail": "",
       "data": {
         "primary": "/Users/rohit/VaishnaviStore",
         "secondary": "/Users/rohit/VaishnaviStore-Backups",
@@ -185,22 +216,24 @@
     },
     "autostart": {
       "status": "OK",
-      "at": "2026-11-16T04:07:10",
+      "at": "2026-11-16T04:57:40",
       "cache_key": null,
       "message": "already set up",
       "error_code": "",
       "elapsed_ms": 0,
+      "detail": "",
       "data": {
         "registered": true
       }
     },
     "database": {
       "status": "OK",
-      "at": "2026-11-16T04:07:11",
+      "at": "2026-11-16T04:57:41",
       "cache_key": null,
       "message": "database is ready.",
       "error_code": "",
-      "elapsed_ms": 554,
+      "elapsed_ms": 571,
+      "detail": "",
       "data": {
         "created": false,
         "migrated": false,
@@ -210,26 +243,28 @@
       }
     },
     "doctor": {
-      "status": "FAIL",
-      "at": "2026-11-16T04:07:12",
+      "status": "WARN",
+      "at": "2026-11-16T04:57:42",
       "cache_key": null,
-      "message": "something essential is not right.",
-      "error_code": "E-SYS-099",
-      "elapsed_ms": 1378,
+      "message": "finished with notes — the shop can open; see the lines marked '!' above.",
+      "error_code": "",
+      "elapsed_ms": 1372,
+      "detail": "",
       "data": {
-        "exit_code": 2
+        "exit_code": 1
       }
     },
     "start": {
       "status": "OK",
-      "at": "2026-11-16T04:06:27",
+      "at": "2026-11-16T05:04:57",
       "cache_key": null,
       "message": "Ready to open the shop:  http://127.0.0.1:8080",
       "error_code": "",
-      "elapsed_ms": 3193154,
+      "elapsed_ms": 434925,
+      "detail": "",
       "data": {
         "url": "http://127.0.0.1:8080",
-        "pid": 3977
+        "pid": 6416
       }
     }
   }

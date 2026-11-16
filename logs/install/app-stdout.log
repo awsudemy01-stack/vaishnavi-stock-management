@@ -29,3 +29,4 @@ RuntimeError: ui.page cannot be used in NiceGUI scripts when UI is defined in th
 To use multiple pages, either move all UI into page functions or use ui.sub_pages.
 Unexpected error in 'run': RuntimeError. Details are in the log. (E-SYS-099)
 NiceGUI ready to go on http://127.0.0.1:8080
+NiceGUI ready to go on http://127.0.0.1:8080
