@@ -127,7 +127,7 @@ def sign_in(users: UserService, sessions: WorkSessionService, client: ClientStat
     elif user.role is Role.OWNER:
         next_path = "/"
     elif shift_id is None:
-        next_path = "/shifts?open=1"  # docs/05 §6: a cashier opens the drawer with the float before selling
+        next_path = "/shifts?then_pos=1"  # docs/05 §6: a cashier opens the drawer with the float before selling
     else:
         next_path = "/pos"
     log.info("SIGN_IN_OK user=%s role=%s session=%s next=%s", user.username, user.role.value, started.session_id, next_path)
@@ -187,7 +187,7 @@ def register(state: Any) -> None:
                                     ui.label(tile.role_label).classes("text-xs " + ("text-orange-800 font-semibold" if tile.is_owner else "text-gray-500"))
                         if model.banner:
                             with ui.element("div").classes("rounded-lg p-2 text-xs").style("border:1px solid #FFE0B2;background:#FFF8E1;color:#7a4b00"):
-                                ui.html(f"<b>{model.banner.title}</b><br>{model.banner.body}")
+                                ui.html(f"<b>{model.banner.title}</b><br>{model.banner.body}", sanitize=False)
                         if model.show_username_box:
                             ui.input(model.texts["username"]).bind_value(typed, "username").classes("w-full")
                         pw = ui.input(model.texts["password"], password=True, password_toggle_button=True).bind_value(typed, "password").classes("w-full")
