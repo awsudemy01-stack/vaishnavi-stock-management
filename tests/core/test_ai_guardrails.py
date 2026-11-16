@@ -134,7 +134,13 @@ class FakeTools:
         if name == "get_stock":
             return {"found": True, "name": "Camphor 50g", "qty": "37", "unit": "pc", "min_stock": "20", "category": "Puja Samagri"} if "camphor" in args["query"].lower() or "kapoor" in args["query"].lower() else {"found": False, "query": args["query"]}
         if name == "item_price":
+            if "match" in args["query"].lower():
+                return {"found": False, "query": args["query"]}
             return {"found": True, "name": "Pure Ghee 100g", "price": "₹60.00", "mrp": "₹65.00", "unit": "pc"}
+        if name == "search_products":
+            return {"items": [{"name": "Match stick", "qty": "12"}], "count": 1} if "match" in args["query"].lower() else {"items": [], "count": 0}
+        if name == "stock_overview":
+            return {"items_total": 2, "in_stock": 1, "low": 0, "out": 1, "top": [{"name": "Camphor 50g", "qty": "37", "unit": "pc"}], "out_names": ["Wicks"]}
         if name == "low_stock_items":
             return {"items": [{"name": "Camphor 50g", "qty": "4", "min_stock": "20"}, {"name": "Wicks", "qty": "0", "min_stock": "10"}], "count": 2}
         if name == "out_of_stock_items":
@@ -162,6 +168,11 @@ class FastPathTest(unittest.TestCase):
             "aaj ka total": ("sales_summary", None),
             "how do I hold a bill": ("explain_screen", "hold a bill"),
             "hello": ("greeting", None),
+            "stock kya hai": ("stock_overview", None),
+            "stock list": ("stock_overview", None),
+            "kaun sa item or stock hai abhi": ("stock_overview", None),
+            "sab stock dikhao": ("stock_overview", None),
+            "स्टॉक लिस्ट": ("stock_overview", None),
         }
         for text, (tool, arg) in cases.items():
             intent = fastpath.match(text)
@@ -171,6 +182,24 @@ class FastPathTest(unittest.TestCase):
             if arg is not None:
                 self.assertEqual(intent.query, arg, text)
         self.assertIsNone(fastpath.match("compare camphor sales with last Diwali and explain the trend"), "complex questions go to the LLM")
+        self.assertIsNone(fastpath.match("kitna hai abhi"), "question words alone are not an item name")
+
+    def test_unknown_item_is_tentative_with_suggestions(self) -> None:
+        tools = FakeTools()
+        a = fastpath.answer("match box ka price kya hai", role=Role.STAFF, language="hinglish", run_tool=tools)
+        assert a is not None
+        self.assertTrue(a.tentative)
+        self.assertIn("Match stick", a.text, "near names from search_products are offered")
+        self.assertEqual(tools.calls[-1][0], "search_products")
+        a = fastpath.answer("stock of diya", role=Role.STAFF, language="english", run_tool=tools)
+        assert a is not None
+        self.assertTrue(a.tentative)
+        a = fastpath.answer("stock list", role=Role.STAFF, language="english", run_tool=tools)
+        assert a is not None
+        self.assertFalse(a.tentative)
+        self.assertIn("2 items", a.text)
+        self.assertIn("Camphor 50g (37 pc)", a.text)
+        self.assertIn("Wicks", a.text)
 
     def test_answers_use_tool_results_with_templates_and_role_rules(self) -> None:
         tools = FakeTools()
