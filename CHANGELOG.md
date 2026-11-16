@@ -746,6 +746,22 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   path, query and referer (`HTTP_404`, `E-UI-002`) and answered by a small bilingual page with a *Home* link.
   New `UiError` area; docs/08 §5 lists the codes.
 
+### Fixed — live run 3 (macOS 16-Nov, the daily start)
+- **Second cached start crashed in the *Software packages* stage** (`E-SYS-099` after ~0.9 s, exit 4): the cached
+  branch returned `StageResult(..., **previous_data, verified_only=True)`, and the previous record — written by
+  the cached branch the day before — already contained `verified_only`, so Python raised *"got multiple values
+  for keyword argument"*. It never showed before because the `pyproject.toml` pin change forced a reinstall in
+  between. Data is now rebuilt explicitly; the test runs three consecutive starts (lock and unpinned variants).
+  Every shop day after the first cached day would have failed to start — the most serious bug so far.
+- **"Port 8080 is already in use by another program" when yesterday's app was still running**: the owner closed
+  the installer window (the app deliberately survives that) and double-clicked *Start Vaishnavi* again; the
+  doctor's network check refused the day although the start stage would have adopted the instance. The check
+  now asks `/healthz` on the busy port: when it is Vaishnavi (`"app": "vaishnavi"` added to the payload) the check
+  **passes** with "already running on port … (version, uptime)" and the start stage opens the browser on it;
+  only a foreign listener is still `E-SYS-017`.
+- Installer `state.json` now keeps each stage's `detail` (the crash repr) so a failed run is diagnosable from the
+  state file alone.
+
 ### Removed — Phase 7
 - Never-imported Phase-1 placeholders: `db/repositories/` (ORM twins of `sqlite_stores`), `hardware/scanner.py`,
   `hardware/scale.py`, `hardware/printer/{discovery,os_print}.py`, `api/{auth,data}.py`,
