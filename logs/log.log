@@ -1,53 +1,11 @@
-rohit@Rohits-MacBook-Pro logs % tree       
-.
-├── install
-│   ├── 2026-11-15_202711_26111520271180ae.log
-│   ├── 2026-11-15_203303_261115203303ab7c.log
-│   ├── 2026-11-15_205708_261115205708264c.log
-│   ├── 2026-11-16_040709_26111604070990d6.log
-│   ├── 2026-11-16_040758_2611160407584c63.log
-│   ├── 2026-11-16_045427_2611160454270ec8.log
-│   ├── 2026-11-16_045739_261116045739d2db.log
-│   ├── app-stdout.log
-│   ├── state.json
-│   └── survey.json
-└── startup
-    ├── launchd.err.log
-    └── launchd.out.log
+# 1. copy the new code (src/, bootstrap/, tests/), then verify the copy landed:
+shasum -a 256 ~/Documents/vaishnavi-stock-management/src/vaishnavi/ui/server.py | cut -c1-16
+#    must print: 18c2e52539abfa40
 
-3 directories, 12 files
+# 2. restart via Start Vaishnavi, click Shifts once, then:
+cd ~/VaishnaviStore/logs
+grep -h "UI_ROUTE_MATCH\|UI_ROUTE_UNREACHABLE\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT\|HTTP_404" app/vaishnavi.log | tail -8
+grep -h "shifts" access/http.log | tail -5
 
-
-rohit@Rohits-MacBook-Pro logs % tree /Users/rohit/VaishnaviStore/logs 
-/Users/rohit/VaishnaviStore/logs
-├── access
-│   └── http.log
-├── ai
-│   ├── ai.log
-│   └── ai.log.2026-11-15
-├── app
-│   ├── vaishnavi.jsonl
-│   ├── vaishnavi.jsonl.2026-11-15
-│   ├── vaishnavi.log
-│   └── vaishnavi.log.2026-11-15
-├── audit
-│   ├── audit.jsonl
-│   └── audit.jsonl.2026-11-15
-├── errors
-│   ├── errors.log
-│   └── errors.log.2026-11-15
-└── hardware
-    ├── hardware.log
-    └── hardware.log.2026-11-15
-
-7 directories, 13 files
-
-rohit@Rohits-MacBook-Pro logs % grep -h "HTTP_404\|not found" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log
-2026-11-16 10:26:57.960 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
-2026-11-16 10:28:01.533 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
-2026-11-16 10:33:02.078 IST | WARNING | nicegui | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts?open=1 not found
-rohit@Rohits-MacBook-Pro logs % grep -h "HTTP_404\|not found" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log
-
-rohit@Rohits-MacBook-Pro logs % grep -h "UI_ROUTES\|UI_ROUTE_MISSING\|UI_PAGE_IMPORT_FAILED\|UI_PAGES_REGISTERED" /Users/rohit/VaishnaviStore/logs/app/vaishnavi.log | tail -5
-2026-11-16 10:27:43.866 IST | INFO  | vaishnavi.ui.server | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | UI_PAGES_REGISTERED count=15
-
+# 3. the exact library versions, so I can read the matching code:
+~/Documents/vaishnavi-stock-management/.venv/bin/python -m pip list 2>/dev/null | grep -i "nicegui\|fastapi\|starlette\|uvicorn"
