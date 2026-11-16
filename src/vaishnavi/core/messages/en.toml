@@ -151,6 +151,7 @@ cloud_ok = "{provider} reachable · key stored · {model} · {percent}% of month
 # ---------------------------------------------------------------- configuration
 E-CFG-001 = { msg = "A required setting is missing or invalid: {key}", fix = "Open Settings and fill it in, or fix config/settings.toml. The app cannot start without it." }
 E-CFG-002 = { msg = "Unknown setting: {key}", fix = "This setting name does not exist in this version. Nothing was changed." }
+E-CFG-003 = { msg = "GST registered needs the shop's GSTIN", fix = "Type the 15-character GSTIN (for example 09ABCDE1234F1Z5) or switch GST registered off. Nothing was changed." }
 
 # ---------------------------------------------------------------- database
 E-DB-002 = { msg = "The shop database file was not found: {path}", fix = "On a new installation nothing is wrong — it is created now. Otherwise restore the latest backup from Settings → Backups (or copy a snapshot from the backup folder to that place as vaishnavi.db)." }
@@ -298,3 +299,7 @@ E-MONEY-001 = { msg = "This is not a valid amount: {value}", fix = "Type the amo
 E-LOGAPI-001 = { msg = "Sign in as Owner to view the logs", fix = "" }
 E-LOGAPI-002 = { msg = "Too many requests to the log console", fix = "Wait a moment and reload." }
 E-ALERT-001 = { msg = "Alert: {name} is {value} (limit {threshold})", fix = "" }
+
+# ---------------------------------------------------------------- UI shell
+E-UI-001 = { msg = "A screen of the app could not be loaded: {page}", fix = "The rest of the app works. Send logs/vaishnavi.log to support — the traceback is next to UI_PAGE_IMPORT_FAILED." }
+E-UI-002 = { msg = "This page does not exist: {path}", fix = "Use the menu on the left. If a button brought you here, the address is in the app log — send it to support." }
