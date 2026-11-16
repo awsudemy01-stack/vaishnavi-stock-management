@@ -316,7 +316,9 @@ class Settings:
         if not 0 <= self.tax.default_rate_bp <= 10_000:
             raise ConfigError("E-CFG-001", key="tax.default_rate_bp")
         if self.tax.registered and not self.shop.gstin.strip():
-            raise ConfigError("E-CFG-001", key="shop.gstin", detail="tax.registered is true")
+            # Its own code: the generic E-CFG-001 text ("the app cannot start without it") frightened the owner when
+            # he flipped "GST registered" in the wizard before typing a GSTIN (live run 2).
+            raise ConfigError("E-CFG-003", key="shop.gstin", detail="tax.registered is true")
         if not 0 <= self.ai.cloud.budget_alert_pct <= 100:
             raise ConfigError("E-CFG-001", key="ai.cloud.budget_alert_pct")
         if self.billing.heartbeat_seconds < 5:
