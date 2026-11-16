@@ -172,6 +172,41 @@ class InstallerModesTest(unittest.TestCase):
         (self.program_dir / "config" / "locations.toml").unlink()
         self.assertIs(mode.run_where(ctx), ExitCode.WARN, "no install yet → says so, exit 1")
 
+    def test_stop_mode_terminates_the_heartbeat_pid_and_waits_for_the_port(self) -> None:
+        """Live run 3: yesterday's instance kept serving old code; the owner had no way to stop it except kill."""
+        from bootstrap import selftest as mode
+
+        cfg = self.program_dir / "config"
+        cfg.mkdir(exist_ok=True)
+        primary = self.program_dir / "data"
+        (primary / "state").mkdir(parents=True)
+        cfg.joinpath("locations.toml").write_text(f'[locations]\nprimary = "{primary.as_posix()}"\nsecondary = "{(self.program_dir / "bk").as_posix()}"\nsame_device = true\n', encoding="utf-8")
+        (primary / "state" / "heartbeat.json").write_text('{"at": "2026-11-16T05:00:00Z", "pid": 4242, "loops": {}}', encoding="utf-8")
+        killed: list[int] = []
+        busy = {"value": True}
+
+        def term(pid: int) -> bool:
+            killed.append(pid)
+            busy["value"] = False  # the app exits on SIGTERM
+            return True
+
+        clock = [0.0]
+        outcome, detail = mode.stop_app(cfg, in_use=lambda h, p: busy["value"], terminate_fn=term, sleep=lambda s: clock.__setitem__(0, clock[0] + s), clock=lambda: clock[0])
+        self.assertEqual(outcome, "stopped")
+        self.assertEqual(killed, [4242])
+        self.assertIn("4242", detail)
+        self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: False, terminate_fn=term)[0], "not_running")
+        # pid gone already → not_running, never an error
+        self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: True, terminate_fn=lambda pid: False)[0], "not_running")
+        if not sys.platform.startswith("win"):
+            self.assertFalse(mode.terminate(2**22 + 12345, windows=False), "a non-existent pid is reported as gone, not raised")
+        # stubborn process → timeout
+        clock[0] = 0.0
+        self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: True, terminate_fn=lambda pid: True, sleep=lambda s: clock.__setitem__(0, clock[0] + s), clock=lambda: clock[0], timeout_s=3)[0], "timeout")
+        # no heartbeat → no_pid
+        (primary / "state" / "heartbeat.json").unlink()
+        self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: True, terminate_fn=term)[0], "no_pid")
+
 
 if __name__ == "__main__":
     unittest.main()
