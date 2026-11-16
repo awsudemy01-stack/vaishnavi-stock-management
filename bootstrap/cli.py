@@ -57,6 +57,7 @@ class Mode(str, Enum):
     SELFTEST = "selftest"
     UNINSTALL_AUTOSTART = "uninstall-autostart"
     MAKE_OFFLINE_BUNDLE = "make-offline-bundle"
+    STOP = "stop"
 
 
 MUTATING_MODES = frozenset({Mode.INSTALL_RUN, Mode.INSTALL_ONLY, Mode.RESTORE, Mode.UPDATE, Mode.RESET_OWNER_PASSWORD, Mode.UNINSTALL_AUTOSTART})
@@ -135,6 +136,7 @@ def build_parser() -> argparse.ArgumentParser:
     action.add_argument("--reset-owner-password", action="store_true", help="reset the Owner password using the 12-word recovery key (asks for the computer's admin password)")
     action.add_argument("--selftest", action="store_true", help="run the test suite with fakes plus live checks on this PC")
     action.add_argument("--uninstall-autostart", action="store_true", help="remove the start-at-logon entry; nothing else is removed")
+    action.add_argument("--stop", action="store_true", help="shut the running shop application down cleanly (then start it again with main.py)")
     action.add_argument("--make-offline-bundle", metavar="TARGET_OS", choices=BUNDLE_TARGETS, help="on a connected PC, prepare offline/ for a shop PC without internet")
 
     p.add_argument("--fix", action="store_true", help="with --doctor: apply the safe automatic fixes")
@@ -168,6 +170,8 @@ def _mode_from(ns: argparse.Namespace) -> Mode:
         return Mode.SELFTEST
     if ns.uninstall_autostart:
         return Mode.UNINSTALL_AUTOSTART
+    if ns.stop:
+        return Mode.STOP
     if ns.make_offline_bundle is not None:
         return Mode.MAKE_OFFLINE_BUNDLE
     return Mode.INSTALL_RUN
