@@ -1,0 +1,76 @@
+2026-11-16 02:03:04.665 IST | WARNING | vaishnavi.db.guardian | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | DB_UNCLEAN_CLOSE last_open=2026-11-15T20:33:04Z last_close=None code=E-DB-022
+2026-11-16 02:03:04.670 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | DOCTOR_CHECK key=database status=WARN code=E-AUTH-005 ms=6 msg=Owner account not set up yet detail=- fixed=False
+2026-11-16 02:03:04.673 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | DOCTOR_CHECK key=backup status=WARN code=- ms=1 msg=no backup has been made yet detail=- fixed=False
+2026-11-16 02:03:04.673 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-16 02:27:20.289 IST | WARNING | vaishnavi.db.guardian | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DB_UNCLEAN_CLOSE last_open=2026-11-15T20:57:20Z last_close=2026-11-15T20:33:10Z code=E-DB-022
+2026-11-16 02:27:20.295 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=database status=WARN code=E-AUTH-005 ms=11 msg=Owner account not set up yet detail=- fixed=False
+2026-11-16 02:27:20.300 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-16 02:27:22.587 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/apple-touch-icon-precomposed.png not found
+2026-11-16 02:27:22.687 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/apple-touch-icon.png not found
+2026-11-16 02:28:24.949 IST | WARNING | vaishnavi.services.user | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | LOGIN_FAILED username=owner code=E-AUTH-005 detail=user 1
+2026-11-16 02:30:27.949 IST | WARNING | vaishnavi.services.work_session | cid=- user=-(-) shift=- | WORK_SESSION_HEARTBEAT_LOST id=1 user=1 last_seen=2026-11-15T20:59:19Z
+2026-11-16 02:33:58.347 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:34:15.527 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:34:20.818 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:34:31.142 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 02:34:37.921 IST | WARNING | vaishnavi.services.work_session | cid=- user=-(-) shift=- | WORK_SESSION_HEARTBEAT_LOST id=2 user=1 last_seen=2026-11-15T21:03:33Z
+2026-11-16 02:34:48.911 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:35:59.797 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=settings.set error=ConfigError("E-CFG-001 key='shop.gstin' tax.registered is true")
+2026-11-16 02:36:17.658 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=settings.set error=ConfigError("E-CFG-001 key='shop.gstin' tax.registered is true")
+2026-11-16 02:36:27.505 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=settings.set error=ConfigError("E-CFG-001 key='shop.gstin' tax.registered is true")
+2026-11-16 02:36:51.032 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=settings.set error=ConfigError("E-CFG-001 key='shop.gstin' tax.registered is true")
+2026-11-16 02:37:03.702 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=settings.set error=ConfigError("E-CFG-001 key='shop.gstin' tax.registered is true")
+2026-11-16 02:45:42.528 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:46:22.545 IST | WARNING | vaishnavi.ui.pages.settings_ai | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | AI_PROVIDER_TEST_FAILED provider=ollama code=E-SEC-010
+2026-11-16 02:46:36.076 IST | ERROR | vaishnavi.core.events | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | events: handler _wire_assistant.<locals>.on_settings failed on SettingsChanged: OperationalError('database is locked')
+Traceback (most recent call last):
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/core/events.py", line 185, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/app_services.py", line 248, in on_settings
+    c.rebuild_ai_provider()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/app_services.py", line 133, in rebuild_ai_provider
+    ai = self.settings_service.effective().ai
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/services/settings.py", line 129, in effective
+    overrides = self.overrides()
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/services/settings.py", line 123, in overrides
+    return {k: v for k, v in self.rows().items() if k in self._known}
+                             ~~~~~~~~~^^
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/services/settings.py", line 115, in rows
+    with self._txn(label="settings.load") as session:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/db/sqlite_stores.py", line 47, in __call__
+    conn.execute("BEGIN IMMEDIATE")
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+2026-11-16 02:47:26.788 IST | WARNING | vaishnavi.db.guardian | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DB_UNCLEAN_CLOSE last_open=2026-11-15T20:57:20Z last_close=2026-11-15T20:33:10Z code=E-DB-022
+2026-11-16 02:47:26.791 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=database status=WARN code=E-DB-022 ms=9 msg=did not close properly last time — all saved data is intact detail=last_open=2026-11-15T20:57:20Z fixed=False
+2026-11-16 02:47:26.802 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=5 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-16 02:47:26.802 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:47:26.888 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-16 02:47:27.285 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:48:56.835 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 02:49:21.548 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:49:25.107 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 02:50:15.641 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 1 has no open shift')
+2026-11-16 02:50:23.132 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 1 has no open shift')
+2026-11-16 02:50:36.125 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 1 has no open shift')
+2026-11-16 02:52:05.106 IST | WARNING | vaishnavi.services.work_session | cid=- user=-(-) shift=- | WORK_SESSION_HEARTBEAT_LOST id=3 user=2 last_seen=2026-11-15T21:21:01Z
+2026-11-16 02:52:20.664 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 02:53:25.427 IST | WARNING | vaishnavi.bootstrap.doctor | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 02:54:13.571 IST | WARNING | vaishnavi.services.hardware_guard | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | HARDWARE_OVERRIDE kind=PRINTER minutes=60 by=1 owner=1 reason='not have'
+2026-11-16 02:54:25.347 IST | WARNING | vaishnavi.services.hardware_guard | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | HARDWARE_OVERRIDE kind=SCANNER minutes=60 by=1 owner=1 reason='not have'
+2026-11-16 02:54:25.586 IST | WARNING | vaishnavi.services.work_session | cid=- user=-(-) shift=- | WORK_SESSION_HEARTBEAT_LOST id=4 user=1 last_seen=2026-11-15T21:23:15Z
+2026-11-16 02:54:55.380 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 2 has no open shift')
+2026-11-16 02:55:04.369 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | http://127.0.0.1:8080/shifts not found
+2026-11-16 02:55:26.965 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 2 has no open shift')
+2026-11-16 02:55:40.995 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 2 has no open shift')
+2026-11-16 02:55:59.468 IST | WARNING | vaishnavi.services.work_session | cid=- user=-(-) shift=- | WORK_SESSION_HEARTBEAT_LOST id=5 user=2 last_seen=2026-11-15T21:24:44Z
+2026-11-16 03:03:24.877 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 2 has no open shift')
+2026-11-16 03:03:37.725 IST | WARNING | vaishnavi.db.sqlite_stores | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | SQLITE_TXN_ROLLBACK label=billing.checkout error=BillingError('E-BILL-042 user 2 has no open shift')
+2026-11-16 03:06:09.335 IST | WARNING | vaishnavi.services.work_session | cid=- user=-(-) shift=- | WORK_SESSION_HEARTBEAT_LOST id=6 user=1 last_seen=2026-11-15T21:35:07Z
+2026-11-16 04:33:43.541 IST | WARNING | nicegui | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | binding propagation for 1 active links took 912.784 s

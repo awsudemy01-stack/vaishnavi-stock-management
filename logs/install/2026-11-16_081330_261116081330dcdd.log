@@ -1,0 +1,13 @@
+2026-11-16 08:13:30 DEBUG   run=261116081330dcdd bootstrap.logsetup: install log opened: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-16_081330_261116081330dcdd.log
+2026-11-16 08:13:30 DEBUG   run=261116081330dcdd bootstrap.i18n: i18n: loaded lang=en keys=309 fallback_keys=309
+2026-11-16 08:13:30 DEBUG   run=261116081330dcdd bootstrap.console: console: unicode=True encoding=utf-8
+2026-11-16 08:13:30 DEBUG   run=261116081330dcdd bootstrap.stages: state: loaded 14 stage records, 7 runs
+2026-11-16 08:13:30 DEBUG   run=261116081330dcdd bootstrap.wizard: answers: loaded 5 answers from /Users/rohit/Documents/vaishnavi-stock-management/config/install-answers.toml
+2026-11-16 08:13:30 INFO    run=261116081330dcdd bootstrap.cli: RUN_START run=261116081330dcdd mode=stop argv=--stop
+2026-11-16 08:13:30 INFO    run=261116081330dcdd bootstrap.cli: ENV python=3.13.5 exe=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 os=macOS-27.2.1-arm64-arm-64bit-Mach-O arch=arm64 program_dir=/Users/rohit/Documents/vaishnavi-stock-management
+2026-11-16 08:13:30 DEBUG   run=261116081330dcdd bootstrap.console: console: Vaishnavi Store Manager Setup       Log: logs/install/2026-11-16_081330_261116081330dcdd.log
+2026-11-16 08:13:30 INFO    run=261116081330dcdd bootstrap.selftest: APP_STOP_REQUESTED pid=6416 source=heartbeat /Users/rohit/VaishnaviStore/state/heartbeat.json
+2026-11-16 08:13:31 INFO    run=261116081330dcdd bootstrap.selftest: APP_STOPPED pid=6416
+2026-11-16 08:13:31 DEBUG   run=261116081330dcdd bootstrap.console: console[ok]: The application was shut down cleanly (pid 6416). Start it again with Start Vaishnavi / python3 main.py.
+2026-11-16 08:13:31 DEBUG   run=261116081330dcdd bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 08:13:31 INFO    run=261116081330dcdd bootstrap.cli: RUN_END run=261116081330dcdd exit=0

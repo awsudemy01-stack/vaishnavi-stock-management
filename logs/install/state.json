@@ -42,16 +42,48 @@
       "argv": [],
       "exit_code": 1,
       "finished_at": "2026-11-16T05:04:58"
+    },
+    {
+      "run_id": "2611160715590972",
+      "started_at": "2026-11-16T07:15:59",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T07:16:02"
+    },
+    {
+      "run_id": "261116081330dcdd",
+      "started_at": "2026-11-16T08:13:30",
+      "argv": [
+        "--stop"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-16T08:13:31"
+    },
+    {
+      "run_id": "2611160813467752",
+      "started_at": "2026-11-16T08:13:46",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T08:22:30"
+    },
+    {
+      "run_id": "26111608223321e8",
+      "started_at": "2026-11-16T08:22:33",
+      "argv": [
+        "--stop"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-16T08:22:33"
     }
   ],
   "stages": {
     "log_console": {
       "status": "OK",
-      "at": "2026-11-16T04:57:39",
+      "at": "2026-11-16T08:13:46",
       "cache_key": null,
       "message": "watch at http://192.168.0.190:8081/",
       "error_code": "",
-      "elapsed_ms": 9,
+      "elapsed_ms": 10,
       "detail": "",
       "data": {
         "url": "http://192.168.0.190:8081/",
@@ -60,11 +92,11 @@
     },
     "language": {
       "status": "OK",
-      "at": "2026-11-16T04:57:39",
+      "at": "2026-11-16T08:13:46",
       "cache_key": null,
       "message": "English",
       "error_code": "",
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "detail": "",
       "data": {
         "lang": "en"
@@ -119,7 +151,7 @@
     },
     "offline_bundle": {
       "status": "SKIP",
-      "at": "2026-11-16T04:57:39",
+      "at": "2026-11-16T08:13:46",
       "cache_key": null,
       "message": "not needed on this computer",
       "error_code": "",
@@ -129,7 +161,7 @@
     },
     "python_check": {
       "status": "OK",
-      "at": "2026-11-16T04:57:39",
+      "at": "2026-11-16T08:13:46",
       "cache_key": null,
       "message": "Python 3.13 found",
       "error_code": "",
@@ -142,7 +174,7 @@
     },
     "venv": {
       "status": "OK",
-      "at": "2026-11-16T04:57:39",
+      "at": "2026-11-16T08:13:46",
       "cache_key": null,
       "message": "ready (.venv)",
       "error_code": "",
@@ -155,11 +187,11 @@
     },
     "packages": {
       "status": "WARN",
-      "at": "2026-11-16T04:57:40",
+      "at": "2026-11-16T08:13:47",
       "cache_key": null,
       "message": "verified (7 packages load correctly)",
       "error_code": "E-SYS-041",
-      "elapsed_ms": 1036,
+      "elapsed_ms": 1020,
       "detail": "",
       "data": {
         "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
@@ -173,11 +205,11 @@
     },
     "system_components": {
       "status": "OK",
-      "at": "2026-11-16T04:57:40",
+      "at": "2026-11-16T08:13:47",
       "cache_key": null,
       "message": "all 3 present",
       "error_code": "",
-      "elapsed_ms": 6,
+      "elapsed_ms": 2,
       "detail": "",
       "data": {
         "missing": []
@@ -185,11 +217,11 @@
     },
     "ai_provider": {
       "status": "OK",
-      "at": "2026-11-16T04:57:40",
+      "at": "2026-11-16T08:13:47",
       "cache_key": null,
       "message": "Ollama ready — qwen2.5:7b-instruct · bge-m3",
       "error_code": "",
-      "elapsed_ms": 89,
+      "elapsed_ms": 97,
       "detail": "",
       "data": {
         "provider": "ollama",
@@ -202,7 +234,7 @@
     },
     "locations": {
       "status": "WARN",
-      "at": "2026-11-16T04:57:40",
+      "at": "2026-11-16T08:13:47",
       "cache_key": null,
       "message": "primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups",
       "error_code": "E-SYS-012",
@@ -216,7 +248,7 @@
     },
     "autostart": {
       "status": "OK",
-      "at": "2026-11-16T04:57:40",
+      "at": "2026-11-16T08:13:47",
       "cache_key": null,
       "message": "already set up",
       "error_code": "",
@@ -228,11 +260,11 @@
     },
     "database": {
       "status": "OK",
-      "at": "2026-11-16T04:57:41",
+      "at": "2026-11-16T08:13:48",
       "cache_key": null,
       "message": "database is ready.",
       "error_code": "",
-      "elapsed_ms": 571,
+      "elapsed_ms": 554,
       "detail": "",
       "data": {
         "created": false,
@@ -244,11 +276,11 @@
     },
     "doctor": {
       "status": "WARN",
-      "at": "2026-11-16T04:57:42",
+      "at": "2026-11-16T08:13:49",
       "cache_key": null,
       "message": "finished with notes — the shop can open; see the lines marked '!' above.",
       "error_code": "",
-      "elapsed_ms": 1372,
+      "elapsed_ms": 1321,
       "detail": "",
       "data": {
         "exit_code": 1
@@ -256,15 +288,15 @@
     },
     "start": {
       "status": "OK",
-      "at": "2026-11-16T05:04:57",
+      "at": "2026-11-16T08:22:30",
       "cache_key": null,
       "message": "Ready to open the shop:  http://127.0.0.1:8080",
       "error_code": "",
-      "elapsed_ms": 434925,
+      "elapsed_ms": 521146,
       "detail": "",
       "data": {
         "url": "http://127.0.0.1:8080",
-        "pid": 6416
+        "pid": 8275
       }
     }
   }

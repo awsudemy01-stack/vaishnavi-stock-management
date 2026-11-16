@@ -1,0 +1,7 @@
+2026-11-16 02:03:00.354 IST | INFO  | vaishnavi.platform.paths | cid=01M7GEKJE1C73414TSQF5ZEDFJ user=installer(SYSTEM) shift=- | PATHS_CREATED ['/Users/rohit/VaishnaviStore/data', '/Users/rohit/VaishnaviStore/receipts', '/Users/rohit/VaishnaviStore/images/products', '/Users/rohit/VaishnaviStore/quarantine', '/Users/rohit/VaishnaviStore/exports', '/Users/rohit/VaishnaviStore/outbox', '/Users/rohit/VaishnaviStore/tmp', '/Users/rohit/VaishnaviStore/backup-queue', '/Users/rohit/VaishnaviStore/state', '/Users/rohit/VaishnaviStore/backups_local']
+2026-11-16 02:03:00.531 IST | INFO  | vaishnavi.platform.secrets | cid=01M7GEKJE1C73414TSQF5ZEDFJ user=installer(SYSTEM) shift=- | MASTER_KEY_CREATED backend=keyring
+2026-11-16 02:03:04.469 IST | INFO  | vaishnavi.platform.secrets | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 02:27:18.078 IST | INFO  | vaishnavi.platform.secrets | cid=01M7GG01WW4R4M9AT43EASPWXT user=installer(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 02:27:20.177 IST | INFO  | vaishnavi.platform.secrets | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 02:27:22.196 IST | INFO  | vaishnavi.platform.browser | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | BROWSER_OPENED mode=default ok=True
+2026-11-16 02:47:26.802 IST | DEBUG | vaishnavi.platform.fonts | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | devanagari font: /System/Library/Fonts/Supplemental/Devanagari Sangam MN.ttc

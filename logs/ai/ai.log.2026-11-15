@@ -1,0 +1,42 @@
+2026-11-16 02:03:01.039 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7GEKJE1C73414TSQF5ZEDFJ user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 02:03:01.039 IST | INFO  | vaishnavi.ai.tools | cid=01M7GEKJE1C73414TSQF5ZEDFJ user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 02:03:04.555 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 02:03:04.555 IST | INFO  | vaishnavi.ai.tools | cid=01M7GEKPBZ7GMCSG5R9Y0NDQAZ user=system(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 02:03:04.853 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_REBUILT chunks=39 new=39 removed=0
+2026-11-16 02:03:07.991 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/embed ms=3131 bytes=204554
+2026-11-16 02:03:07.992 IST | DEBUG | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_EMBED provider=ollama model=bge-m3 n=16 dim=1024 ms=3131
+2026-11-16 02:03:09.612 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/embed ms=1610 bytes=204409
+2026-11-16 02:03:09.613 IST | DEBUG | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_EMBED provider=ollama model=bge-m3 n=16 dim=1024 ms=1610
+2026-11-16 02:03:10.465 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/embed ms=840 bytes=89549
+2026-11-16 02:03:10.466 IST | DEBUG | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_EMBED provider=ollama model=bge-m3 n=7 dim=1024 ms=840
+2026-11-16 02:03:10.473 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_EMBEDDED chunks=39 provider=ollama model=bge-m3
+2026-11-16 02:27:18.138 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7GG01WW4R4M9AT43EASPWXT user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 02:27:18.138 IST | INFO  | vaishnavi.ai.tools | cid=01M7GG01WW4R4M9AT43EASPWXT user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 02:27:20.242 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 02:27:20.242 IST | INFO  | vaishnavi.ai.tools | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 02:27:20.429 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_REBUILT chunks=39 new=0 removed=0
+2026-11-16 02:37:24.740 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=4000 bytes=330
+2026-11-16 02:37:24.740 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=4000 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 02:46:36.134 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7GG03YM653VNPPV2V15BT59 user=system(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 02:47:21.792 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=208 bytes=326
+2026-11-16 02:47:21.793 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=208 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 02:57:22.120 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=293 bytes=327
+2026-11-16 02:57:22.124 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=293 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 03:07:22.589 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=321 bytes=327
+2026-11-16 03:07:22.591 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=321 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 03:17:23.288 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=198 bytes=324
+2026-11-16 03:17:23.289 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=198 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 03:43:30.326 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=161 bytes=326
+2026-11-16 03:43:30.326 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=161 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 04:00:53.599 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=54 bytes=324
+2026-11-16 04:00:53.599 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=54 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 04:18:26.661 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=57 bytes=325
+2026-11-16 04:18:26.661 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=57 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 04:33:44.849 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=53 bytes=324
+2026-11-16 04:33:44.849 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=53 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 04:51:43.188 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=71 bytes=325
+2026-11-16 04:51:43.188 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=71 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 05:08:57.534 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=54 bytes=324
+2026-11-16 05:08:57.534 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=54 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 05:25:29.707 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=57 bytes=324
+2026-11-16 05:25:29.707 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=57 prompt_tokens=30 completion_tokens=1 tool_calls=0

@@ -1,0 +1,146 @@
+2026-11-16 05:44:01.546 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=53 bytes=324
+2026-11-16 05:44:01.546 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=53 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 05:59:46.643 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=57 bytes=324
+2026-11-16 05:59:46.644 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=57 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 06:14:50.801 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=50 bytes=323
+2026-11-16 06:14:50.801 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=50 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 06:27:35.106 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=62 bytes=324
+2026-11-16 06:27:35.106 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=62 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 06:45:23.275 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=58 bytes=324
+2026-11-16 06:45:23.275 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=58 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 07:01:14.645 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=57 bytes=324
+2026-11-16 07:01:14.645 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=57 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 07:18:52.769 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=60 bytes=324
+2026-11-16 07:18:52.769 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=60 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 07:29:43.224 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=63 bytes=324
+2026-11-16 07:29:43.224 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=63 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 07:45:44.650 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=59 bytes=324
+2026-11-16 07:45:44.651 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=59 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 08:03:04.763 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=59 bytes=324
+2026-11-16 08:03:04.763 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=59 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 08:19:51.099 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=61 bytes=324
+2026-11-16 08:19:51.099 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=61 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 08:29:35.274 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_REBUILT chunks=39 new=0 removed=0
+2026-11-16 08:45:59.316 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=60 bytes=324
+2026-11-16 08:45:59.316 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=60 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 09:03:34.580 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=62 bytes=324
+2026-11-16 09:03:34.580 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=62 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 09:21:17.647 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=57 bytes=324
+2026-11-16 09:21:17.647 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=57 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 09:35:53.490 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=75 bytes=324
+2026-11-16 09:35:53.490 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=75 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 09:37:11.438 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7H8K6NFAHKGSEGF63T8DVAD user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 09:37:11.438 IST | INFO  | vaishnavi.ai.tools | cid=01M7H8K6NFAHKGSEGF63T8DVAD user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 09:45:53.383 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=213 bytes=327
+2026-11-16 09:45:53.384 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=213 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 09:55:54.414 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=343 bytes=326
+2026-11-16 09:55:54.414 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=343 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 10:06:20.793 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=88 bytes=324
+2026-11-16 10:06:20.793 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=88 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 10:18:02.491 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=69 bytes=323
+2026-11-16 10:18:02.491 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=69 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 10:24:39.968 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HBA46NFC97G4NR8B362EHN user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 10:24:39.968 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBA46NFC97G4NR8B362EHN user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 10:27:41.251 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HBFNE102GGFNEY758FWJ2X user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 10:27:41.251 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFNE102GGFNEY758FWJ2X user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 10:27:43.098 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 10:27:43.098 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOLS_READY count=26 staff=9
+2026-11-16 10:27:43.265 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_REBUILT chunks=39 new=0 removed=0
+2026-11-16 10:28:18.271 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_SESSION_NEW id=1 user=1
+2026-11-16 10:28:18.276 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=english match='sale'
+2026-11-16 10:28:18.290 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=sales_summary args={'period': 'today', 'group_by': 'none'} rows=1 ms=7 user=1 role=OWNER
+2026-11-16 10:28:18.290 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_FASTPATH intent=sales_today tool=sales_summary role=OWNER lang=hinglish
+2026-11-16 10:28:18.295 IST | INFO  | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_REPLY session=1 source=fastpath category=- lang=hinglish tools=0 ms=30
+2026-11-16 10:28:36.137 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=hinglish match='stock'
+2026-11-16 10:28:49.405 IST | DEBUG | vaishnavi.ai.providers.http | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=13246 bytes=458
+2026-11-16 10:28:49.406 IST | INFO  | vaishnavi.ai.providers.ollama | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=13246 prompt_tokens=2276 completion_tokens=23 tool_calls=1
+2026-11-16 10:28:49.417 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=get_stock args={'query': 'sandalwood powder'} rows=1 ms=10 user=1 role=OWNER
+2026-11-16 10:28:51.162 IST | DEBUG | vaishnavi.ai.providers.http | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=1744 bytes=421
+2026-11-16 10:28:51.162 IST | INFO  | vaishnavi.ai.providers.ollama | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=1744 prompt_tokens=2329 completion_tokens=29 tool_calls=0
+2026-11-16 10:28:51.173 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_USAGE provider=ollama prompt=4605 completion=52 requests=2 errors=0 at=2026-11-16T04:58:51.173508+00:00
+2026-11-16 10:28:51.175 IST | DEBUG | vaishnavi.ai.output_filter | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_OUTPUT_OK answer_len=85 numbers=0
+2026-11-16 10:28:51.185 IST | INFO  | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_REPLY session=1 source=ollama category=- lang=hinglish tools=1 ms=15065
+2026-11-16 10:28:57.977 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=english match='stock'
+2026-11-16 10:28:57.991 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=get_stock args={'query': 'list'} rows=1 ms=7 user=1 role=OWNER
+2026-11-16 10:28:57.991 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_FASTPATH intent=stock_of tool=get_stock role=OWNER lang=english
+2026-11-16 10:28:57.997 IST | INFO  | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_REPLY session=1 source=fastpath category=- lang=english tools=0 ms=38
+2026-11-16 10:29:23.467 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=hinglish match='price'
+2026-11-16 10:29:23.489 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=item_price args={'query': 'match box'} rows=1 ms=11 user=1 role=OWNER
+2026-11-16 10:29:23.489 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_FASTPATH intent=price_of tool=item_price role=OWNER lang=hinglish
+2026-11-16 10:29:23.493 IST | INFO  | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_REPLY session=1 source=fastpath category=- lang=hinglish tools=0 ms=42
+2026-11-16 10:29:44.313 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=hinglish match='stock'
+2026-11-16 10:29:44.331 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=get_stock args={'query': 'kaun sa or abhi'} rows=1 ms=9 user=1 role=OWNER
+2026-11-16 10:29:44.331 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_FASTPATH intent=stock_of tool=get_stock role=OWNER lang=hinglish
+2026-11-16 10:29:44.338 IST | INFO  | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_REPLY session=1 source=fastpath category=- lang=hinglish tools=0 ms=39
+2026-11-16 10:30:23.413 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_SESSION_NEW id=2 user=1
+2026-11-16 10:30:23.420 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=english match='stock'
+2026-11-16 10:30:23.431 IST | INFO  | vaishnavi.ai.tools | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=get_stock args={'query': 'which items low in'} rows=1 ms=5 user=1 role=OWNER
+2026-11-16 10:30:23.431 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | AI_FASTPATH intent=stock_of tool=get_stock role=OWNER lang=english
+2026-11-16 10:30:23.437 IST | INFO  | vaishnavi.ai.chat | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | CHAT_REPLY session=2 source=fastpath category=- lang=english tools=0 ms=30
+2026-11-16 10:37:44.354 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=394 bytes=326
+2026-11-16 10:37:44.354 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=394 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 10:47:45.274 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=192 bytes=326
+2026-11-16 10:47:45.274 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=192 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 10:57:45.717 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=177 bytes=327
+2026-11-16 10:57:45.717 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=177 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 11:12:45.406 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=141 bytes=326
+2026-11-16 11:12:45.407 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=141 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 11:22:45.035 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=174 bytes=327
+2026-11-16 11:22:45.036 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=174 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 11:32:45.556 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=348 bytes=327
+2026-11-16 11:32:45.558 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=348 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 11:49:26.480 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=56 bytes=324
+2026-11-16 11:49:26.480 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=56 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 12:05:50.675 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=62 bytes=324
+2026-11-16 12:05:50.675 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=62 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 12:17:21.533 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=59 bytes=324
+2026-11-16 12:17:21.533 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=59 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 12:34:30.602 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=53 bytes=324
+2026-11-16 12:34:30.602 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=53 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 12:44:31.161 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=172 bytes=327
+2026-11-16 12:44:31.161 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=172 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 12:46:01.125 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HKCYSVS64KMKDXW9B8PNDK user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 12:46:01.126 IST | INFO  | vaishnavi.ai.tools | cid=01M7HKCYSVS64KMKDXW9B8PNDK user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=27 staff=10
+2026-11-16 12:54:31.639 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=256 bytes=327
+2026-11-16 12:54:31.640 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=256 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 13:18:58.135 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=59 bytes=324
+2026-11-16 13:18:58.135 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=59 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 13:35:15.604 IST | DEBUG | vaishnavi.ai.providers.http | cid=- user=-(-) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=61 bytes=324
+2026-11-16 13:35:15.604 IST | INFO  | vaishnavi.ai.providers.ollama | cid=- user=-(-) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=61 prompt_tokens=30 completion_tokens=1 tool_calls=0
+2026-11-16 13:43:48.147 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HPPRJ8X6G0GPWARMHD7CQ6 user=installer(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 13:43:48.147 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPRJ8X6G0GPWARMHD7CQ6 user=installer(SYSTEM) shift=- | AI_TOOLS_READY count=27 staff=10
+2026-11-16 13:43:49.967 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 13:43:49.967 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOLS_READY count=27 staff=10
+2026-11-16 13:43:50.131 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_REBUILT chunks=39 new=0 removed=0
+2026-11-16 13:45:06.725 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_SESSION_NEW id=3 user=2
+2026-11-16 13:45:06.731 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=STAFF lang=english match='stock'
+2026-11-16 13:45:06.739 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=get_stock args={'query': 'camphor'} rows=1 ms=3 user=2 role=STAFF
+2026-11-16 13:45:06.742 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=search_products args={'query': 'camphor', 'limit': 3} rows=0 ms=2 user=2 role=STAFF
+2026-11-16 13:45:06.742 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_FASTPATH intent=stock_of tool=get_stock role=STAFF lang=hinglish tentative=True
+2026-11-16 13:45:06.742 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_FASTPATH_TENTATIVE intent=stock_of → LLM
+2026-11-16 13:45:13.816 IST | DEBUG | vaishnavi.ai.providers.http | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=7066 bytes=446
+2026-11-16 13:45:13.816 IST | INFO  | vaishnavi.ai.providers.ollama | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=7066 prompt_tokens=1144 completion_tokens=22 tool_calls=1
+2026-11-16 13:45:13.825 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=get_stock args={'query': 'camphor'} rows=1 ms=8 user=2 role=STAFF
+2026-11-16 13:45:15.644 IST | DEBUG | vaishnavi.ai.providers.http | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_HTTP_OK provider=ollama url=http://127.0.0.1:11434/api/chat ms=1818 bytes=454
+2026-11-16 13:45:15.644 IST | INFO  | vaishnavi.ai.providers.ollama | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_CHAT provider=ollama model=qwen2.5:7b-instruct ms=1818 prompt_tokens=1195 completion_tokens=31 tool_calls=0
+2026-11-16 13:45:15.655 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_USAGE provider=ollama prompt=2339 completion=53 requests=2 errors=0 at=2026-11-16T08:15:15.655382+00:00
+2026-11-16 13:45:15.655 IST | DEBUG | vaishnavi.ai.output_filter | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_OUTPUT_OK answer_len=118 numbers=0
+2026-11-16 13:45:15.663 IST | INFO  | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_REPLY session=3 source=ollama category=- lang=hinglish tools=1 ms=8943
+2026-11-16 13:45:39.110 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=STAFF lang=english match='stock'
+2026-11-16 13:45:39.129 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=stock_overview args={'limit': 8} rows=1 ms=8 user=2 role=STAFF
+2026-11-16 13:45:39.130 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_FASTPATH intent=stock_overview tool=stock_overview role=STAFF lang=hinglish tentative=False
+2026-11-16 13:45:39.136 IST | INFO  | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_REPLY session=3 source=fastpath category=- lang=hinglish tools=0 ms=42
+2026-11-16 13:49:36.385 IST | DEBUG | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_SESSION_NEW id=4 user=1
+2026-11-16 13:49:36.390 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=english match='stock'
+2026-11-16 13:49:36.404 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=stock_overview args={'limit': 8} rows=1 ms=5 user=1 role=OWNER
+2026-11-16 13:49:36.404 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_FASTPATH intent=stock_overview tool=stock_overview role=OWNER lang=hinglish tentative=False
+2026-11-16 13:49:36.409 IST | INFO  | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_REPLY session=4 source=fastpath category=- lang=hinglish tools=0 ms=30
+2026-11-16 13:50:13.882 IST | INFO  | vaishnavi.ai.guardrails | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | GUARDRAIL decision=REFUSE category=OFF_TOPIC role=OWNER lang=hinglish
+2026-11-16 13:50:13.894 IST | INFO  | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_REPLY session=4 source=refusal category=OFF_TOPIC lang=hinglish tools=0 ms=22
+2026-11-16 13:50:25.881 IST | DEBUG | vaishnavi.ai.guardrails | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | GUARDRAIL decision=ALLOW role=OWNER lang=hinglish match='stock'
+2026-11-16 13:50:25.885 IST | INFO  | vaishnavi.ai.tools | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_TOOL_CALL name=low_stock_items args={'limit': 10} rows=1 ms=2 user=1 role=OWNER
+2026-11-16 13:50:25.885 IST | INFO  | vaishnavi.ai.fastpath | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | AI_FASTPATH intent=low_stock tool=low_stock_items role=OWNER lang=hinglish tentative=False
+2026-11-16 13:50:25.887 IST | INFO  | vaishnavi.ai.chat | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | CHAT_REPLY session=4 source=fastpath category=- lang=hinglish tools=0 ms=10
+2026-11-16 13:52:09.527 IST | INFO  | vaishnavi.ai.providers.factory | cid=01M7HQ626M28DEENQHT2QP1QQC user=system(SYSTEM) shift=- | AI_PROVIDER_BUILT provider=ollama host=http://127.0.0.1:11434 chat=qwen2.5:7b-instruct embed=bge-m3
+2026-11-16 13:52:09.527 IST | INFO  | vaishnavi.ai.tools | cid=01M7HQ626M28DEENQHT2QP1QQC user=system(SYSTEM) shift=- | AI_TOOLS_READY count=27 staff=10
+2026-11-16 13:52:09.703 IST | INFO  | vaishnavi.ai.indexer | cid=- user=-(-) shift=- | INDEX_REBUILT chunks=39 new=0 removed=0

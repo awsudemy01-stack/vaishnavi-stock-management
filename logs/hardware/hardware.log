@@ -1,0 +1,11 @@
+2026-11-16 09:37:11.374 IST | INFO  | vaishnavi.platform.secrets | cid=01M7H8K6NFAHKGSEGF63T8DVAD user=installer(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 10:24:39.704 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HBA46NFC97G4NR8B362EHN user=installer(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 10:27:41.147 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HBFNE102GGFNEY758FWJ2X user=installer(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 10:27:43.049 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 10:27:44.629 IST | INFO  | vaishnavi.platform.browser | cid=01M7HBFQ9VCMQM3TGYTKT637VB user=system(SYSTEM) shift=- | BROWSER_OPENED mode=default ok=True
+2026-11-16 12:46:01.045 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HKCYSVS64KMKDXW9B8PNDK user=installer(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 13:43:48.072 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HPPRJ8X6G0GPWARMHD7CQ6 user=installer(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 13:43:49.918 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 13:43:50.906 IST | INFO  | vaishnavi.platform.browser | cid=01M7HPPTCHTQ475DB6EEN7FZWB user=system(SYSTEM) shift=- | BROWSER_OPENED mode=default ok=True
+2026-11-16 13:52:09.471 IST | INFO  | vaishnavi.platform.secrets | cid=01M7HQ626M28DEENQHT2QP1QQC user=system(SYSTEM) shift=- | MASTER_KEY_LOADED backend=keyring
+2026-11-16 13:52:10.557 IST | INFO  | vaishnavi.platform.browser | cid=01M7HQ626M28DEENQHT2QP1QQC user=system(SYSTEM) shift=- | BROWSER_OPENED mode=default ok=True
