@@ -22,3 +22,22 @@ python3 main.py --stop             # (or: kill $(lsof -ti :8080))
 python3 main.py
 
 grep -h "UI_PAGE_REGISTERED\|UI_ROUTE_MATCH" ~/VaishnaviStore/logs/app/vaishnavi.log | tail -17
+
+vaishu-vishnu@WIN-MQ6TJLNVB9B:~/vaishnavi-stock-management$ python3 main.py
+Vaishnavi Store Manager Setup       Log: logs/install/2026-11-17_132830_261117132830c863.log
+────────────────────────────────────────────────────────────────────────────────────────────
+ ✔  Log console — watch at http://192.168.64.7:8081/
+
+ ?  Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे?
+      [1] English  (recommended)
+      [2] हिंदी (Hindi)
+      (q = quit)
+    Choice [1]: 1
+ ✔  Language — English
+ ✔  Computer — Ubuntu 26.04.1 LTS 4.4.0-26100-Microsoft, 8 GB memory, no graphics card → local AI would be slow here — a cloud AI provider is recommended
+ –  Offline bundle — not needed on this computer
+ ✖  Python — This Python cannot create private environments (the 'venv' part is missing)  (E-SYS-001)
+      On Ubuntu/Debian run:  sudo apt install python3-venv python3-pip   then start again.
+────────────────────────────────────────────────────────────────────────────────────────────
+ ✖  Stopped: something essential is not right. Follow the 'What to do' hint above, then run Start Vaishnavi again.
+Technical details: /home/vaishu-vishnu/vaishnavi-stock-management/logs/install/2026-11-17_132830_261117132830c863.log
