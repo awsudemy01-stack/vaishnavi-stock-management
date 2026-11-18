@@ -19,6 +19,7 @@ from vaishnavi.core.clock import FrozenClock, iso_utc, set_clock
 from vaishnavi.core.permissions import Actor, Role
 from vaishnavi.core.security import hash_secret
 from vaishnavi.core.settings import Settings
+from vaishnavi.db.schema import HEAD_REVISION
 from vaishnavi.db.sqlite_stores import SqliteAuditStore, SqliteTxn, SqliteUserStore
 from vaishnavi.platform.paths import AppPaths
 from vaishnavi.services.audit import AuditService
@@ -208,7 +209,7 @@ class SystemPageTest(Base):
         lan = settings_system.build_system_model(self.state, EN)
         self.assertTrue(lan.remote_access.enabled)
         self.assertTrue(any(u.endswith(":8080/system/logs") and "127.0.0.1" not in u for u in lan.remote_access.urls), "the LAN URL the owner types on the phone")
-        self.assertEqual(model.database.revision, "0001_initial")
+        self.assertEqual(model.database.revision, HEAD_REVISION)
 
     def test_support_bundle_contains_doctor_errors_and_redacted_config_only(self) -> None:
         (self.paths.logs / "errors").mkdir(parents=True, exist_ok=True)
