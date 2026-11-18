@@ -11,6 +11,7 @@ module (``hardware/receipts.py``) because services never import the hardware lay
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from decimal import Decimal
@@ -39,7 +40,12 @@ _BIG: Final = {"g": "kg", "ml": "L"}
 # ----------------------------------------------------------------------------- model
 @dataclass(frozen=True)
 class ReceiptLine:
-    """One printed line (+ optional note beneath)."""
+    """One printed line (+ optional discount row and note beneath).
+
+    For a discounted item ``amount_text`` is the **shelf** amount (price × qty) and ``discount_row`` carries
+    ``("discount 1% (Diwali Offer)", "-10.00", "990.00")`` — the customer can follow the arithmetic line by line
+    (owner's request, live run 4). Undiscounted lines have ``discount_row=None`` and the net amount.
+    """
 
     name: str
     qty_text: str
@@ -48,6 +54,8 @@ class ReceiptLine:
     amount_text: str
     marker: str = ""
     note: str = ""
+    discount_row: tuple[str, str, str] | None = None
+    """``(label, discount_amount, net_amount)``."""
 
 
 @dataclass(frozen=True)
@@ -77,6 +85,7 @@ class ReceiptModel:
     tax_rows: list[TotalRow]
     total_text: str
     saved_text: str | None
+    """Total savings (item + bill) — the single "You saved" line when there is no bill discount."""
     payment_lines: list[str]
     legend: str
     footer_lines: list[str]
@@ -87,6 +96,9 @@ class ReceiptModel:
     paper_mm: int = 80
     show_hindi: bool = False
     extras: dict[str, Any] = field(default_factory=dict)
+    saved_lines: list[str] = field(default_factory=list)
+    """Printed in bold under TOTAL. With a bill discount the story is told in two lines — "You saved ₹0.30 on
+    items" and "You saved another ₹10.00 as our Regular customer" — then a thank-you; otherwise just "You saved …"."""
 
 
 class ReceiptStore(Protocol):
@@ -162,7 +174,8 @@ class ReceiptService:
         if sale.item_discount_paise:
             rows.append(TotalRow("Item discounts", f"-{_amt(sale.item_discount_paise)}"))
         if sale.bill_discount_paise:
-            label = "Bill discount" + (f" ({sale.bill_discount_reason})" if sale.bill_discount_reason else "")
+            # "Extra" on purpose: the customer should feel the seller went beyond the shelf offers.
+            label = "Extra discount" + (f" \u2014 {sale.bill_discount_reason}" if sale.bill_discount_reason else "")
             rows.append(TotalRow(label, f"-{_amt(sale.bill_discount_paise)}"))
         tax_rows: list[TotalRow] = []
         if tax.registered and (sale.cgst_paise or sale.sgst_paise):
@@ -196,12 +209,22 @@ class ReceiptService:
         if upi:
             footer.insert(0, f"Pay by UPI: {upi}")
         label = copy_label or ("CREDIT NOTE" if sale.status in ("VOIDED", "REFUND") else None)
+        saved_lines: list[str] = []
+        if sale.bill_discount_paise:
+            if sale.item_discount_paise:
+                saved_lines.append(f"You saved {format_inr(sale.item_discount_paise)} on items")
+            who = f" as our {sale.bill_discount_reason}" if sale.bill_discount_reason else ""
+            saved_lines.append(f"You saved {'another ' if sale.item_discount_paise else ''}{format_inr(sale.bill_discount_paise)}{who}")
+            if rc.savings_message.strip():
+                saved_lines.append(rc.savings_message.strip())
+        elif sale.total_savings_paise:
+            saved_lines.append(f"You saved {format_inr(sale.total_savings_paise)} today")
         model = ReceiptModel(
             sale_id=sale.id, public_id=sale.public_id, invoice_no=sale.invoice_no, status=sale.status, shop_name=shop.name, shop_name_hi=shop.name_hi, header_lines=header,
             datetime_text=format_ist(parse_iso_utc(sale.sold_at)), cashier=self._cashier_name(sale.user_id), shift_label=f"#{sale.shift_id}", lines=lines, total_rows=rows,
             tax_rows=tax_rows, total_text=format_inr(sale.total_paise), saved_text=format_inr(sale.total_savings_paise) if sale.total_savings_paise else None,
             payment_lines=payments, legend=legend, footer_lines=footer, barcode=receipt_ean13(sale.fin_year, sale.seq_no), upi_id=upi, upi_payload=payload,
-            copy_label=label, paper_mm=rc.paper_width_mm, show_hindi=rc.show_hindi_name, extras={"sold_at": sale.sold_at},
+            copy_label=label, paper_mm=rc.paper_width_mm, show_hindi=rc.show_hindi_name, extras={"sold_at": sale.sold_at}, saved_lines=saved_lines,
         )
         log.debug("RECEIPT_MODEL sale=%s invoice=%s lines=%d markers=%s copy=%s", sale.id, sale.invoice_no, len(lines), "".join(sorted(markers)), label)
         return model
@@ -245,19 +268,30 @@ class ReceiptService:
         qty_text = format_qty(spec, it.qty)
         price = _amt(it.shelf_price_paise)
         if measured:
-            price = f"{price}/{_clean(it.pricing_unit_qty_snapshot)}{it.unit}"
+            # "/kg", "/100g", "/L" — the pricing unit in its natural size (never "/1000g", which the narrow column truncates).
+            per = format_qty(spec, it.pricing_unit_qty_snapshot).replace(" ", "")
+            if re.match(r"^1(?=[A-Za-z])", per):
+                per = per[1:]
+            price = f"{price}/{per}"
         name = it.open_item_name or it.name_snapshot
         marker = MARK_OPEN if it.is_open_item else (MARK_LOOKUP if it.entry_method == "LOOKUP" else "")
         if name_hi and not it.is_open_item:
             name = f"{name} ({name_hi})"
         discount = "\u2014"
         note = ""
+        discount_row: tuple[str, str, str] | None = None
+        amount = _amt(it.line_total_paise)
         if it.discount_paise:
             pct = _pct(it.discount_bp) if it.discount_bp else None
             discount = f"-{pct}" if pct else f"-{_amt(it.discount_paise)}"
-            who = f"{it.offer_name_snapshot} {pct}" if it.offer_name_snapshot else f"Discount: {it.discount_reason or ''}".rstrip(": ")
-            note = f"#{it.product_id} \u00b7 {who} (you saved {_amt(it.discount_paise)})" if not it.is_open_item else f"{who} (you saved {_amt(it.discount_paise)})"
-        return ReceiptLine(name=name, qty_text=qty_text, price_text=price, discount_text=discount, amount_text=_amt(it.line_total_paise), marker=marker, note=note)
+            who = it.offer_name_snapshot or (it.discount_reason or "").strip()
+            label = f"discount {pct}" if pct else f"discount {_amt(it.discount_paise)}"
+            if who:
+                label += f" ({who})"
+            # Item row shows what the shelf said; the row beneath shows the discount and what was actually charged.
+            amount = _amt(it.line_total_paise + it.discount_paise)
+            discount_row = (label, f"-{_amt(it.discount_paise)}", _amt(it.line_total_paise))
+        return ReceiptLine(name=name, qty_text=qty_text, price_text=price, discount_text=discount, amount_text=amount, marker=marker, note=note, discount_row=discount_row)
 
 
 # ----------------------------------------------------------------------------- helpers
