@@ -49,6 +49,9 @@ class StockChanged(Event):
     low_stock: bool = False
     """True when ``qty_after`` fell to/below the product's minimum (notification centre, dashboard badge)."""
     product_name: str = ""
+    user_id: int | None = None
+    by_staff: bool = False
+    """True when a non-Owner made the movement (goods received at the counter) — the Owner is told."""
 
 
 @dataclass(frozen=True)
