@@ -110,6 +110,7 @@ class AppServices:
     publisher: Any = None
     publish_store: Any = None
     purchase_orders: Any = None
+    receipt_share: Any = None
     _ai_provider: Any = None
     chips_source: Callable[[], Mapping[str, tuple[str, str]]] = lambda: {}
     """Set by startup to ``lambda: state.chips`` so the assistant's ``shop_status`` tool sees the live chips."""
@@ -278,6 +279,10 @@ def _wire_publishing(c: AppServices, settings_service: SettingsService) -> None:
         raise PublishError("E-PUB-001", channel=name, detail="unknown channel")
 
     c.publisher = ReportPublisher(c.txn, outbox=outbox, renderer=renderer, channel_factory=channel_factory, reports=c.reports, forecast=c.forecast, insights=c.insights, shifts=c.shifts, ledger=c.ledger, users=c.users, settings=settings_service.effective, paths=c.paths, notifications=c.notifications, pdf_engine=renderer.default_pdf_engine())
+    from vaishnavi.hardware import receipts as receipt_renderers  # noqa: PLC0415
+    from vaishnavi.services.receipt_share import ReceiptShareService  # noqa: PLC0415
+
+    c.receipt_share = ReceiptShareService(c.txn, c.receipts, c.billing, c.audit, settings=settings_service.effective, secret=secret, post=c.publisher.http_post, text_renderer=receipt_renderers.text_lines)
     from vaishnavi.services.purchase_order import PurchaseOrderService  # noqa: PLC0415
 
     c.purchase_orders = PurchaseOrderService(c.forecast, c.catalog, c.inventory, publisher=c.publisher)
