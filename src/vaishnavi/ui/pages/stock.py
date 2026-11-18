@@ -80,7 +80,8 @@ def build_overview(services: AppServices, texts: UiTexts) -> OverviewModel:
         unit_value = p.cost_paise if p.cost_paise is not None else p.price_paise
         rows.append(StockRow(p.id, p.sku, p.name, f"{p.stock_qty.normalize():f} {p.base_unit}", f"{p.min_stock.normalize():f}", p.low_stock, format_inr(int(p.stock_qty * unit_value))))
     valuation = services.inventory.valuation_paise()
-    labels = {k: texts.t(f"stock.{k}") for k in ("title", "overview", "movements", "adjust", "purchase", "stock_take", "low", "valuation", "qty", "min", "value", "reason", "quantity", "supplier", "invoice", "cost", "add_line", "save", "count", "approve", "cancel", "variance")}
+    labels = {k: texts.t(f"stock.{k}") for k in ("title", "overview", "movements", "adjust", "purchase", "stock_take", "low", "valuation", "qty", "min", "value", "reason", "quantity", "supplier", "invoice", "cost", "add_line", "save", "count", "approve", "cancel", "variance",
+                                                  "receive", "receive_hint", "receive_qty", "receive_note", "receive_saved", "staff_hint")}
     return OverviewModel(rows, services.inventory.low_stock_products(), valuation, format_inr(valuation), labels)
 
 
@@ -125,6 +126,21 @@ def submit_adjustment(services: AppServices, actor: Actor, *, product_id: int, q
     except InvalidOperation:
         return ActionResult(False, "quantity: not a number")
     return _wrap(services.inventory.adjust, actor, product_id, delta, reason=reason)
+
+
+def submit_receipt(services: AppServices, actor: Actor, *, product_id: int, qty_text: str, note: str) -> ActionResult:
+    """Goods received at the counter (staff or Owner): quantity typed in the pricing unit (``2`` for 2 kg of ghee → 2000 g)."""
+    product = services.catalog.get(product_id)
+    if product is None:
+        return ActionResult(False, "product not found")
+    try:
+        qty = Decimal(qty_text.strip().replace(" ", "").replace("+", ""))
+    except InvalidOperation:
+        return ActionResult(False, "quantity: not a number")
+    if qty <= 0:
+        return ActionResult(False, "quantity must be more than 0 — stock can only be added here")
+    base_qty = qty * (product.pricing_unit_qty or Decimal(1))
+    return _wrap(services.inventory.receive_goods, actor, product_id, base_qty, note=note)
 
 
 def submit_purchase(services: AppServices, actor: Actor, *, supplier: str, invoice_no: str | None, lines: list[dict[str, str]]) -> ActionResult:
@@ -250,7 +266,9 @@ def register(state: Any) -> None:
                 ui.label(m.labels["title"]).classes("text-xl font-semibold")
                 if owner:
                     ui.label(f"{m.labels['valuation']}: {m.valuation_text}").classes("text-sm text-gray-600")
-                    ui.element("div").classes("flex-1")
+                ui.element("div").classes("flex-1")
+                ui.button(m.labels["receive"], icon="inventory", on_click=lambda: _receive_dialog(services, client, texts, None)).props("outline color=primary").tooltip(m.labels["receive_hint"])
+                if owner:
                     ui.button(m.labels["purchase"], icon="local_shipping", on_click=lambda: ui.navigate.to("/stock/purchase")).props("unelevated color=primary")
                     ui.button(m.labels["stock_take"], icon="fact_check", on_click=lambda: ui.navigate.to(f"/stock/count/{start_stock_take(services, client.actor()).id}")).props("outline")
             if m.low_stock:
@@ -259,6 +277,9 @@ def register(state: Any) -> None:
             table = ui.table(columns=cols, rows=[r.__dict__ for r in m.rows], row_key="id", pagination=50).classes("w-full")
             if owner:
                 table.on("rowClick", lambda e: _adjust_dialog(services, client, texts, int(e.args[1]["id"])))
+            else:
+                table.on("rowClick", lambda e: _receive_dialog(services, client, texts, int(e.args[1]["id"])))
+            ui.label(m.labels["staff_hint"]).classes("text-xs text-gray-500")
 
     @ui.page("/stock/movements")
     def _movements(product: str = "") -> None:
@@ -354,6 +375,48 @@ def _adjust_dialog(services: AppServices, client: Any, texts: UiTexts, product_i
         def go() -> None:
             result = submit_adjustment(services, client.actor(), product_id=product_id, qty_text=form["qty"], reason=form["reason"])
             if result.ok:
+                dialog.close()
+                ui.navigate.reload()
+            else:
+                ui.notify(result.message, type="negative")
+
+        with ui.row().classes("gap-2"):
+            ui.button(texts.t("common.confirm"), on_click=go).props("unelevated color=primary")
+            ui.button(texts.t("common.cancel"), on_click=dialog.close).props("flat")
+    dialog.open()
+
+
+def _receive_dialog(services: AppServices, client: Any, texts: UiTexts, product_id: int | None) -> None:
+    """Goods received — the one stock write staff may make (add only, note mandatory, time and name recorded)."""
+    from nicegui import ui  # noqa: PLC0415
+
+    from vaishnavi.core.clock import format_ist, now_utc  # noqa: PLC0415
+
+    products = {str(p.id): f"{p.sku} · {p.name}" for p in services.catalog.list_products(limit=5000).items if not p.is_system}
+    form: dict[str, str] = {"product_id": str(product_id) if product_id else "", "qty": "", "note": ""}
+    with ui.dialog() as dialog, ui.card().classes("vsm-card p-4 gap-2").style("width: 460px"):
+        ui.label(texts.t("stock.receive")).classes("font-semibold")
+        ui.label(texts.t("stock.receive_hint")).classes("text-xs text-gray-600")
+        picker = ui.select(products, label=texts.t("products.name"), with_input=True).bind_value(form, "product_id").classes("w-full")
+        unit = ui.label("").classes("text-xs text-gray-500")
+
+        def show_unit() -> None:
+            p = services.catalog.get(int(form["product_id"])) if form["product_id"] else None
+            unit.set_text(texts.t("products.price_per", unit=p.pricing_unit_label) if p else "")
+
+        picker.on_value_change(lambda _e: show_unit())
+        show_unit()
+        ui.input(texts.t("stock.receive_qty"), placeholder="12").bind_value(form, "qty").props("type=number min=0 step=any").classes("w-full")
+        ui.input(texts.t("stock.receive_note"), placeholder="Sharma Traders parcel, bill 4471").bind_value(form, "note").classes("w-full")
+        ui.label(f"{format_ist(now_utc())} · {client.user.display_name if client.user else ''}").classes("text-xs text-gray-500")
+
+        def go() -> None:
+            if not form["product_id"]:
+                ui.notify(texts.t("products.name"), type="warning")
+                return
+            result = submit_receipt(services, client.actor(), product_id=int(form["product_id"]), qty_text=form["qty"] or "", note=form["note"] or "")
+            if result.ok:
+                ui.notify(texts.t("stock.receive_saved"), type="positive")
                 dialog.close()
                 ui.navigate.reload()
             else:
