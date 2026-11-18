@@ -142,13 +142,14 @@ Decisions taken:
 | **Discount column** | Shows offer name + % (locked for cashier) or ad-hoc % / ₹ with reason; click → line discount dialog (F4). Red if above cap → Owner PIN |
 | **F3 Find / Manual** | Dialog, two tabs: **Find item** (default) — type name / Hindi / code / `#ID` → product card with image, price, stock and its **barcode drawn on screen** → *Add to bill* (reason: label damaged / missing / not labelled), *Print replacement label* (POS printer), *Scan now*; **Open item** — name, detail, qty, unit price, discount, tax preset. Lookup lines marked `†`, open items `*`. Open-item tab governed by `billing.manual_add_policy` |
 | Search | Fuzzy over name / Hindi / SKU; arrow keys + Enter. **Disabled for STAFF in strict mode** (use F3 Find instead, which is counted) |
-| Quick-pick tiles | Image, English name, price, **live stock count**; tap adds 1; long-press → qty dialog; category tabs. **Disabled (🔒) for STAFF in strict mode** — still visible for price/stock reference |
+| Quick-pick tiles | **Every active item** is a tile (quick picks first, then the rest), filtered by the category pills; emoji icon derived from the name (camphor 🕯, ghee 🥛, dress 👗 … — no image upload needed), English name, price (per unit for weighed items), **live stock** "37 left" / "3 left ⚠" / "✖ out"; tap adds 1 (weighed items open the quantity pad). **Disabled (🔒) for STAFF in strict mode** — still visible for price/stock reference |
 | Hardware banner | "Scanner not detected — billing paused" with **Owner override** button (time-boxed). Printer problems show only an amber chip ("receipts queued") unless *Require printed receipt* is on |
-| Qty | `+`/`−`, type number; **weighed/measured items open the quantity pad**: preset buttons (50 g · 100 g · 250 g · 500 g · 1 kg), numeric field with unit, *by amount* toggle ("₹50 of ghee"), live scale weight with *Use weight* / *Tare* when a scale is connected; weight-embedded barcodes fill qty automatically |
+| Qty | `+`/`−`, type number; **weighed/measured items open the quantity pad**: preset buttons (50 g · 100 g · 250 g · 500 g · 1 kg), numeric field that understands "500", "0.5 kg", "1.5kg", "250 g", *by amount* toggle ("₹50 of ghee"), live scale weight with *Use weight* / *Tare* when a scale is connected; weight-embedded barcodes fill qty automatically. Whether an item is weighed follows its **unit** in the editor (kg → grams, l → ml, m → cm) |
 | Line discount | ₹ or %; reason dropdown; above cap → Owner PIN modal. Offer discounts are shown but locked |
-| Bill discount | Same cap logic; reason dropdown |
-| Customer | Optional phone/name (autocomplete) |
-| **F9 Pay** | Payment dialog: Cash (tendered keypad, change), UPI (QR shown, reference optional), Card, Split |
+| **Bill discount** (F4 with no line selected) | Dialog: **customer tier** (Regular 2 % · Premier 5 % · Festival · Round-off / bargaining — editable in data key `billing.discount_tiers`), then **% or ₹**; same cap logic (staff above cap → Owner PIN); shown as its own totals row with the reason and at the foot of the bill card; printed on the receipt below the item discounts so the customer sees both |
+| Customer | **F8** — mobile number (+ optional name), normalised to `+91 …`, kept in `customer` (one row per number, so a regular is recognised next time) and linked to the sale; shown as a green 📱 chip in the bill header |
+| **Bill on WhatsApp** (optional, **off by default** — Settings → Shop & GST → "Offer Send bill on WhatsApp") | When on, the done dialog after Pay shows a phone box (prefilled from F8, or typed now) + **Send bill on WhatsApp**. If the Owner configured the WhatsApp Cloud API (Settings → Publishing: phone-number id + token) the bill text is posted directly (`RECEIPT_SHARED via=api`); otherwise a `https://wa.me/<number>?text=…` **click-to-chat link** opens WhatsApp Desktop/Web with the whole bill pre-filled and the cashier taps *Send*. The message is the 58 mm receipt (32 columns, fits a phone) in a monospace block under the bold shop name. API failure falls back to the link; never affects the sale. When off, nothing WhatsApp-related appears and F8 is plain customer capture |
+| **F9 Pay** | Payment dialog changes with the mode: **Cash** quick-note buttons + tendered + change; **UPI** the shop's UPI id and a **QR** (`upi://pay`, amount pre-filled) + optional reference; **Card** slip reference; **Split** three amounts with the live shortfall |
 | **F6 Hold / F7 Resume** | Park carts with label (customer name) |
 | **F10 Reprint last** | Up to `receipt.max_reprints` |
 | **F11 Shift** | Open / cash-in / cash-out / close |
@@ -159,7 +160,7 @@ Decisions taken:
 ## 5. Products
 
 - Grid with image thumbnails, **#ID**, code, barcode(s), name, category, price, stock, tax, status; filters & column chooser; CSV/XLSX import/export; multi-select → **Print labels** (copies per item, target: POS printer / label printer / A4 sheet).
-- **Editor** (Owner): all fields from the data model; ID, code and internal barcode are shown read-only (generated on save); **Selling mode** (Piece / Weight / Volume) with pricing unit ("₹ per 100 g / kg / 100 ml / L"), min qty, step, preset buttons; **Barcodes** section lists internal + manufacturer + pack barcodes with *Scan to add* (scan the maker's code once) and *Regenerate internal*; image upload (drag-drop, camera capture on tablets); variant grouping; tags; `quick_pick` toggle; price change requires reason → audit + price history; **Print label** button (shelf-edge label for loose items).
+- **Editor** (Owner): **essentials first** — name, category, **Sold as** (pc / pkt / box / dozen = counted · g / 100 g / kg = weighed · ml / l = measured · cm / m = cut; the unit alone decides the selling mode, prices and stock are per this unit), **purchase price**, **selling price**, **opening stock** (typed in that unit: "10" for 10 kg; after the first movement the field shows *Stock now* with a link to Stock → Adjust), **GST %** with the live CGST + SGST split. Everything else sits under **Advanced**: code (auto), MRP, HSN, low-stock alert, usual order quantity (for the reorder list), tags, change reason, barcodes (internal + manufacturer + pack, *Scan to add*, *Regenerate internal*), image, `quick_pick`. No Hindi name field (kept in the data model for CSV import; receipts print English). Price change requires reason → audit + price history. **Archive** asks for confirmation; the grid has a *Show archived* switch and a status column; an archived item's editor shows a banner with **Restore**; a duplicate code names the other item and its state (`E-CAT-005`).
 - **Price history** (Owner): the *Price history* button on a product row or in the editor opens a **compact pop-up window** (dialog, ~900×560, also usable on a tablet):
   - top row: range chips **1 month · 6 months · 1 year** and a **Custom** option that reveals *From* / *To* date pickers; the chosen range is remembered per session;
   - middle: **line chart** of selling price, MRP and cost (cost hidden unless the viewer is Owner — it always is here) over the range, step-style so each change is visible, offer windows shaded, hover tooltip shows date · old → new · who · reason;
@@ -170,11 +171,12 @@ Decisions taken:
 - **Open-item review** (Owner): queue of free-text items sold via F3 Find / Manual → Open item; group by similar name; **Convert to product** (pre-fills name/price), **Dismiss**.
 - Staff: products are reachable only through F3 Find (read-only card + replacement label).
 
-## 6. Stock (Owner; staff see only an item's stock level via F3 Find)
+## 6. Stock (Owner; staff see levels, and may book goods received)
 
 | Sub-screen | Purpose |
 |------------|---------|
-| **Overview** | Current stock, low-stock filter, value at cost |
+| **Overview** | Current stock, low-stock filter, value at cost (Owner). **Goods received** button for everyone; Owner row-click → Adjust, staff row-click → Goods received |
+| **Goods received** (dialog, Owner + staff) | A parcel arrived: item, quantity **in the item's unit** (2.5 for 2.5 kg), **note required** (who delivered / bill no.); the time and the user's name are shown and recorded; stock can only go **up** here (`PURCHASE`, no cost); the Owner is notified and books the supplier bill later |
 | **Movements** | Timeline per product; filter by type/user/date |
 | **Adjust / Damage** | Qty ± with mandatory reason |
 | **Purchase entry** | Supplier, invoice no., lines (scan to add), cost, optional expiry date → posts `PURCHASE`; prints labels for received qty; feeds the **Purchases** report (total purchases per day / period) |
@@ -231,8 +233,11 @@ discount & void overrides — by Owner, by cashier, by day.
 
 ## 9. Shifts
 
-Current shift panel (float, cash in/out, expected cash — Owner only mid-shift), close wizard with
-denomination grid, history of shifts with variance colouring.
+**Open**: denomination grid (₹500 … ₹1) with a live total — staff must count note by note (type 0 for an
+empty drawer), the Owner may type a total instead. Current shift panel (float, cash in/out, expected cash —
+Owner only mid-shift), close wizard with denomination grid, history of shifts with variance colouring.
+**End work** for staff while a shift is open: the primary button is *Close shift & count the drawer*;
+*Confirm* stays disabled until an Owner PIN is typed.
 
 **Day-close wizard** (Owner, *Shifts → Day close*): closes any open shifts (with variance review) →
 Z-report preview with print / PDF → backup now (verified) → send digest (if enabled) → *Shut down app*.
@@ -242,9 +247,8 @@ Each step shows ✔ and the whole run is audited `DAY_CLOSED`.
 
 | Tab | Options |
 |-----|---------|
-| **Shop profile** | Name (EN/HI), address, phone, GSTIN, logo |
+| **Shop & GST** (first tab, `/settings/shop`) | Shop name, address, phone, email; **GST registered** switch (off = composition/unregistered: no CGST/SGST lines), **GSTIN** (15-character pattern; required when registered → `E-CFG-003`; printed on every bill), state code, **default GST %** for new items (0 · 3 · 5 · 12 · 18 · 28), **shelf prices include GST**; live receipt-header preview; **Receipt extras**: "Offer Send bill on WhatsApp" (optional, default off). Per-item CGST/SGST = the item's GST % in Products. Reuses the onboarding wizard's validated submits |
 | **Payments** (bank / UPI details) | **UPI ID** (generates the static QR on screen & receipt), payee name, **bank account** (bank, account no., IFSC — for the owner's reference and digest), accepted payment modes. Values shown **masked**; editing requires re-entering the Owner password; stored encrypted; never visible to staff or to the AI |
-| **Tax** | Scheme, labels, default rate, inclusive pricing, rounding |
 | **Receipt** | Width (80 mm/58 mm/A4), header/footer text, show Hindi, auto-print, max reprints, QR on receipt |
 | **Billing rules** | **Require scan** (default on), **Require printed receipt** (default **off** — can only be switched on while a printer is configured and ready), **Manual add policy** (ALLOW / PIN / BLOCK), max open items per shift, override duration, max cashier discount %, discount reason list, negative stock policy, void window hours, idle lock minutes |
 | **Users** | Two roles only (**Owner**, **Billing staff**). Add staff accounts (one per person), set / reset passwords (numeric allowed for staff), deactivate; change Owner password and **Owner PIN**; view per-user last login, failed attempts, overrides received |
