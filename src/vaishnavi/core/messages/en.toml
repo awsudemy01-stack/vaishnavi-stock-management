@@ -185,6 +185,7 @@ E-AUTH-042 = { msg = "Too many wrong recovery keys — locked for 15 minutes", f
 
 # ---------------------------------------------------------------- catalogue
 E-CAT-004 = { msg = "This barcode is already used by another item ({name})", fix = "Scan a different code, or open that item and edit it instead." }
+E-CAT-005 = { msg = "Code {name} already belongs to \"{other}\" ({state})", fix = "Use another code — or, if that item is archived, open Products → Show archived and press Restore instead of adding it again." }
 E-CAT-010 = { msg = "Someone else changed this item while you were editing", fix = "Reload the item and make your change again." }
 E-CAT-020 = { msg = "This is not a valid barcode: {code}", fix = "Check the digits; a label can be re-printed from the item page." }
 
