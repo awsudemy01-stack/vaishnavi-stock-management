@@ -40,22 +40,24 @@ DB_PROVIDERS = frozenset({"ollama", "openai", "huggingface", "fastpath"})
 HISTORY_TURNS = 8
 
 _DATA_WORDS = re.compile(
-    r"\b(stock|inventory|qty|quantity|price|rate|mrp|sale|sales|bikri|kamai|collection|total|bill|bills|invoice|item|items|product|products|"
-    r"demand|forecast|reorder|profit|margin|purchase|supplier|cashier|variance|shrinkage|kitna|kitne|kitni|kaun|konsa|khatam|bacha)\b"
-    r"|स्टॉक|कीमत|दाम|बिक्री|कुल|बिल|वस्तु|माँग|पूर्वानुमान|कितना|कितनी|कितने",  # no \b: matras are not \w characters
+    r"\b(stock|inventory|qty|quantity|price|rate|mrp|sale|sales|sold|sell|bikri|bika|bike|kamai|collection|total|bill|bills|invoice|item|items|product|products|"
+    r"demand|forecast|predict|growth|reorder|profit|margin|purchase|purchases|spent|spend|kharch|supplier|cashier|variance|shrinkage|kitna|kitne|kitni|kaun|konsa|khatam|bacha)\b"
+    r"|स्टॉक|कीमत|दाम|बिक्री|बिका|खर्च|कुल|बिल|वस्तु|माँग|पूर्वानुमान|कितना|कितनी|कितने",  # no \b: matras are not \w characters
     re.IGNORECASE,
 )
 
 GROUNDING_NUDGE = (
-    "Your previous answer used no tool. You have NO knowledge of this shop's items, quantities or sales except through tools. "
-    "Call the right tool now (stock_overview for general stock questions, get_stock / item_price / search_products for one item, "
-    "low_stock_items, out_of_stock_items, sales_summary …). Never invent an item name or a number."
+    "Your previous answer used no tool. You have NO knowledge of this shop's items, quantities, sales or purchases except through tools. "
+    "Call the right tool now: stock_overview for general stock questions; get_stock / item_price / search_products for one item; "
+    "low_stock_items, out_of_stock_items; sales_summary for totals (period=today/yesterday/this_week/this_month/all_time); "
+    "demand_ranking for item-wise sales / best or worst sellers; dead_stock for 'no demand'; purchases_summary for money spent on stock; "
+    "forecast_sales / reorder_plan for the coming days. Never invent an item name or a number."
 )
 
 _UNGROUNDED: dict[str, str] = {
-    "english": "I could not check that in the shop's data, so I will not guess. Try \"stock list\", \"low stock\", or name one item — e.g. \"stock of camphor\".",
-    "hindi": "यह दुकान के डेटा में जाँच नहीं हो सका, इसलिए मैं अंदाज़ा नहीं लगाऊँगा। \"स्टॉक लिस्ट\", \"कम स्टॉक\" या किसी एक वस्तु का नाम पूछें — जैसे \"कपूर का स्टॉक\"।",
-    "hinglish": "Yeh shop ke data mein check nahi ho saka, isliye main guess nahi karunga. \"stock list\", \"kam stock\" ya ek item ka naam poochhein — jaise \"camphor kitna hai\".",
+    "english": "I could not check that in the shop's data, so I will not guess. Try \"stock list\", \"low stock\", \"today's sale\", \"item wise sale today\", \"how much have I spent so far\", \"forecast next week\" — or name one item, e.g. \"stock of camphor\".",
+    "hindi": "यह दुकान के डेटा में जाँच नहीं हो सका, इसलिए मैं अंदाज़ा नहीं लगाऊँगा। \"स्टॉक लिस्ट\", \"कम स्टॉक\", \"आज की बिक्री\", \"हर आइटम की बिक्री\", \"अब तक कितना खर्च\", \"अगले हफ़्ते का पूर्वानुमान\" — या किसी एक वस्तु का नाम पूछें, जैसे \"कपूर का स्टॉक\"।",
+    "hinglish": "Yeh shop ke data mein check nahi ho saka, isliye main guess nahi karunga. \"stock list\", \"kam stock\", \"aaj ki sale\", \"har item ki sale\", \"ab tak kitna kharch\", \"agle hafte ka forecast\" — ya ek item ka naam poochhein, jaise \"camphor kitna hai\".",
 }
 
 
