@@ -1,4 +1,4 @@
-"""``/settings`` — the Owner's settings page with tabs (docs/09 §10): Backups · Hardware · Users · Payments · System. NiceGUI only."""
+"""``/settings`` — the Owner's settings page with tabs (docs/09 §10): Shop & GST · Backups · Hardware · Users · Payments · Assistant · Publishing · System. NiceGUI only."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from vaishnavi.ui.i18n import UiTexts
 
 log = logging.getLogger("vaishnavi.ui.pages.settings")
 
-TABS = ("backups", "hardware", "users", "payments", "ai", "publishing", "system")
+TABS = ("shop", "backups", "hardware", "users", "payments", "ai", "publishing", "system")
 
 
 def register(state: Any) -> None:
@@ -17,11 +17,11 @@ def register(state: Any) -> None:
     from nicegui import app, ui  # noqa: PLC0415
 
     from vaishnavi.ui import guards  # noqa: PLC0415
-    from vaishnavi.ui.pages import settings_ai, settings_backups, settings_hardware, settings_payments, settings_publishing, settings_system, settings_users  # noqa: PLC0415
+    from vaishnavi.ui.pages import settings_ai, settings_backups, settings_hardware, settings_payments, settings_publishing, settings_shop, settings_system, settings_users  # noqa: PLC0415
     from vaishnavi.ui.server import frame  # noqa: PLC0415
     from vaishnavi.ui.session import load_client  # noqa: PLC0415
 
-    renderers = {"backups": settings_backups.render_tab, "hardware": settings_hardware.render_tab, "users": settings_users.render_tab, "payments": settings_payments.render_tab, "ai": settings_ai.render_tab, "publishing": settings_publishing.render_tab, "system": settings_system.render_tab}
+    renderers = {"shop": settings_shop.render_tab, "backups": settings_backups.render_tab, "hardware": settings_hardware.render_tab, "users": settings_users.render_tab, "payments": settings_payments.render_tab, "ai": settings_ai.render_tab, "publishing": settings_publishing.render_tab, "system": settings_system.render_tab}
 
     def page(tab: str) -> None:
         path = "/settings" if tab == "backups" else f"/settings/{tab}"
