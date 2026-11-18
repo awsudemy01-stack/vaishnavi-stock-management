@@ -19,7 +19,7 @@ from vaishnavi.services.billing import PaymentInput
 from vaishnavi.ui import layout
 from vaishnavi.ui.i18n import UiTexts
 from vaishnavi.ui.pages import reports as reports_page
-from vaishnavi.ui.pages import settings_payments, settings_users
+from vaishnavi.ui.pages import settings_payments, settings_shop, settings_users
 from vaishnavi.ui.state import ClientState, ClientUser
 
 from tests.core.test_billing import CAMPHOR, OWNER, STAFF, STAFF_PIN
@@ -197,6 +197,26 @@ class BannerAndPagesTest(Base):
         self.assertFalse(settings_payments.save_payments(self.state, STAFF, {"upi_id": "x@y"}).ok)
         self.assertTrue(settings_payments.clear_field(self.state, owner, "account_no").ok)
         self.assertEqual({f.key: f.preview for f in settings_payments.build_payments_model(self.state, EN).fields}["account_no"], "")
+
+    def test_settings_shop_tab_saves_identity_and_gst_rules_with_validation(self) -> None:
+        owner = Actor(user_id=1, role=Role.OWNER)
+        base = {"name": "Vaishnavi Puja Store", "address_line1": "12 Mandir Road", "address_line2": "", "phone": "98765 43210", "email": "", "state_code": "09"}
+        bad = settings_shop.save_shop(self.state, owner, {**base, "registered": True, "gstin": "short", "default_rate": "5", "prices_include_tax": True})
+        self.assertFalse(bad.ok)
+        self.assertIn("gstin", bad.problems)
+        missing = settings_shop.save_shop(self.state, owner, {**base, "registered": True, "gstin": "", "default_rate": "5", "prices_include_tax": True})
+        self.assertEqual((missing.ok, missing.error_code), (False, "E-CFG-003"), "registered without a GSTIN is refused")
+        ok = settings_shop.save_shop(self.state, owner, {**base, "registered": True, "gstin": "09abcde1234f1z5", "default_rate": "5", "prices_include_tax": True})
+        self.assertTrue(ok.ok, ok.message)
+        m = settings_shop.build_shop_model(self.state, EN)
+        self.assertEqual((m.gstin, m.registered, m.default_rate, m.prices_include_tax), ("09ABCDE1234F1Z5", True, "5", True))
+        self.assertEqual(m.receipt_preview, ["Vaishnavi Puja Store", "12 Mandir Road", "Ph: 98765 43210", "GSTIN: 09ABCDE1234F1Z5"])
+        self.assertFalse(m.whatsapp_share, "WhatsApp bills are optional and off by default")
+        on = settings_shop.save_shop(self.state, owner, {**base, "registered": True, "gstin": "09abcde1234f1z5", "default_rate": "5", "prices_include_tax": True, "whatsapp_share": True})
+        self.assertTrue(on.ok, on.message)
+        self.assertTrue(settings_shop.build_shop_model(self.state, EN).whatsapp_share)
+        self.assertTrue(self.c.settings_service.effective().receipt.whatsapp_share)
+        self.assertFalse(settings_shop.save_shop(self.state, STAFF, {**base, "registered": False, "gstin": "", "default_rate": "0"}).ok, "staff cannot change shop settings")
 
 
 if __name__ == "__main__":
