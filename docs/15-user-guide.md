@@ -43,6 +43,9 @@ The wizard walks you through, in order; you can stop and come back — the dashb
 | Recovery key | tick "I have written it down" |
 
 ### A3. Settings you should know (Settings → सेटिंग्स)
+- **Shop & GST** (first tab): shop name and address as printed on bills, **GST registered** on/off, your
+  **GSTIN**, the default GST % for new items, and whether shelf prices include GST. Each item's own GST %
+  is set in Products; the bill splits it into CGST + SGST for you.
 - **Billing rules**: *Require scan* (on — keep it), *Require printed receipt* (off until you have a
   reliable printer), *Manual add policy* (Allow / Owner PIN / Block), maximum staff discount %.
 - **Hardware**: printer list, scanner pairing, weighing scale.
@@ -88,21 +91,35 @@ The wizard walks you through, in order; you can stop and come back — the dashb
 1. Tap your name tile, type your password (number pad), press **Sign in & start work**. Your login time
    is recorded.
 2. If asked "You left at 18:42 yesterday without ending work — confirm?", press **Confirm** (add a note if you like).
-3. Press **F11 → Open shift** and type the cash you start with (float).
+3. Press **F11 → Open shift**: count the notes and coins in the drawer and type how many of each
+   (500 × 2, 100 × 5 …). The total appears as you type. Empty drawer? Type 0 in any box.
 
 ### C2. Make a bill
-1. **Scan** each item. The line appears with price and any offer discount.
+1. **Scan** each item. The line appears with price and any offer discount. You can also tap an item
+   **tile** on the left (the owner may lock tiles so that everything is scanned).
 2. **Loose items** (ghee, oil, kumkum): scan the **shelf label**, then choose a preset (50 g · 100 g · 250 g)
-   or type the weight / volume; or type the **amount** (₹50 of ghee) and the app works out the quantity.
+   or type the weight — "500", "0.5 kg" and "250 g" all work; or type the **amount** (₹50 of ghee) and
+   the app works out the quantity. Stock goes down by exactly that weight.
 3. **Label damaged or missing?** Press **F3 Find**, type the name, code or `#ID`, check the picture,
    **Add to bill**. You can also **Print replacement label** so the next sale can be scanned.
 4. **Item not in the system at all?** F3 → **Open item** tab → name, detail, quantity, price. (The owner
    may require their PIN for this.)
-5. **Discount asked?** Press **F4**, enter % or ₹ and choose a reason. Above the limit the owner must
-   type their PIN.
-6. Press **F9 Pay**: Cash (type tendered, change shown), UPI (customer scans the QR), Card, or Split.
+5. **Discount on one item?** Select the line, press **F4**, enter % or ₹ and choose a reason.
+   **Discount on the whole bill?** Press **F4** with no line selected → pick the customer type
+   (Regular / Premier / Festival / Round-off) → % or ₹. Both kinds print on the receipt. Above the
+   limit the owner must type their PIN.
+6. Press **F9 Pay**: **Cash** (tap the note the customer gave or type it — change is shown), **UPI**
+   (the QR appears on screen — the customer scans it; note the reference if you like), **Card**, or
+   **Split** (type how much by cash / UPI / card; the remaining amount is shown).
 7. The receipt prints automatically (or is saved if there is no printer — you can show it on screen).
+   **Customer wants the bill on WhatsApp?** (only if the owner switched this on in Settings → Shop & GST)
+   Type their mobile number in the box on the "Bill done" screen (or press **F8 Customer** earlier, while
+   billing) and press **Send bill on WhatsApp** — WhatsApp opens on this PC with the bill ready; press
+   *Send* there. The number is remembered, so next time the name shows up.
 8. Customer changed their mind mid-bill? **F6 Hold**, serve the next person, **F7 Resume** later.
+9. **A parcel of stock arrived and the owner is away?** Stock → **Goods received**: pick the item, type
+   how many came (in the item's unit), and a note (who delivered / bill number). The time and your name
+   are recorded and the owner is told. You can only *add* stock here.
 
 ### C3. Fix a mistake
 - Wrong quantity: select the line, use **+ / −** or type the quantity.
@@ -112,7 +129,8 @@ The wizard walks you through, in order; you can stop and come back — the dashb
 
 ### C4. End work
 1. **F11 → Close shift**: count the drawer by denomination (500 × 4, 200 × 3 …); the app shows expected vs counted.
-2. Press **⏻ End work** (top-right or `Ctrl+Q`), check the exit time, **Confirm**.
+2. Press **⏻ End work** (top-right or `Ctrl+Q`), check the exit time, **Confirm**. If your shift is still
+   open, the big button takes you to the count first — only the owner's PIN can skip it.
 3. Do **not** just close the window: if you do, you will have to confirm the exit time next morning,
    and the owner sees it as "window closed".
 
@@ -120,22 +138,30 @@ The wizard walks you through, in order; you can stop and come back — the dashb
 You can ask, in English or Hindi: *"kalawa ka stock?"*, *"price of camphor 50 g"*, *"which items are
 low?"*, *"how do I hold a bill?"*. It cannot tell you sales totals or anything about other staff.
 
+**Owner** questions that are answered instantly (even with the AI model switched off): *"aaj ki sale"*,
+*"kal ki sale kitni thi"*, *"is mahine ka total"*, *"har item ka sale aaj"* / *"which items sold today"*,
+*"which stock is high in demand"*, *"which item has no demand"*, *"maine ab tak kitna kharch kiya"* /
+*"how much have I spent so far"*, *"forecast next week"* / *"agle mahine kitna bikega"*. Comparisons and
+"why" questions need the AI model.
+
 ---
 
 ## Part D — Products & stock (Owner)  (सामान / स्टॉक)
 
 | Task | Where | Notes |
 |---|---|---|
-| Add a product | Products → **New** | ID, code and barcode are generated for you; set *Selling mode* Piece / Weight / Volume |
+| Add a product | Products → **New** | Name, category, **Sold as** (pc / kg / l …), purchase price, selling price, opening stock, GST %. Code and barcode are generated for you; MRP, HSN, alerts and barcodes are under *Advanced* |
 | Print barcode labels | Products → select → **Print labels** | thermal strip, label roll or A4 sticker sheet |
-| Attach the manufacturer's barcode | Product → Barcodes → **Scan to add** | both barcodes then work |
+| Attach the manufacturer's barcode | Product → Advanced → Barcodes → **Scan to add** | both barcodes then work |
 | Change a price | Product → Price → reason | recorded in **Price history** (pop-up chart: 1 m / 6 m / 1 y / custom) |
 | Festival offer | Products → **Offers** → New | e.g. "Diwali 1 % on Camphor", dates; applies automatically when scanned |
-| Goods received | Stock → **Purchase entry** | supplier, invoice no., qty, cost; labels for the received qty |
+| Goods received (with the supplier bill) | Stock → **Purchase entry** | supplier, invoice no., qty, cost; updates the purchase price; labels for the received qty |
+| Goods received (quick, or by staff) | Stock → **Goods received** | item, qty in its unit, note; add only — book the bill later with Purchase entry |
 | Correction / damage | Stock → **Adjust / Damage** | reason required; shows in reports |
 | Count the shelf | Stock → **Stock-take** | Full / category / selected; approve → shrinkage report |
 | Items staff sold as "Open item" | Products → **Open-item review** | one click converts them into real products with labels |
 | Reorder | Reports → **Forecast** → *Create reorder list* → PDF | send to the supplier |
+| Hidden an item by mistake? | Products → **Show archived** → open → **Restore** | its code stays reserved while archived |
 
 ---
 
