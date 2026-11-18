@@ -234,7 +234,7 @@ def render_topbar(model: ShellModel, *, on_lang: Any = None, on_bell: Any = None
             ui.element("div").classes("om").props(f'innerHTML="{model.brand.mark}"')
             with ui.element("div"):
                 ui.label(model.brand.title)
-                ui.html(f"<small>{model.brand.subtitle}</small>")
+                ui.html(f"<small>{model.brand.subtitle}</small>", sanitize=False)
         ui.element("div").classes("flex-1")
         with ui.row().classes("gap-2 items-center"):
             for chip in model.chips:
@@ -266,12 +266,12 @@ def render_topbar(model: ShellModel, *, on_lang: Any = None, on_bell: Any = None
 
 
 def render_rail(model: ShellModel) -> None:
-    """Left navigation."""
+    """Left navigation — the 64 px icon rail of the mock-up (icon above a tiny label; active = saffron square)."""
     from nicegui import ui  # noqa: PLC0415
 
-    with ui.element("nav").classes("vsm-rail flex flex-col gap-1 p-2 w-52"):
+    with ui.element("nav").classes("vsm-rail"):
         for item in model.nav:
-            with ui.link(target=item.path).classes("active" if item.active else ""):
+            with ui.link(target=item.path).classes("active" if item.active else "").tooltip(item.label):
                 ui.icon(item.icon)
                 ui.label(item.label)
 
@@ -285,7 +285,7 @@ def render_chat_bubble(model: ShellModel, on_click: Any = None) -> None:
     with ui.element("div").classes("vsm-chatfab") as fab:
         ui.element("div").classes("bub").props('innerHTML="💬"')
         with ui.element("div"):
-            ui.html(f"<b>{model.chat_bubble.title}</b><br><small>{model.chat_bubble.hint}</small>")
+            ui.html(f"<b>{model.chat_bubble.title}</b><br><small>{model.chat_bubble.hint}</small>", sanitize=False)
     if on_click is not None:
         fab.on("click", on_click)
 
@@ -308,4 +308,4 @@ def render_health_summary(summary: HealthSummary) -> None:
         ui.label(f"{glyph.get(summary.level, '•')} {summary.title}").classes("font-bold mb-2")
         for line in summary.lines:
             ui.label(f"{glyph.get(line.level, '•')} {line.text}")
-        ui.html(f"<div style='margin-top:10px;opacity:.9;font-size:12px'>{summary.foot}</div>")
+        ui.html(f"<div style='margin-top:10px;opacity:.9;font-size:12px'>{summary.foot}</div>", sanitize=False)
