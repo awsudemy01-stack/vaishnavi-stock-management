@@ -107,19 +107,36 @@ def build_shift_model(c: Any, texts: UiTexts, actor: Actor, *, shift_id: int | N
     current = _current(c, names, shift, show_expected=owner) if shift is not None and shift.status == "OPEN" else None
     opens = [_current(c, names, s, show_expected=True) for s in c.shifts.open_shifts()] if owner else []
     history = [HistoryRow(s.id, names.get(s.user_id, f"#{s.user_id}"), format_ist(parse_iso_utc(s.opened_at), "%d-%b %H:%M"), format_ist(parse_iso_utc(s.closed_at), "%d-%b %H:%M") if s.closed_at else "", format_inr(s.expected_cash_paise or 0), format_inr(s.counted_cash_paise or 0), _signed(s.variance_paise or 0), s.note or "") for s in c.shifts.variance_history(user_id=None if owner else actor.user_id, limit=50)]
-    labels = {k: texts.t(f"shifts.{k}") for k in ("title", "open", "float", "cash_in", "cash_out", "amount", "reason", "x_report", "close", "count", "note", "expected", "counted", "variance", "history", "print", "z_report", "open_shifts", "no_shift")}
+    labels = {k: texts.t(f"shifts.{k}") for k in ("title", "open", "float", "cash_in", "cash_out", "amount", "reason", "x_report", "close", "count", "note", "expected", "counted", "variance", "history", "print", "z_report", "open_shifts", "no_shift",
+                                                   "open_count_hint", "float_total", "float_total_hint")}
     return ShiftModel(current, c.shifts.current(actor.user_id) is None, owner, DENOMINATIONS, opens, history, labels)
 
 
-def open_shift(c: Any, actor: Actor, *, float_text: str) -> ActionOutcome:
-    """Enter the float."""
+def open_shift(c: Any, actor: Actor, *, float_text: str = "", denominations: dict[str, str] | None = None) -> ActionOutcome:
+    """Count the float into the drawer — note by note when the grid is used, else the typed total (Owner only).
+
+    Staff must fill the grid (type ``0`` in one box for an empty drawer) so an opening float is never assumed.
+    """
     try:
-        c.shifts.open(actor, opening_float_paise=parse_inr(float_text or "0"))
+        if denominations is not None and any(str(v).strip() for v in denominations.values()):
+            c.shifts.open(actor, denominations=_counts(denominations))
+        elif actor.role is Role.OWNER:
+            c.shifts.open(actor, opening_float_paise=parse_inr(float_text or "0"))
+        else:
+            return ActionOutcome(False, "Count the notes in the drawer first (type 0 if it is empty).")
     except ShiftError as exc:
         return ActionOutcome(False, f"{exc.user_message()} {exc.what_to_do()}".strip(), exc.code)
-    except (VaishnaviError, ValueError) as exc:
+    except (VaishnaviError, ValueError, InvalidOperation) as exc:
         return ActionOutcome(False, str(exc))
     return ActionOutcome(True)
+
+
+def open_preview_text(denominations: dict[str, str]) -> str:
+    """Live total of the opening count grid (``₹0.00`` while nothing/invalid is typed)."""
+    try:
+        return format_inr(count_denominations(_counts(denominations)))
+    except (ValueError, InvalidOperation):
+        return format_inr(0)
 
 
 def cash_in(c: Any, actor: Actor, *, amount_text: str, reason: str) -> ActionOutcome:
@@ -231,10 +248,17 @@ def register(state: Any) -> None:
                 ui.label(m.labels["title"]).classes("text-xl font-semibold")
                 if m.current is None:
                     ui.label(m.labels["no_shift"]).classes("text-sm text-gray-600")
-                    form = {"float": "0"}
+                    ui.label(m.labels["open_count_hint"]).classes("text-sm")
+                    open_counts = {str(d): "" for d in m.denominations}
+                    open_total = ui.label(f"{m.labels['float']}: {open_preview_text(open_counts)}").classes("font-semibold text-lg")
+                    with ui.grid(columns=5).classes("gap-2"):
+                        for d in m.denominations:
+                            ui.input(f"₹{d} ×").bind_value(open_counts, str(d)).props("dense inputmode=numeric" + (" autofocus" if d == m.denominations[0] else "")).on("update:model-value", lambda _e: open_total.set_text(f"{m.labels['float']}: {open_preview_text(open_counts)}"))
+                    form = {"float": ""}
                     with ui.row().classes("items-end gap-2"):
-                        ui.input(m.labels["float"]).bind_value(form, "float").props("inputmode=decimal autofocus").classes("w-40")
-                        ui.button(m.labels["open"], on_click=lambda: (_after_open(open_shift(services, actor, float_text=str(form["float"]))),)).props("unelevated color=primary size=lg")
+                        if m.show_expected:
+                            ui.input(m.labels["float_total"]).bind_value(form, "float").props("inputmode=decimal").classes("w-40").tooltip(m.labels["float_total_hint"])
+                        ui.button(m.labels["open"], icon="lock_open", on_click=lambda: (_after_open(open_shift(services, actor, float_text=str(form["float"]), denominations=open_counts)),)).props("unelevated color=primary size=lg")
                 else:
                     cur = m.current
                     with ui.row().classes("gap-6 vsm-card p-3"):
