@@ -51,6 +51,7 @@ class Permission(str, Enum):
     MANAGE_PRODUCTS = "MANAGE_PRODUCTS"  # create/edit products, barcodes, labels
     PRINT_LABEL = "PRINT_LABEL"  # replacement label only
     STOCK_MOVEMENTS = "STOCK_MOVEMENTS"  # purchase, adjustment, damage, stock-take approval
+    RECEIVE_STOCK = "RECEIVE_STOCK"  # book a delivery in (add only, note mandatory) — staff too, for parcels arriving in the Owner's absence
     # Reports
     REPORT_OWN_SHIFT = "REPORT_OWN_SHIFT"
     REPORT_SALES = "REPORT_SALES"
@@ -86,6 +87,7 @@ MATRIX: Final[dict[Permission, dict[Role, Grant]]] = {
     Permission.MANAGE_PRODUCTS: {Role.OWNER: _A, Role.STAFF: _D},
     Permission.PRINT_LABEL: {Role.OWNER: _A, Role.STAFF: _A},
     Permission.STOCK_MOVEMENTS: {Role.OWNER: _A, Role.STAFF: _D},
+    Permission.RECEIVE_STOCK: {Role.OWNER: _A, Role.STAFF: _A},
     Permission.REPORT_OWN_SHIFT: {Role.OWNER: _A, Role.STAFF: _A},
     Permission.REPORT_SALES: {Role.OWNER: _A, Role.STAFF: _D},
     Permission.REPORT_PURCHASES: {Role.OWNER: _A, Role.STAFF: _D},
