@@ -28,7 +28,7 @@ log = logging.getLogger("vaishnavi.ai.tools")
 
 ALL: Final = frozenset({Role.OWNER, Role.STAFF})
 OWNER: Final = frozenset({Role.OWNER})
-PERIODS: Final = ("today", "yesterday", "this_week", "last_week", "this_month", "last_month", "last_7_days", "last_30_days", "last_90_days", "this_year")
+PERIODS: Final = ("today", "yesterday", "this_week", "last_week", "this_month", "last_month", "last_7_days", "last_30_days", "last_90_days", "this_year", "all_time")
 
 
 def _q(value: Decimal | int | None) -> str:
@@ -66,12 +66,16 @@ def period_bounds(period: str | None, from_: str | None, to: str | None, *, toda
             a, b = today - timedelta(days=29), today
         elif p == "last_90_days":
             a, b = today - timedelta(days=89), today
+        elif p == "all_time":  # "so far" / "ab tak" — everything the app has (clamped to two years below)
+            a, b = today - timedelta(days=730), today
         else:  # this_year
             a, b = today.replace(month=1, day=1), today
     if a > b:
         a, b = b, a
     a = max(a, today - timedelta(days=730))
     label = a.strftime("%d-%b-%Y") if a == b else f"{a.strftime('%d-%b-%Y')} to {b.strftime('%d-%b-%Y')}"
+    if period == "all_time" and not (from_ or to):
+        label = "all time"
     return a.isoformat(), b.isoformat(), label
 
 
@@ -152,17 +156,17 @@ class ToolRegistry:
         self._add("shop_status", "Scanner, printer and assistant status.", {}, ALL, self._shop_status, link="/status")
         self._add("explain_error", "Plain-language meaning and fix for an E- error code shown on screen.", {"code": {"type": "string"}}, ALL, self._explain_error, required=["code"])
         self._add("explain_screen", "How to do something in the app (steps from the user guide).", q, ALL, self._explain_screen, required=["query"])
-        self._add("sales_summary", "Sales totals for a period: net, bills, average bill, items, by payment mode.", {**_PERIOD_PARAMS, "group_by": {"type": "string", "enum": ["none", "day", "payment_mode"], "default": "none"}}, OWNER, self._sales_summary, link="/reports/sales")
+        self._add("sales_summary", "Sales totals for a period (today/yesterday/this_week/this_month/all_time…): net, bills, average bill, items, by payment mode. Use for 'kitni sale hui', 'aaj ka total', 'how much did we sell'.", {**_PERIOD_PARAMS, "group_by": {"type": "string", "enum": ["none", "day", "payment_mode"], "default": "none"}}, OWNER, self._sales_summary, link="/reports/sales")
         self._add("sales_compare", "Compare two periods' sales.", {"period_a": {"type": "string", "enum": list(PERIODS)}, "period_b": {"type": "string", "enum": list(PERIODS)}}, OWNER, self._sales_compare, required=["period_a", "period_b"], link="/reports/sales")
-        self._add("demand_ranking", "Top or bottom selling items for a period.", {**_PERIOD_PARAMS, "order": {"type": "string", "enum": ["top", "bottom"], "default": "top"}, "limit": {"type": "integer", "default": 10}}, OWNER, self._demand_ranking, link="/reports/top")
-        self._add("dead_stock", "Items in stock but unsold for N days, with value.", {"days": {"type": "integer", "default": 60, "minimum": 7, "maximum": 365}, "limit": {"type": "integer", "default": 20}}, OWNER, self._dead_stock, link="/reports/dead")
-        self._add("forecast_sales", "Expected total demand over the horizon (sum of item forecasts).", {"horizon_days": {"type": "integer", "default": 14, "minimum": 1, "maximum": 90}}, OWNER, self._forecast_sales, link="/reports/forecast")
-        self._add("forecast_item", "Demand forecast for one item with band, confidence and caveats.", {**q, "horizon_days": {"type": "integer", "default": 14, "minimum": 1, "maximum": 90}}, OWNER, self._forecast_item, required=["query"], link="/reports/forecast")
-        self._add("reorder_plan", "Items to reorder: stock, daily rate, days of cover, suggested quantity.", {"horizon_days": {"type": "integer", "default": 14, "minimum": 1, "maximum": 90}, "limit": {"type": "integer", "default": 20}}, OWNER, self._reorder_plan, link="/reports/forecast")
+        self._add("demand_ranking", "Item-wise sales for a period: quantity and amount sold of each item, best sellers (order=top, 'high demand', 'sabse zyada bikta') or slowest (order=bottom, 'low demand', 'kam bikta'). Use for 'har item ki sale', 'kaun sa item kitna bika', 'which items sold today'.", {**_PERIOD_PARAMS, "order": {"type": "string", "enum": ["top", "bottom"], "default": "top"}, "limit": {"type": "integer", "default": 10}}, OWNER, self._demand_ranking, link="/reports/top")
+        self._add("dead_stock", "Items in stock but unsold for N days ('no demand', 'nahi bikta', 'jo bikta hi nahi'), with value.", {"days": {"type": "integer", "default": 60, "minimum": 7, "maximum": 365}, "limit": {"type": "integer", "default": 20}}, OWNER, self._dead_stock, link="/reports/dead")
+        self._add("forecast_sales", "Expected total demand over the next N days ('forecast', 'future sale', 'agle hafte kitna bikega', 'next week sales'). Sum of item forecasts.", {"horizon_days": {"type": "integer", "default": 14, "minimum": 1, "maximum": 90}}, OWNER, self._forecast_sales, link="/reports/forecast")
+        self._add("forecast_item", "Demand forecast for one item with band, confidence and caveats ('camphor agle mahine kitna bikega').", {**q, "horizon_days": {"type": "integer", "default": 14, "minimum": 1, "maximum": 90}}, OWNER, self._forecast_item, required=["query"], link="/reports/forecast")
+        self._add("reorder_plan", "Items to reorder soon: stock, daily sale rate, days of cover, stock-out date, suggested quantity ('kya mangana hai', 'what to order').", {"horizon_days": {"type": "integer", "default": 14, "minimum": 1, "maximum": 90}, "limit": {"type": "integer", "default": 20}}, OWNER, self._reorder_plan, link="/reports/forecast")
         self._add("festival_outlook", "Next festival window and the categories it lifts.", {"festival": {"type": "string"}}, OWNER, self._festival_outlook, link="/reports/forecast")
         self._add("cashier_summary", "Per-cashier bills, sales, discounts, voids, manual lines, variance.", {**_PERIOD_PARAMS, "user": {"type": "string"}}, OWNER, self._cashier_summary, link="/reports/cashiers")
         self._add("shrinkage_summary", "Damage, adjustments and stock-take losses, valued.", _PERIOD_PARAMS, OWNER, self._shrinkage, link="/reports/shrinkage")
-        self._add("purchases_summary", "Purchases per supplier for a period.", _PERIOD_PARAMS, OWNER, self._purchases, link="/reports/purchases")
+        self._add("purchases_summary", "Money spent buying stock (purchases) per supplier for a period — 'kitna kharch kiya', 'how much have I spent on items', 'maal kitne ka aaya'. Use period=all_time for 'so far / ab tak'.", _PERIOD_PARAMS, OWNER, self._purchases, link="/reports/purchases")
         self._add("profit_summary", "Gross profit and margin for a period.", _PERIOD_PARAMS, OWNER, self._profit, link="/reports/profit")
         self._add("price_history", "Price changes of one item.", {**q, "range": {"type": "string", "enum": ["1m", "6m", "1y"], "default": "6m"}}, OWNER, self._price_history, required=["query"], link="/products")
         self._add("backup_status", "Last backup age, queued copies, secondary drive.", {}, OWNER, self._backup_status, link="/settings/backups")
