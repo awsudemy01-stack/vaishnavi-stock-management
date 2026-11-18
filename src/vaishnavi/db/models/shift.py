@@ -22,6 +22,7 @@ class Shift(Base):
     opened_at: Mapped[str] = mapped_column(Text)
     closed_at: Mapped[str | None] = mapped_column(Text, nullable=True)
     opening_float_paise: Mapped[int] = mapped_column()
+    opening_denominations: Mapped[str | None] = mapped_column(Text, nullable=True)
     expected_cash_paise: Mapped[int | None] = mapped_column(nullable=True)
     counted_cash_paise: Mapped[int | None] = mapped_column(nullable=True)
     denominations: Mapped[str | None] = mapped_column(Text, nullable=True)
