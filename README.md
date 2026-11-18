@@ -6,7 +6,7 @@
 > POS billing (scan-first, discounts, open items, hold/resume, receipts & ESC/POS printing), shifts with blind
 > count, voids/refunds, anti-theft reports, sales reports, dashboard, forecasting & reorder plan, the guard-railed
 > bilingual AI assistant (Ollama / OpenAI / Hugging Face / off), report publishing (folder · e-mail · Telegram ·
-> WhatsApp), the day-close wizard and purchase orders** are implemented and covered by **770 stdlib-only tests**
+> WhatsApp), the day-close wizard and purchase orders** are implemented and covered by **797 stdlib-only tests**
 > that run on a bare Python interpreter. The first live runs on the shop PC (macOS, NiceGUI 4) have started; the
 > findings and fixes are in the [CHANGELOG](CHANGELOG.md) ("Fixed — first live run", "Fixed — live run 2"). Follow the
 > **[first-run checklist](docs/17-install-and-run.md#51-first-run-on-the-shop-pc--the-checklist)**.
