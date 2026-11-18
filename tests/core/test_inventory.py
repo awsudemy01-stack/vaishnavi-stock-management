@@ -82,6 +82,23 @@ class MovementsTest(Base):
         self.assertEqual(self.inventory.stock_of(10), Decimal("93"))
         self.assertEqual(self._q("SELECT type FROM stock_movement ORDER BY id DESC LIMIT 1")[0][0], "DAMAGE")
 
+    def test_staff_can_book_goods_received_but_never_reduce_stock(self) -> None:
+        mv = self.inventory.receive_goods(STAFF, 10, Decimal("24"), note="Sharma Traders parcel, bill 4471")
+        self.assertEqual((mv.type, mv.qty_delta, mv.qty_after, mv.user_id), ("PURCHASE", Decimal("24"), Decimal("120"), 2))
+        self.assertEqual(mv.reason, "received at counter: Sharma Traders parcel, bill 4471")
+        self.assertEqual(self.inventory.stock_of(10), Decimal("120"))
+        self.assertEqual((self.events[-1].movement_type, self.events[-1].by_staff, self.events[-1].user_id), ("PURCHASE", True, 2))
+        self.assertEqual(self._q("SELECT action, user_id FROM audit_log ORDER BY id DESC LIMIT 1")[0], ("STOCK_RECEIVED", 2))
+        with self.assertRaises(ValueError):
+            self.inventory.receive_goods(STAFF, 10, Decimal("-5"), note="oops")
+        with self.assertRaises(ValueError):
+            self.inventory.receive_goods(STAFF, 10, Decimal("5"), note="")
+        with self.assertRaises(PermissionDenied):
+            self.inventory.adjust(STAFF, 10, Decimal("5"), reason="still owner-only")
+        owner_mv = self.inventory.receive_goods(OWNER, 10, Decimal("1"), note="sample pack")
+        self.assertFalse(self.events[-1].by_staff)
+        self.assertEqual(owner_mv.qty_after, Decimal("121"))
+
     def test_low_stock_event_fires_once_when_crossing_the_minimum(self) -> None:
         p = self.catalog.create(OWNER, ProductInput(name="Agarbatti 20", category_id=None, price_paise=1000, min_stock=Decimal("5")))
         self.inventory.opening_stock(OWNER, p.id, Decimal("8"))
