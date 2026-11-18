@@ -34,7 +34,7 @@ log = logging.getLogger("vaishnavi.services.settings")
 
 SettingType = Literal["str", "int", "bool", "json", "float"]
 
-DATA_KEYS: Final[frozenset[str]] = frozenset({"catalog.units", "tax.presets", "ui.quick_pick_order", "setup.first_run_done"})
+DATA_KEYS: Final[frozenset[str]] = frozenset({"catalog.units", "tax.presets", "ui.quick_pick_order", "setup.first_run_done", "billing.discount_tiers"})
 """Keys that are stored in the table but are not fields of ``Settings``."""
 
 
