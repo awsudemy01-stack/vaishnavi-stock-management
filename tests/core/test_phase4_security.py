@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 import tempfile
 import unittest
@@ -107,9 +108,14 @@ class ShiftsPageTest(Base):
         m = shifts_page.build_shift_model(self.c, EN, STAFF)
         self.assertIsNone(m.current)
         self.assertTrue(m.can_open)
-        self.assertEqual(list(m.denominations), [2000, 500, 200, 100, 50, 20, 10, 5, 2, 1])
-        opened = shifts_page.open_shift(self.c, STAFF, float_text="500")
+        self.assertEqual(list(m.denominations), [500, 200, 100, 50, 20, 10, 5, 2, 1], "₹2000 was withdrawn in 2023")
+        blind = shifts_page.open_shift(self.c, STAFF, float_text="500", denominations={"500": "", "100": ""})
+        self.assertFalse(blind.ok, "staff must count the drawer note by note — no typed total")
+        self.assertEqual(shifts_page.open_preview_text({"500": "1", "100": "", "20": "x"}), "₹0.00", "invalid grid → ₹0 preview, never a crash")
+        self.assertEqual(shifts_page.open_preview_text({"200": "2", "100": "1"}), "₹500.00")
+        opened = shifts_page.open_shift(self.c, STAFF, denominations={"200": "2", "100": "1", "50": "0"})
         self.assertTrue(opened.ok, opened.message)
+        self.assertEqual(json.loads(self.c.shifts.current(2).opening_denominations), {"200": 2, "100": 1}, "zero rows dropped, count kept for the Owner")  # type: ignore[union-attr]
         m = shifts_page.build_shift_model(self.c, EN, STAFF)
         assert m.current is not None
         self.assertEqual((m.current.opening_float_text, m.current.bills, m.current.cash_sales_text), ("₹500.00", 0, "₹0.00"))
