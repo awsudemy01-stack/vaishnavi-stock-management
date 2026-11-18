@@ -446,6 +446,25 @@ class SaleView:
 
 
 @dataclass(frozen=True)
+class CustomerRecord:
+    """A ``customer`` row — a phone number (E.164 digits, e.g. ``919876543210``) and an optional name,
+    kept so a bill can be sent on WhatsApp and the regular customer is recognised next time."""
+
+    id: int
+    name: str | None
+    phone: str | None
+    note: str | None
+
+    @property
+    def phone_text(self) -> str:
+        """``+91 98765 43210`` for the screen."""
+        p = self.phone or ""
+        if len(p) == 12 and p.startswith("91"):
+            return f"+91 {p[2:7]} {p[7:]}"
+        return f"+{p}" if p else ""
+
+
+@dataclass(frozen=True)
 class HeldCartRecord:
     """A ``held_cart`` row (the cart itself is the JSON ``payload`` of its single line row)."""
 
@@ -487,6 +506,8 @@ class ShiftRecord:
     closed_by_user_id: int | None
     status: str  # OPEN | CLOSED
     note: str | None
+    opening_denominations: str | None = None
+    """JSON of the notes counted into the drawer at open (same shape as ``denominations``)."""
 
 
 @dataclass(frozen=True)
