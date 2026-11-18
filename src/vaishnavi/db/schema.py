@@ -8,13 +8,14 @@ same statements through SQLAlchemy.
 from __future__ import annotations
 
 import hashlib
+import re
 import sqlite3
 from pathlib import Path
 from typing import Final
 
 SCHEMA_FILE: Final = Path(__file__).resolve().parent / "schema.sql"
-SCHEMA_VERSION: Final = "0001"
-HEAD_REVISION: Final = "0001_initial"
+SCHEMA_VERSION: Final = "0002"
+HEAD_REVISION: Final = "0002_staff_receive"
 """Newest Alembic revision shipped (kept equal to ``alembic/versions`` by ``tests/core/test_db_schema.py``);
 lets the stdlib doctor compare ``alembic_version`` without importing Alembic."""
 
@@ -61,6 +62,16 @@ def load_statements(path: Path = SCHEMA_FILE) -> list[str]:
 def schema_hash(path: Path = SCHEMA_FILE) -> str:
     """Short SHA-256 of the schema file (recorded in ``db_identity.schema_version`` detail / manifests)."""
     return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def statement_for(object_name: str, path: Path = SCHEMA_FILE) -> str:
+    """The ``CREATE …`` statement of one named table/index/trigger — lets a later migration re-create an
+    object exactly as ``schema.sql`` defines it today (single source of truth, no copy-paste drift)."""
+    pattern = re.compile(rf"^CREATE\s+(?:UNIQUE\s+)?(?:TABLE|INDEX|TRIGGER|VIEW)\s+(?:IF\s+NOT\s+EXISTS\s+)?{re.escape(object_name)}\b", re.IGNORECASE)
+    for stmt in load_statements(path):
+        if pattern.match(stmt):
+            return stmt
+    raise KeyError(object_name)
 
 
 def apply_schema(conn: sqlite3.Connection, path: Path = SCHEMA_FILE) -> int:
