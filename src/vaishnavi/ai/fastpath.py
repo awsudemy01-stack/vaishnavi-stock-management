@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 import re
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Final
 
 from vaishnavi.core.permissions import Role
@@ -31,6 +31,8 @@ class FastIntent:
     tool: str
     query: str | None = None
     owner_only: bool = False
+    args: dict[str, Any] = field(default_factory=dict)
+    """Extra tool arguments decided from the question (period, order, horizon)."""
 
 
 @dataclass(frozen=True)
@@ -63,6 +65,70 @@ _OVERVIEW = re.compile(
     re.IGNORECASE,
 )
 _SALES = re.compile(r"\b(today.?s? (sale|sales|total|collection)|aaj (ka|ki) (total|sale|bikri|kamai|collection)|current sale|आज की (बिक्री|कुल)|आज का (टोटल|कुल))\b", re.IGNORECASE)
+# ---- Owner business intents (live run 4): spend, item-wise sales, demand, forecast. Matched before the stock intents
+#      because "which item is of no demand" otherwise looks like a stock list, and "kitna item bika" like a stock query.
+_SPEND = re.compile(r"\b(kharch|kharcha|spent|spend|spending|expense|expenses|invest(ed|ment)?|paisa laga|paise lage|lagaya|purchase total|purchases?|khareed|khareeda|kharida|maal (aaya|mangaya))\b|खर्च|खरीद", re.IGNORECASE)
+_FORECAST = re.compile(r"\b(forecast|predict(ion)?|future|upcoming|expected|anuman|agle|agla|aane ?wal[ae]|next (day|days|week|weeks|month|few)|growth|kitna bikega|bikegi|kya bikega)\b|पूर्वानुमान|अगले|आने वाल", re.IGNORECASE)
+_DEMAND_HIGH = re.compile(r"\b(high demand|most demand|zyada demand|jyada demand|high in demand|in demand|best ?sell(er|ers|ing)|top ?sell(er|ers|ing)|most (sold|selling|popular)|sabse (zyada|jyada|adhik) (bikta|bikti|bikne|bika|sale)|fast ?moving|hot items?|popular items?|top items?)\b|ज़्यादा (माँग|मांग|बिकता|बिकने)|सबसे ज़्यादा|सबसे ज्यादा", re.IGNORECASE)
+_DEMAND_NONE = re.compile(r"\b(no demand|low demand|less demand|kam demand|not (selling|sold|moving)|nahi bik(ta|ti|te|a|e|i)|bikta (hi )?nahi|unsold|dead stock|slow ?moving|worst ?sell(er|ers|ing)|least (sold|selling)|zero sale|no sale items?|koi demand nahi)\b|कम (माँग|मांग)|नहीं बिक|माँग नहीं|मांग नहीं", re.IGNORECASE)
+_ITEM_SALES = re.compile(
+    r"\b(har (ek )?item|har (ek )?cheez|each items?|every item|per item|item ?wise|itemwise|product ?wise|"
+    r"kaun ?sa item .*\bbik(a|e|i|ri)|kitn[aei] (item|items|cheez|cheezein) .*\bbik(a|e|i|ri)|items? (ne )?bik(a|e|i|ay[ie])|bika hai|bike hain|bikri hui|"
+    r"(items?|products?) (have been |were |got )?sold|sold items?|what (all )?(did we |have we |i |we )?(sell|sold)|sale (of|on|for) (each|every|all) (items?|products?)|kya kya bika)"
+    r"|हर (एक )?(आइटम|वस्तु|चीज़)|कितने? (आइटम|वस्तु|चीज़ें?) बिक|क्या क्या बिका",
+    re.IGNORECASE,
+)
+_SALE_WORD = re.compile(r"\b(sale|sales|bikri|bikree|kamai|collection|revenue|turnover|total|becha|bech[ae])\b|बिक्री|कमाई", re.IGNORECASE)
+_PERIOD_WORDS: Final[tuple[tuple[re.Pattern[str], str], ...]] = (
+    (re.compile(r"\b(so far|till (now|date|today)|until now|up to now|ab tak|abtak|ab ?talak|overall|all time|lifetime|since (the )?(start|beginning|opening)|shuru se|kul mila ?kar|grand total)\b|अब तक|शुरू से|कुल मिलाकर", re.IGNORECASE), "all_time"),
+    (re.compile(r"\b(yesterday|kal (ki|ka|ko)? ?(sale|bikri|total|kamai)|beete kal|pichle din)\b|कल की|बीते कल", re.IGNORECASE), "yesterday"),
+    (re.compile(r"\b(last week|pichle (hafte|week|saptah)|pichhle hafte|गत सप्ताह)\b|पिछले (हफ़्ते|हफ्ते|सप्ताह)", re.IGNORECASE), "last_week"),
+    (re.compile(r"\b(this week|is (hafte|week|saptah)|iss hafte|weekly)\b|इस (हफ़्ते|हफ्ते|सप्ताह)", re.IGNORECASE), "this_week"),
+    (re.compile(r"\b(last month|pichle (mahine|month|maheene)|pichhle mahine)\b|पिछले (महीने|माह)", re.IGNORECASE), "last_month"),
+    (re.compile(r"\b(this month|is (mahine|month|maheene)|iss mahine|monthly|mahine (ka|ki|mein))\b|इस (महीने|माह)", re.IGNORECASE), "this_month"),
+    (re.compile(r"\b(last 7 days|past week|pichle 7 din|7 din)\b", re.IGNORECASE), "last_7_days"),
+    (re.compile(r"\b(last 30 days|past month|pichle 30 din|30 din)\b", re.IGNORECASE), "last_30_days"),
+    (re.compile(r"\b(this year|is saal|iss saal|yearly|saal (ka|ki|bhar))\b|इस साल", re.IGNORECASE), "this_year"),
+    (re.compile(r"\b(today|aaj|aj|pura din|poora din|pure din|din bhar|dinbhar)\b|आज|पूरा दिन|दिन भर", re.IGNORECASE), "today"),
+)
+_HORIZON = re.compile(r"\b(\d{1,2})\s*(din|days?|दिन)\b|\b(next|agle|agla|aane wale|coming)\s+(day|din|week|hafte|hafta|month|mahine|mahina|few days)\b|अगले\s+(दिन|हफ़्ते|हफ्ते|महीने)|अगला\s+(दिन|हफ़्ता|महीना)", re.IGNORECASE)
+_COMPLEX = re.compile(r"\b(compare|comparison|compared|versus|vs|explain|why|kyun|kyon|kyu|than|mukable|mukabla|difference|diwali|holi|navratri|festival)\b|तुलना|क्यों|मुकाबले", re.IGNORECASE)
+"""Comparisons, explanations and festival questions need the model (several tools, reasoning)."""
+
+
+_PAST = re.compile(r"\b(bik[aei]|biki|thi|tha|the|hua|hui|hue|kiya|kiye|sold|was|were|did|bech[ae])\b|बिका|बिकी|बिके|थी|था|हुआ|हुई", re.IGNORECASE)
+_BARE_KAL = re.compile(r"\bkal\b|कल", re.IGNORECASE)
+_STOCK_NOUN = re.compile(r"\b(stock|inventory|left|bacha|bache|available|quantity|qty)\b|स्टॉक|बचा|बचे", re.IGNORECASE)
+
+
+def period_of(text: str, default: str) -> str:
+    """Period word in the question → a ``PERIODS`` key ("ab tak" → all_time, "kal ki sale" → yesterday, "aaj" → today).
+
+    "kal" alone means yesterday *or* tomorrow; with a past-tense verb ("kal kitna bika") it is yesterday.
+    """
+    for pattern, period in _PERIOD_WORDS:
+        if pattern.search(text):
+            return period
+    if _BARE_KAL.search(text) and _PAST.search(text):
+        return "yesterday"
+    return default
+
+
+def horizon_of(text: str, default: int = 7) -> int:
+    """Days ahead for a forecast question ("next week" → 7, "agle mahine" → 30, "10 din" → 10, "next day" → 1)."""
+    m = _HORIZON.search(text)
+    if not m:
+        return default
+    if m.group(1):
+        return max(1, min(90, int(m.group(1))))
+    unit = (m.group(4) or m.group(5) or m.group(6) or "").lower()
+    if unit in ("day", "din", "दिन"):
+        return 1
+    if unit in ("month", "mahine", "mahina", "महीने", "महीना"):
+        return 30
+    if unit == "few days":
+        return 3
+    return 7
 _HOWTO = re.compile(r"^\W*(how (do|can|to) (i|we)?\s*|(.+?)\s+kaise\s+(kare|karein|karu|karte|hota hai)\W*$|कैसे)", re.IGNORECASE)
 _PRICE = re.compile(r"\b(price|rate|mrp|daam|dam|kimat|keemat|cost|कीमत|दाम|रेट)\b", re.IGNORECASE)
 _STOCK = re.compile(r"\b(stock|kitna|kitne|kitni|left|bacha|bache|available|quantity|qty|कितना|कितनी|कितने|स्टॉक)\b", re.IGNORECASE)
@@ -80,17 +146,32 @@ def _subject(text: str, *words: str) -> str:
 def match(text: str) -> FastIntent | None:
     """Recognise one of the documented intents; None → go to the LLM."""
     t = text.strip()
-    if not t or len(t) > 160:
+    if not t or len(t) > 200:
         return None
     if _GREETING.match(t):
         return FastIntent("greeting", "greeting")
-    simple = len(t.split()) <= 6  # longer questions carry comparisons/conditions → the LLM
+    words = len(t.split())
+    simple = words <= 6  # longer questions carry comparisons/conditions → the LLM
+    business = words <= 16 and not _COMPLEX.search(t)  # the Owner's business questions are naturally longer ("maine shop mein kitna paisa ab tak kharch kiya hai")
+    if business and _SPEND.search(t) and not _PRICE.search(t):
+        return FastIntent("spend", "purchases_summary", owner_only=True, args={"period": period_of(t, "all_time")})
+    if business and _FORECAST.search(t) and not _LOW.search(t):
+        return FastIntent("forecast", "forecast_sales", owner_only=True, args={"horizon_days": horizon_of(t)})
+    if business and _DEMAND_NONE.search(t):
+        return FastIntent("no_demand", "dead_stock", owner_only=True, args={"days": 30})
+    if business and _DEMAND_HIGH.search(t):
+        return FastIntent("high_demand", "demand_ranking", owner_only=True, args={"period": period_of(t, "last_30_days"), "order": "top"})
+    if business and _ITEM_SALES.search(t):
+        return FastIntent("item_sales", "demand_ranking", owner_only=True, args={"period": period_of(t, "today"), "order": "top", "limit": 15})
     if simple and _LOW.search(t):
         return FastIntent("low_stock", "low_stock_items")
     if simple and _OUT.search(t):
         return FastIntent("out_of_stock", "out_of_stock_items")
     if simple and _SALES.search(t):
-        return FastIntent("sales_today", "sales_summary", owner_only=True)
+        return FastIntent("sales_today", "sales_summary", owner_only=True, args={"period": "today"})
+    if business and _SALE_WORD.search(t) and not _PRICE.search(t) and not _STOCK_NOUN.search(t):
+        # "kal ki sale", "is mahine ka total", "how much did we sell this week"
+        return FastIntent("sales_period", "sales_summary", owner_only=True, args={"period": period_of(t, "today")})
     if len(t.split()) <= 8 and _OVERVIEW.search(t):  # "kaun sa item or stock hai abhi" is seven words
         return FastIntent("stock_overview", "stock_overview")
     m = _HOWTO.search(t)
@@ -128,6 +209,17 @@ _T: Final[dict[str, dict[str, str]]] = {
         "out_none": "Nothing is out of stock right now.",
         "out": "Out of stock ({count}): {items}.",
         "sales": "Today {net} · {bills} bills · average {avg_bill} · cash {cash_pct}%. Source: sales_summary, {period}.",
+        "sales_period": "Sales {period}: {net} net · {bills} bills · average {avg_bill} · cash {cash_pct}%.",
+        "spend": "Spent on stock ({period}): {total} across {purchases} purchase bill(s). By supplier: {items}. Only supplier bills booked under Stock → Purchase are counted.",
+        "spend_none": "No purchases are booked for {period}. Book supplier bills under Stock → Purchase and I can total them.",
+        "item_sales": "Item-wise sales {period} ({count} items): {items}.",
+        "item_sales_none": "Nothing sold {period}.",
+        "high_demand": "Most in demand {period}: {items}.",
+        "no_demand": "No demand (in stock, nothing sold in {days} days) — {count} item(s) worth {value_total}: {items}.",
+        "no_demand_none": "Every item in stock has sold at least once in the last {days} days.",
+        "forecast": "Next {horizon} day(s): about {expected_units} units expected across {with_forecast} items ({without} items have too little history yet).{reorder}",
+        "forecast_reorder": " Order soon: {items}.",
+        "forecast_none": "No forecast yet — it needs about 4 weeks of sales history. Keep billing through the app and ask again.",
         "howto": "{title}: {steps}",
         "howto_none": "I could not find that in the user guide. Open Help from the menu, or ask the owner.",
         "offline": "The assistant is offline — simple stock and price questions are still answered.",
@@ -147,6 +239,17 @@ _T: Final[dict[str, dict[str, str]]] = {
         "out_none": "अभी कुछ भी ख़त्म नहीं है।",
         "out": "ख़त्म ({count}): {items}।",
         "sales": "आज {net} · {bills} बिल · औसत {avg_bill} · नकद {cash_pct}%। स्रोत: sales_summary, {period}।",
+        "sales_period": "बिक्री {period}: {net} शुद्ध · {bills} बिल · औसत {avg_bill} · नकद {cash_pct}%।",
+        "spend": "स्टॉक पर खर्च ({period}): {total}, {purchases} खरीद बिल। सप्लायर अनुसार: {items}। सिर्फ़ स्टॉक → खरीद में दर्ज सप्लायर बिल गिने जाते हैं।",
+        "spend_none": "{period} की कोई खरीद दर्ज नहीं है। सप्लायर बिल स्टॉक → खरीद में दर्ज करें, फिर मैं जोड़ दूँगा।",
+        "item_sales": "आइटम-वार बिक्री {period} ({count} वस्तुएँ): {items}।",
+        "item_sales_none": "{period} कुछ नहीं बिका।",
+        "high_demand": "सबसे ज़्यादा माँग {period}: {items}।",
+        "no_demand": "कोई माँग नहीं ({days} दिन में स्टॉक में पर नहीं बिका) — {count} वस्तु(एँ), मूल्य {value_total}: {items}।",
+        "no_demand_none": "स्टॉक की हर वस्तु पिछले {days} दिनों में कम से कम एक बार बिकी है।",
+        "forecast": "अगले {horizon} दिन: लगभग {expected_units} इकाइयाँ, {with_forecast} वस्तुओं में ({without} वस्तुओं का इतिहास अभी कम है)।{reorder}",
+        "forecast_reorder": " जल्दी मँगाएँ: {items}।",
+        "forecast_none": "अभी पूर्वानुमान नहीं — लगभग 4 हफ़्ते की बिक्री चाहिए। ऐप से बिल बनाते रहें और फिर पूछें।",
         "howto": "{title}: {steps}",
         "howto_none": "यह उपयोगकर्ता गाइड में नहीं मिला। मेनू से सहायता खोलें, या मालिक से पूछें।",
         "offline": "सहायक ऑफ़लाइन है — स्टॉक और कीमत के सरल सवालों के जवाब फिर भी मिलेंगे।",
@@ -166,6 +269,17 @@ _T: Final[dict[str, dict[str, str]]] = {
         "out_none": "Abhi kuch bhi khatam nahi hai.",
         "out": "Khatam ({count}): {items}.",
         "sales": "Aaj {net} · {bills} bills · average {avg_bill} · cash {cash_pct}%. Source: sales_summary, {period}.",
+        "sales_period": "Sale {period}: {net} net · {bills} bills · average {avg_bill} · cash {cash_pct}%.",
+        "spend": "Stock par kharch ({period}): {total}, {purchases} purchase bill. Supplier-wise: {items}. Sirf Stock → Purchase mein darj supplier bills gine jaate hain.",
+        "spend_none": "{period} ki koi purchase darj nahi hai. Supplier bills Stock → Purchase mein darj karein, phir main total bata dunga.",
+        "item_sales": "Item-wise sale {period} ({count} items): {items}.",
+        "item_sales_none": "{period} kuch nahi bika.",
+        "high_demand": "Sabse zyada demand {period}: {items}.",
+        "no_demand": "No demand ({days} din mein stock mein par nahi bika) — {count} item, value {value_total}: {items}.",
+        "no_demand_none": "Stock ka har item pichle {days} din mein kam se kam ek baar bika hai.",
+        "forecast": "Agle {horizon} din: lagbhag {expected_units} units, {with_forecast} items mein ({without} items ki history abhi kam hai).{reorder}",
+        "forecast_reorder": " Jaldi mangayein: {items}.",
+        "forecast_none": "Abhi forecast nahi — lagbhag 4 hafte ki sale history chahiye. App se bill banate rahein aur phir poochhein.",
         "howto": "{title}: {steps}",
         "howto_none": "Yeh user guide mein nahi mila. Menu se Help kholein, ya owner se poochhein.",
         "offline": "Assistant offline hai — stock aur price ke simple sawaal phir bhi answer honge.",
@@ -233,8 +347,46 @@ def answer(text: str, *, role: Role, language: str, run_tool: ToolRunner) -> Fas
             rows = list(r.get("items") or [])
             out = FastAnswer(tpl("out").format(count=r.get("count", len(rows)), items=_items(rows, with_qty=False)) if rows else tpl("out_none"), "out_of_stock_items", "/reports/low_stock", intent.name)
         elif intent.tool == "sales_summary":
-            r = run_tool("sales_summary", period="today")
-            out = FastAnswer(tpl("sales").format(net=r.get("net"), bills=r.get("bills"), avg_bill=r.get("avg_bill"), cash_pct=r.get("cash_pct", 0), period=r.get("period", "")), "sales_summary", "/reports/sales", intent.name)
+            r = run_tool("sales_summary", period=intent.args.get("period", "today"))
+            key = "sales" if intent.name == "sales_today" else "sales_period"
+            out = FastAnswer(tpl(key).format(net=r.get("net"), bills=r.get("bills"), avg_bill=r.get("avg_bill"), cash_pct=r.get("cash_pct", 0), period=r.get("period", "")), "sales_summary", "/reports/sales", intent.name)
+        elif intent.tool == "purchases_summary":
+            r = run_tool("purchases_summary", period=intent.args.get("period", "all_time"))
+            rows = list(r.get("items") or [])
+            period = r.get("period", "")
+            if rows:
+                items = ", ".join(f"{x.get('supplier') or '-'} {x.get('total')}" for x in rows[:8]) + (" …" if len(rows) > 8 else "")
+                out = FastAnswer(tpl("spend").format(period=period, total=r.get("total"), purchases=sum(int(x.get("purchases") or 0) for x in rows), items=items), "purchases_summary", "/reports/purchases", intent.name)
+            else:
+                out = FastAnswer(tpl("spend_none").format(period=period), "purchases_summary", "/stock/purchase", intent.name)
+        elif intent.tool == "demand_ranking":
+            r = run_tool("demand_ranking", period=intent.args.get("period", "today"), order=intent.args.get("order", "top"), limit=intent.args.get("limit", 10))
+            rows = list(r.get("items") or [])
+            period = r.get("period", "")
+            items = ", ".join(f"{x.get('name')} × {x.get('qty')} = {x.get('amount')}" for x in rows[:15]) + (" …" if len(rows) > 15 else "")
+            if intent.name == "high_demand":
+                out = FastAnswer(tpl("high_demand").format(period=period, items=items) if rows else tpl("item_sales_none").format(period=period), "demand_ranking", "/reports/top", intent.name)
+            else:
+                out = FastAnswer(tpl("item_sales").format(period=period, count=r.get("count", len(rows)), items=items) if rows else tpl("item_sales_none").format(period=period), "demand_ranking", "/reports/top", intent.name)
+        elif intent.tool == "dead_stock":
+            r = run_tool("dead_stock", days=intent.args.get("days", 30), limit=15)
+            rows = list(r.get("items") or [])
+            items = ", ".join(f"{x.get('name')} ({x.get('qty')})" for x in rows) + (" …" if int(r.get("count", 0)) > len(rows) else "")
+            out = FastAnswer(tpl("no_demand").format(days=r.get("days"), count=r.get("count", len(rows)), value_total=r.get("value_total"), items=items) if rows else tpl("no_demand_none").format(days=r.get("days")), "dead_stock", "/reports/dead", intent.name)
+        elif intent.tool == "forecast_sales":
+            h = intent.args.get("horizon_days", 7)
+            r = run_tool("forecast_sales", horizon_days=h)
+            if not r.get("items_with_forecast"):
+                out = FastAnswer(tpl("forecast_none"), "forecast_sales", "/reports/forecast", intent.name)
+            else:
+                reorder = ""
+                try:
+                    plan = list((run_tool("reorder_plan", horizon_days=h, limit=5) or {}).get("items") or [])
+                except Exception:  # noqa: BLE001 - optional detail
+                    plan = []
+                if plan:
+                    reorder = tpl("forecast_reorder").format(items=", ".join(f"{x.get('name')} +{x.get('order_qty')}" for x in plan))
+                out = FastAnswer(tpl("forecast").format(horizon=r.get("horizon_days", h), expected_units=r.get("expected_units"), with_forecast=r.get("items_with_forecast"), without=r.get("items_without_history", 0), reorder=reorder), "forecast_sales", "/reports/forecast", intent.name)
         elif intent.tool == "explain_screen":
             r = run_tool("explain_screen", query=intent.query)
             out = FastAnswer(tpl("howto").format(title=r.get("title"), steps=" → ".join(r.get("steps") or [])) if r.get("found") else tpl("howto_none"), "explain_screen", r.get("link"), intent.name)
