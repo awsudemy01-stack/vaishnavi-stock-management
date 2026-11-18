@@ -238,7 +238,7 @@ class ChatServiceTest(Base):
         self.fake.calls = []
         self.fake._replies = ["", "Sales today were ₹99,999 with 500 bills."]
         self.fake._tool_calls = [[ToolCall("call_2", "sales_summary", {"period": "today"})], []]
-        r = self.c.chat.ask(OWNER, r.session_id, "what were sales today in words", language="english")
+        r = self.c.chat.ask(OWNER, r.session_id, "explain the sales figures for today in words", language="english")
         self.assertEqual((r.source, r.category), ("refusal", "OUTPUT_FILTER"))
         self.assertIn("withheld", r.text)
         self.assertEqual(self._q("SELECT layer FROM chat_security_event ORDER BY id")[-1][0], "OUTPUT")
@@ -292,6 +292,12 @@ class ChatServiceTest(Base):
         self.assertEqual(r.source, "offline")
         self.assertIn("offline", r.text.lower())
         self.assertEqual(self.c.chat.ask(STAFF, None, "stock of camphor").source, "fastpath", "fast path works without a provider")
+        # live run 4: the owner's business questions are answered from real tools even with no model at all
+        for q, must in (("maine shop mein kitna paisa ab tak kharch kiya hai", "Stock → Purchase"), ("aaj pura din kitna item bika hai", "Camphor 50g"), ("which item is of no demand", "30 days"), ("forecast me for the next few days or week of item sale", "forecast"), ("kal ki sale kitni thi", "bills")):
+            r = self.c.chat.ask(OWNER, None, q, language="hinglish" if " hai" in q or " thi" in q else "english")
+            self.assertEqual(r.source, "fastpath", q)
+            self.assertIn(must.lower(), r.text.lower(), q)
+        self.assertEqual(self.c.chat.ask(STAFF, None, "aaj kitna item bika hai", language="hinglish").source, "refusal", "staff may not see sales figures")
         self.c.settings_service.set_many(OWNER, {"ai.max_messages_per_minute": 2})
         self.c.chat.ask(STAFF, None, "stock of camphor")
         self.c.chat.ask(STAFF, None, "stock of camphor")
