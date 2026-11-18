@@ -129,7 +129,7 @@ class PermissionsTest(unittest.TestCase):
             self.assertIs(grants[Role.OWNER], Grant.ALLOW, f"owner can do everything: {perm}")
 
     def test_staff_grants_match_docs_05_section_5(self) -> None:
-        expected_allow = {Permission.SELL, Permission.DISCOUNT_WITHIN_CAP, Permission.HOLD_RESUME_REPRINT, Permission.SHIFT_OWN, Permission.VIEW_STOCK_LEVEL, Permission.PRINT_LABEL, Permission.REPORT_OWN_SHIFT, Permission.AI_STOCK_HELP}
+        expected_allow = {Permission.SELL, Permission.DISCOUNT_WITHIN_CAP, Permission.HOLD_RESUME_REPRINT, Permission.SHIFT_OWN, Permission.VIEW_STOCK_LEVEL, Permission.PRINT_LABEL, Permission.RECEIVE_STOCK, Permission.REPORT_OWN_SHIFT, Permission.AI_STOCK_HELP}
         expected_pin = {Permission.DISCOUNT_OVER_CAP, Permission.VOID_REFUND, Permission.CASH_OUT}
         expected_policy = {Permission.OPEN_ITEM}
         staff = {p: g[Role.STAFF] for p, g in MATRIX.items()}
