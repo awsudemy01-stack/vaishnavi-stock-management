@@ -137,15 +137,31 @@ class StockTriggerTest(unittest.TestCase):
             self.assertIn("E-INV-012", str(cm.exception))
         self.assertEqual(self.qty(), 50)
 
-    def test_staff_can_only_create_sale_movements(self) -> None:
+    def test_staff_can_only_create_sale_movements_and_positive_receipts(self) -> None:
         movement(self.conn, user=1, type_="OPENING", delta=50, after=50)
         for type_ in ("OPENING", "PURCHASE", "ADJUSTMENT", "DAMAGE", "STOCK_TAKE"):
             with self.subTest(type_=type_), self.assertRaises(sqlite3.IntegrityError) as cm:
                 movement(self.conn, user=2, type_=type_, delta=-1, after=49)
             self.assertIn("E-INV-010", str(cm.exception))
+        for type_ in ("OPENING", "ADJUSTMENT", "STOCK_TAKE"):
+            with self.subTest(type_=type_, direction="up"), self.assertRaises(sqlite3.IntegrityError) as cm:
+                movement(self.conn, user=2, type_=type_, delta=5, after=55)
+            self.assertIn("E-INV-010", str(cm.exception))
+        movement(self.conn, user=2, type_="PURCHASE", delta=12, after=62)
+        self.assertEqual(self.qty(), 62, "goods received at the counter: staff may add, never remove")
         insert_sale(self.conn)
-        movement(self.conn, user=2, type_="SALE", delta=-2, after=48, ref_type="SALE", ref_id=1)
-        self.assertEqual(self.qty(), 48)
+        movement(self.conn, user=2, type_="SALE", delta=-2, after=60, ref_type="SALE", ref_id=1)
+        self.assertEqual(self.qty(), 60)
+
+    def test_statement_for_returns_the_trigger_exactly_as_in_schema_sql(self) -> None:
+        from vaishnavi.db.schema import statement_for
+
+        stmt = statement_for("trg_stock_movement_validate")
+        self.assertTrue(stmt.startswith("CREATE TRIGGER trg_stock_movement_validate"))
+        self.assertIn("NEW.type = 'PURCHASE' AND NEW.qty_delta > 0", stmt)
+        self.assertTrue(statement_for("stock_movement").startswith("CREATE TABLE stock_movement"))
+        with self.assertRaises(KeyError):
+            statement_for("no_such_object")
 
     def test_sale_movement_must_reference_an_existing_sale(self) -> None:
         movement(self.conn, user=1, type_="OPENING", delta=50, after=50)
