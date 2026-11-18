@@ -146,7 +146,19 @@ class FakeTools:
         if name == "out_of_stock_items":
             return {"items": [{"name": "Wicks"}], "count": 1}
         if name == "sales_summary":
-            return {"net": "₹18,420.00", "bills": 142, "avg_bill": "₹129.72", "cash_pct": 61, "period": "14-Nov-2026"}
+            period = args.get("period", "today")
+            return {"net": "₹18,420.00", "bills": 142, "avg_bill": "₹129.72", "cash_pct": 61, "period": "14-Nov-2026" if period == "today" else period}
+        if name == "purchases_summary":
+            return {"period": "all time" if args.get("period") == "all_time" else args.get("period"), "items": [{"supplier": "Sharma Traders", "purchases": 3, "total": "₹42,000.00"}, {"supplier": "-", "purchases": 1, "total": "₹3,500.00"}], "count": 2, "total": "₹45,500.00"}
+        if name == "demand_ranking":
+            rows = [{"name": "Camphor 50g", "qty": "40", "amount": "₹400.00", "share_pct": 60}, {"name": "Agarbatti", "qty": "12", "amount": "₹240.00", "share_pct": 40}]
+            return {"period": args.get("period"), "order": args.get("order", "top"), "items": rows if args.get("order", "top") == "top" else list(reversed(rows)), "count": 2}
+        if name == "dead_stock":
+            return {"days": args.get("days", 60), "items": [{"name": "Brass Bell", "qty": "6", "value": "₹1,200.00", "last_sold": "never"}], "count": 1, "value_total": "₹1,200.00"}
+        if name == "forecast_sales":
+            return {"horizon_days": args.get("horizon_days", 14), "items_with_forecast": 5, "items_without_history": 2, "expected_units": "310"}
+        if name == "reorder_plan":
+            return {"items": [{"name": "Camphor 50g", "order_qty": "60"}], "count": 1}
         if name == "explain_screen":
             return {"found": True, "title": "Hold and resume a bill", "steps": ["Press F7 to hold", "Press F8 to resume"]}
         return {}
@@ -228,6 +240,70 @@ class FastPathTest(unittest.TestCase):
         assert a is not None
         self.assertIn("stock", a.text.lower())
         self.assertEqual(a.source, "greeting")
+
+    def test_owner_business_questions_from_live_run_4_are_routed_to_the_right_tool(self) -> None:
+        """The owner's exact phrasings (EN + Hinglish) that previously fell to the model and were refused as ungrounded."""
+        cases = {
+            "maine shop mein kitna paisa ab tak kharch kiya hai": ("purchases_summary", {"period": "all_time"}),
+            "How much money I have spent so far on items": ("purchases_summary", {"period": "all_time"}),
+            "is mahine kitna kharch hua": ("purchases_summary", {"period": "this_month"}),
+            "aaj pura din kitna item bika hai": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
+            "pure din bhar ka har ek item ka sale kitna hai": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
+            "How much item have been sold on today's entire day": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
+            "tell me how much sale have done on each items": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
+            "kal kaun sa item kitna bika": ("demand_ranking", {"period": "yesterday", "order": "top", "limit": 15}),
+            "which stock is high in demand": ("demand_ranking", {"period": "last_30_days", "order": "top"}),
+            "sabse zyada bikne wala item": ("demand_ranking", {"period": "last_30_days", "order": "top"}),
+            "which item is of no demand": ("dead_stock", {"days": 30}),
+            "kaun sa item nahi bikta": ("dead_stock", {"days": 30}),
+            "forecast me for the next few days or week of item sale": ("forecast_sales", {"horizon_days": 3}),
+            "based on current demand what is the next day sale growth": ("forecast_sales", {"horizon_days": 1}),
+            "what will be the future sale": ("forecast_sales", {"horizon_days": 7}),
+            "agle mahine kitna bikega": ("forecast_sales", {"horizon_days": 30}),
+            "kal ki sale kitni thi": ("sales_summary", {"period": "yesterday"}),
+            "is hafte ki total sale": ("sales_summary", {"period": "this_week"}),
+            "what is the current sale": ("sales_summary", {"period": "today"}),
+        }
+        for text, (tool, args) in cases.items():
+            intent = fastpath.match(text)
+            self.assertIsNotNone(intent, text)
+            assert intent is not None
+            self.assertEqual((intent.tool, intent.args), (tool, args), text)
+            self.assertTrue(intent.owner_only, text)
+        self.assertEqual(fastpath.match("camphor ka price kya hai").tool, "item_price", "price questions still win over the sale words")  # type: ignore[union-attr]
+        self.assertEqual(fastpath.match("stock kya hai").tool, "stock_overview")  # type: ignore[union-attr]
+        self.assertIsNone(fastpath.match("compare camphor sales with last Diwali and explain the trend"))
+        self.assertIsNone(fastpath.match("why did sales drop this month compared to last month"), "comparisons and 'why' go to the model")
+
+    def test_owner_business_answers_are_rendered_from_tool_results(self) -> None:
+        tools = FakeTools()
+        spend = fastpath.answer("How much money I have spent so far on items", role=Role.OWNER, language="english", run_tool=tools)
+        assert spend is not None
+        self.assertIn("₹45,500.00", spend.text)
+        self.assertIn("Sharma Traders ₹42,000.00", spend.text)
+        self.assertIn("all time", spend.text)
+        self.assertEqual((spend.source, spend.link), ("purchases_summary", "/reports/purchases"))
+        self.assertEqual(tools.calls[-1], ("purchases_summary", {"period": "all_time"}))
+        self.assertIsNone(fastpath.answer("kitna kharch hua", role=Role.STAFF, language="hinglish", run_tool=tools), "staff never see purchase figures")
+        items = fastpath.answer("aaj pura din kitna item bika hai", role=Role.OWNER, language="hinglish", run_tool=tools)
+        assert items is not None
+        self.assertIn("Camphor 50g × 40 = ₹400.00", items.text)
+        self.assertIn("Agarbatti × 12", items.text)
+        self.assertEqual(tools.calls[-1], ("demand_ranking", {"period": "today", "order": "top", "limit": 15}))
+        dead = fastpath.answer("which item is of no demand", role=Role.OWNER, language="english", run_tool=tools)
+        assert dead is not None
+        self.assertIn("Brass Bell (6)", dead.text)
+        self.assertIn("30 days", dead.text)
+        fc = fastpath.answer("forecast me for the next few days or week of item sale", role=Role.OWNER, language="hindi", run_tool=tools)
+        assert fc is not None
+        self.assertIn("310", fc.text)
+        self.assertIn("Camphor 50g +60", fc.text, "reorder suggestions ride along")
+        self.assertEqual([c[0] for c in tools.calls[-2:]], ["forecast_sales", "reorder_plan"])
+        self.assertEqual(tools.calls[-2][1], {"horizon_days": 3})
+        yesterday = fastpath.answer("kal ki sale kitni thi", role=Role.OWNER, language="hinglish", run_tool=tools)
+        assert yesterday is not None
+        self.assertIn("18,420", yesterday.text)
+        self.assertEqual(tools.calls[-1], ("sales_summary", {"period": "yesterday"}))
 
 
 if __name__ == "__main__":
