@@ -91,6 +91,55 @@ class ProductsPageTest(Base):
         self.assertFalse(stale.ok)
         self.assertEqual(stale.error_code, "E-CAT-010")
 
+    def test_unit_drives_sale_mode_and_stock_is_typed_in_the_pricing_unit(self) -> None:
+        """Live run 4: ghee at ₹1000/kg with 10 kg stock could not be sold as 500 g — 'Sold by' had stayed PIECE."""
+        from vaishnavi.services.measure import spec_for
+
+        from vaishnavi.ui.pages import pos
+
+        empty = products_page.build_editor(self.services, EN, product_id=None)
+        saved = products_page.save_editor(self.services, OWNER, product_id=None, row_version=None, form={**empty.form, "name": "Pure Ghee (loose)", "price": "1000", "cost": "800", "unit": "kg", "stock": "10", "min_stock": "1"})
+        self.assertTrue(saved.ok, saved.problems or saved.message)
+        ghee = self.services.catalog.get(saved.product_id)  # type: ignore[arg-type]
+        assert ghee is not None
+        self.assertEqual((ghee.sale_mode, ghee.base_unit, ghee.pricing_unit_qty, ghee.pricing_unit_label, ghee.allow_decimal_qty), ("WEIGHT", "g", Decimal("1000"), "kg", True))
+        self.assertEqual(ghee.stock_qty, Decimal("10000"), "10 kg is stored as 10000 g")
+        self.assertEqual(ghee.min_stock, Decimal("1000"))
+        self.assertEqual(products_page.stock_text_for(ghee), "10 kg")
+        self.assertEqual(products_page.build_editor(self.services, EN, product_id=ghee.id).form["min_stock"], "1", "shown back in kg")
+        # 500 g at ₹1000/kg bills ₹500 and deducts 0.5 kg
+        spec = spec_for(ghee)
+        scan = pos.ScanResult(ghee, ghee.internal_barcode or "", Decimal("1"), spec, True)
+        self.assertEqual(pos.qty_from_pad(scan, qty_text="500"), Decimal("500"))
+        self.assertEqual(pos.qty_from_pad(scan, qty_text="0.5 kg"), Decimal("500"))
+        self.assertEqual(pos.qty_from_pad(scan, qty_text="1.5kg"), Decimal("1500"))
+        self.assertEqual(pos.pad_amount_text(scan, Decimal("500")), "₹500.00")
+        with self.assertRaises(Exception):
+            pos.qty_from_pad(scan, qty_text="2 l")
+        cart = self.services.billing.new_cart(OWNER)
+        self.services.billing.add_scan(OWNER, cart, ghee.internal_barcode or "", qty=Decimal("500"))
+        self.assertEqual(self.services.billing.totals(cart).total_paise, 50000)
+        self.assertEqual(products_page.gst_split_text("12"), "CGST 6% + SGST 6%")
+        self.assertEqual(products_page.gst_split_text("0"), "")
+
+    def test_archive_is_recoverable_and_duplicate_code_names_the_archived_item(self) -> None:
+        """Live run 4: an item with code 2 'vanished' (archived by one click) and re-adding said the code was taken."""
+        empty = products_page.build_editor(self.services, EN, product_id=None)
+        saved = products_page.save_editor(self.services, OWNER, product_id=None, row_version=None, form={**empty.form, "name": "Match stick", "sku": "2", "price": "100", "unit": "box"})
+        self.assertTrue(saved.ok, saved.message)
+        self.services.catalog.archive(OWNER, saved.product_id)  # type: ignore[arg-type]
+        self.assertNotIn(saved.product_id, [r.id for r in products_page.build_grid(self.services, EN).rows])
+        shown = products_page.build_grid(self.services, EN, include_archived=True).rows
+        self.assertIn(saved.product_id, [r.id for r in shown])
+        self.assertFalse(next(r for r in shown if r.id == saved.product_id).active)
+        again = products_page.save_editor(self.services, OWNER, product_id=None, row_version=None, form={**empty.form, "name": "Match stick", "sku": "2", "price": "100"})
+        self.assertFalse(again.ok)
+        self.assertEqual(again.error_code, "E-CAT-005")
+        self.assertIn("archived", again.message)
+        self.assertIn("Restore", again.message)
+        self.services.catalog.restore(OWNER, saved.product_id)  # type: ignore[arg-type]
+        self.assertIn(saved.product_id, [r.id for r in products_page.build_grid(self.services, EN).rows])
+
     def test_price_history_popup_windows(self) -> None:
         version = self.p.row_version
         for days, price in ((10, 2600), (200, 2700)):
@@ -130,6 +179,21 @@ class StockPageTest(Base):
         self.assertEqual(purchase.label_count, 20)
         self.assertEqual(self.services.inventory.stock_of(self.p.id), Decimal("27"))
         self.assertEqual(self.services.catalog.get(self.p.id).cost_paise, 1750)  # type: ignore[union-attr]
+
+    def test_staff_goods_received_is_typed_in_the_pricing_unit_and_add_only(self) -> None:
+        ghee = self.services.catalog.create(OWNER, ProductInput(name="Desi Ghee", category_id=None, price_paise=100000, cost_paise=80000, unit="kg", sale_mode="WEIGHT", base_unit="g", pricing_unit_qty=Decimal("1000"), pricing_unit_label="kg", min_qty=Decimal("50"), qty_step=Decimal("50"), allow_decimal_qty=True))
+        ok = stock_page.submit_receipt(self.services, STAFF, product_id=ghee.id, qty_text="2.5", note="Amul van, bill 118")
+        self.assertTrue(ok.ok, ok.message)
+        self.assertEqual(self.services.inventory.stock_of(ghee.id), Decimal("2500"), "2.5 kg typed → 2500 g stored")
+        timeline = stock_page.build_movements(self.services, EN, product_id=ghee.id)
+        self.assertEqual((timeline.rows[0].type, timeline.rows[0].user_name), ("PURCHASE", "Ramesh"))
+        self.assertIn("Amul van, bill 118", timeline.rows[0].reason)
+        self.assertFalse(stock_page.submit_receipt(self.services, STAFF, product_id=ghee.id, qty_text="-1", note="typo").ok)
+        self.assertFalse(stock_page.submit_receipt(self.services, STAFF, product_id=ghee.id, qty_text="1", note="").ok, "note is mandatory")
+        self.assertFalse(stock_page.submit_receipt(self.services, STAFF, product_id=ghee.id, qty_text="abc", note="x y z").ok)
+        pieces = stock_page.submit_receipt(self.services, STAFF, product_id=self.p.id, qty_text="12", note="Sharma Traders parcel")
+        self.assertTrue(pieces.ok, pieces.message)
+        self.assertEqual(self.services.inventory.stock_of(self.p.id), Decimal("15"))
 
     def test_stock_take_flow_model(self) -> None:
         count = stock_page.start_stock_take(self.services, OWNER, scope="FULL")
