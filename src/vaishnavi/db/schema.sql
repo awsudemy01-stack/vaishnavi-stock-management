@@ -223,6 +223,7 @@ CREATE TABLE shift (
     opened_at           TEXT NOT NULL,
     closed_at           TEXT,
     opening_float_paise INTEGER NOT NULL DEFAULT 0 CHECK (opening_float_paise >= 0),
+    opening_denominations TEXT,
     expected_cash_paise INTEGER,
     counted_cash_paise  INTEGER,
     denominations       TEXT,
@@ -661,7 +662,8 @@ BEGIN
 END;
 
 -- 2. Every movement must carry the correct running balance (E-INV-013) and SALE movements must
---    reference an existing sale (E-INV-011); non-owner users may only create SALE movements (E-INV-010).
+--    reference an existing sale (E-INV-011); non-owner users may only create SALE movements, plus
+--    positive PURCHASE movements (goods received at the counter in the Owner's absence) (E-INV-010).
 CREATE TRIGGER trg_stock_movement_validate
 BEFORE INSERT ON stock_movement
 BEGIN
@@ -673,6 +675,7 @@ BEGIN
         WHEN NEW.type IN ('SALE_VOID', 'RETURN') AND (NEW.ref_type IS NOT 'SALE' OR NOT EXISTS (SELECT 1 FROM sale WHERE id = NEW.ref_id))
             THEN RAISE(ABORT, 'E-INV-011')
         WHEN NEW.type <> 'SALE'
+             AND NOT (NEW.type = 'PURCHASE' AND NEW.qty_delta > 0)
              AND (SELECT r.name FROM user u JOIN role r ON r.id = u.role_id WHERE u.id = NEW.user_id) IS NOT 'OWNER'
             THEN RAISE(ABORT, 'E-INV-010')
         WHEN (SELECT is_system FROM product WHERE id = NEW.product_id) = 1
