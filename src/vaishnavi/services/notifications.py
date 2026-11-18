@@ -98,6 +98,8 @@ class NotificationService:
         def on_stock(e: StockChanged) -> None:
             if e.low_stock:
                 self.notify("INFO", "LOW_STOCK", f"Low stock: {e.product_name or e.product_id}", body=f"{e.qty_after} left", deep_link=f"/stock?product={e.product_id}", source_ref=f"product:{e.product_id}")
+            if e.by_staff and e.movement_type == "PURCHASE":
+                self.notify("INFO", "STOCK_RECEIVED", f"Goods received by staff: {e.product_name or e.product_id} +{e.qty_delta}", body=f"Now {e.qty_after}. Check the note in Stock → Movements and book the supplier bill.", deep_link=f"/stock/movements?product={e.product_id}", source_ref=f"receive:{e.product_id}:{e.qty_after}", dedupe=False)
 
         def on_restored(e: DbRestoredDetected) -> None:
             self.notify("HIGH", "DB_RESTORED", f"Running on a backup from {e.taken_at}", body="Bills after that time must be re-entered from paper receipts.", deep_link="/settings/backups", source_ref=f"backup:{e.backup_id}")
