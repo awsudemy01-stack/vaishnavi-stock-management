@@ -73,6 +73,10 @@ class ReceiptSettings:
     show_qr_upi: bool = False
     copies: int = 1
     invoice_prefix: str = "VPS"
+    savings_message: str = "Happy shopping! Aapka din shubh ho — see you again soon."
+    """Printed after the "You saved" lines when the customer received an extra (bill-level) discount."""
+    whatsapp_share: bool = False
+    """Offer "Send bill on WhatsApp" after payment (optional — off by default; Settings → Shop & GST)."""
 
 
 @dataclass
