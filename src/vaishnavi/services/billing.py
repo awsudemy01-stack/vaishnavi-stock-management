@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import uuid
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field, replace
@@ -34,7 +35,7 @@ from vaishnavi.core.events import EventBus, SaleCommitted, StockChanged, bus
 from vaishnavi.core.money import format_inr, multiply, round_off
 from vaishnavi.core.permissions import Actor, OpenItemPolicy, Permission, PinRequired, Role, require
 from vaishnavi.core.settings import Settings
-from vaishnavi.db.records import HeldCartRecord, OfferRecord, PaymentRecord, ProductRecord, SaleItemRecord, SaleItemView, SaleRecord, SaleView
+from vaishnavi.db.records import CustomerRecord, HeldCartRecord, OfferRecord, PaymentRecord, ProductRecord, SaleItemRecord, SaleItemView, SaleRecord, SaleView
 from vaishnavi.services.audit import AuditService
 from vaishnavi.services.catalog import CatalogService
 from vaishnavi.services.common import Session, TxnFactory
@@ -125,6 +126,9 @@ class Cart:
     bill_offer: OfferRecord | None = None
     approved_by_user_id: int | None = None
     customer_id: int | None = None
+    customer_phone: str | None = None
+    customer_name: str | None = None
+    """Phone (E.164 digits) and name as entered with F8 — for the cart header and the WhatsApp bill."""
     note: str | None = None
     committed_sale_id: int | None = None
     """Set by checkout (also on replay) — a committed cart must never be billed again."""
@@ -241,6 +245,8 @@ class BillingStore(Protocol):
     def held_carts(self, session: Session, *, user_id: int | None) -> list[HeldCartRecord]: ...  # pragma: no cover - protocol
     def held_cart(self, session: Session, held_id: int) -> HeldCartRecord | None: ...  # pragma: no cover - protocol
     def delete_held(self, session: Session, held_id: int) -> None: ...  # pragma: no cover - protocol
+    def upsert_customer(self, session: Session, *, phone: str, name: str | None) -> CustomerRecord: ...  # pragma: no cover - protocol
+    def customer(self, session: Session, customer_id: int) -> CustomerRecord | None: ...  # pragma: no cover - protocol
 
 
 class StockStore(Protocol):
@@ -493,6 +499,38 @@ class BillingService:
         cart.bill_discount_reason = reason.strip()
         log.info("CART_BILL_DISCOUNT cart=%s pct=%s amount=%s reason=%r user=%s", cart.client_txn_id, percent, amount_paise, reason, actor.user_id)
         return cart
+
+    # -- customer (F8) ----------------------------------------------------------------------------
+    def set_customer(self, actor: Actor, cart: Cart, *, phone: str, name: str = "") -> Cart:
+        """Attach the customer's mobile number (and name) to the bill; an empty phone detaches.
+
+        The number is normalised to E.164 digits (``98765 43210`` → ``919876543210``) and kept in the
+        ``customer`` table, one row per number, so a regular customer is recognised next time.
+        """
+        require(actor, Permission.SELL)
+        if not phone.strip():
+            cart.customer_id = cart.customer_phone = cart.customer_name = None
+            log.info("CART_CUSTOMER_CLEARED cart=%s", cart.client_txn_id)
+            return cart
+        digits = normalise_phone(phone)
+        with self._txn(label="billing.customer") as session:
+            record = self._store.upsert_customer(session, phone=digits, name=name.strip() or None)
+        cart.customer_id, cart.customer_phone, cart.customer_name = record.id, record.phone, record.name
+        log.info("CART_CUSTOMER_SET cart=%s customer=%s phone=…%s", cart.client_txn_id, record.id, digits[-4:])
+        return cart
+
+    def customer_of(self, sale: SaleView) -> CustomerRecord | None:
+        """The customer linked to a committed sale (None when the cashier skipped F8)."""
+        if sale.customer_id is None:
+            return None
+        with self._txn(label="billing.customer_of") as session:
+            return self._store.customer(session, sale.customer_id)
+
+    def remember_customer(self, actor: Actor, *, phone: str, name: str = "") -> CustomerRecord:
+        """Phone typed *after* the bill (the customer asked for the bill on WhatsApp at the end): store it without touching the sale."""
+        require(actor, Permission.SELL)
+        with self._txn(label="billing.customer") as session:
+            return self._store.upsert_customer(session, phone=normalise_phone(phone), name=name.strip() or None)
 
     # -- hold / resume ----------------------------------------------------------------------------
     def hold(self, actor: Actor, cart: Cart, *, label: str | None = None) -> int:
@@ -888,6 +926,24 @@ def _scale_item(item: SaleItemView, qty: Decimal) -> dict[str, Any]:
         "entry_method": item.entry_method, "entry_reason": item.entry_reason, "scanned_barcode": item.scanned_barcode, "is_open_item": int(item.is_open_item), "open_item_name": item.open_item_name, "open_item_detail": item.open_item_detail,
         "gross": gross,
     }
+
+
+def normalise_phone(text: str) -> str:
+    """``98765 43210`` · ``098765-43210`` · ``+91 98765 43210`` · ``919876543210`` → ``919876543210`` (E.164 digits, India default).
+
+    Raises ``ValueError`` with a plain sentence for anything that is not a 10-digit Indian mobile number
+    (or an already country-coded 11–15 digit number).
+    """
+    digits = re.sub(r"\D", "", text or "")
+    if len(digits) == 11 and digits.startswith("0"):
+        digits = digits[1:]
+    if len(digits) == 10:
+        if digits[0] not in "6789":
+            raise ValueError("mobile numbers start with 6, 7, 8 or 9")
+        return "91" + digits
+    if 11 <= len(digits) <= 15 and not digits.startswith("0"):
+        return digits
+    raise ValueError("enter a 10-digit mobile number (or with country code, e.g. +91 98765 43210)")
 
 
 def _encode(obj: Any) -> Any:
