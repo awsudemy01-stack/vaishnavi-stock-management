@@ -24,7 +24,7 @@ from typing import Any
 from vaishnavi.core.barcode import parse_receipt_ean13
 from vaishnavi.core.logging import current_cid
 from vaishnavi.core.permissions import Role
-from vaishnavi.db.records import GENESIS_HASH, AuditEntry, BarcodeRecord, CashEventRecord, CategoryRecord, ChatMessageRecord, ChatSecurityEventRecord, ForecastSnapshotRecord, HeldCartRecord, MovementRecord, OfferRecord, OverrideRecord, PaymentView, PriceHistoryRecord, ProductRecord, PromptVersionRecord, PublishQueueRecord as QueueItem, PurchaseRecord, SaleItemView, SaleView, ShiftRecord, StockCountLineRecord, StockCountRecord, SupplierRecord, UserRecord, WorkSessionRecord
+from vaishnavi.db.records import GENESIS_HASH, AuditEntry, BarcodeRecord, CashEventRecord, CategoryRecord, ChatMessageRecord, ChatSecurityEventRecord, CustomerRecord, ForecastSnapshotRecord, HeldCartRecord, MovementRecord, OfferRecord, OverrideRecord, PaymentView, PriceHistoryRecord, ProductRecord, PromptVersionRecord, PublishQueueRecord as QueueItem, PurchaseRecord, SaleItemView, SaleView, ShiftRecord, StockCountLineRecord, StockCountRecord, SupplierRecord, UserRecord, WorkSessionRecord
 
 log = logging.getLogger("vaishnavi.db.sqlite_stores")
 
@@ -925,6 +925,23 @@ class SqliteBillingStore:
         conn.execute("DELETE FROM held_cart_line WHERE held_cart_id = ?", (held_id,))
         conn.execute("DELETE FROM held_cart WHERE id = ?", (held_id,))
 
+    # -- customers (phone book for WhatsApp bills) ------------------------------------------------
+    def upsert_customer(self, conn: sqlite3.Connection, *, phone: str, name: str | None) -> CustomerRecord:
+        """One row per phone; a non-empty name refreshes the stored one."""
+        row = conn.execute("SELECT id, name, phone, note FROM customer WHERE phone = ?", (phone,)).fetchone()
+        if row is None:
+            cid = int(conn.execute("INSERT INTO customer(name, phone) VALUES (?, ?)", (name or None, phone)).lastrowid)
+            return CustomerRecord(cid, name or None, phone, None)
+        if name and name != row[1]:
+            conn.execute("UPDATE customer SET name = ? WHERE id = ?", (name, row[0]))
+            return CustomerRecord(int(row[0]), name, str(row[2]), row[3])
+        return CustomerRecord(int(row[0]), row[1], str(row[2]), row[3])
+
+    def customer(self, conn: sqlite3.Connection, customer_id: int) -> CustomerRecord | None:
+        """By id."""
+        row = conn.execute("SELECT id, name, phone, note FROM customer WHERE id = ?", (customer_id,)).fetchone()
+        return CustomerRecord(int(row[0]), row[1], row[2], row[3]) if row else None
+
 
 # ----------------------------------------------------------------------------- print queue
 class SqlitePrintQueueStore:
@@ -981,12 +998,12 @@ class SqliteHardwareStore:
 
 
 # ----------------------------------------------------------------------------- shifts & cash
-_SHIFT_COLS = "id, user_id, opened_at, closed_at, opening_float_paise, expected_cash_paise, counted_cash_paise, denominations, variance_paise, closed_by_user_id, status, note"
+_SHIFT_COLS = "id, user_id, opened_at, closed_at, opening_float_paise, expected_cash_paise, counted_cash_paise, denominations, variance_paise, closed_by_user_id, status, note, opening_denominations"
 _SHIFT_CLOSE_COLS = frozenset({"closed_at", "expected_cash_paise", "counted_cash_paise", "denominations", "variance_paise", "closed_by_user_id", "status", "note"})
 
 
 def _shift(row: tuple[Any, ...]) -> ShiftRecord:
-    return ShiftRecord(int(row[0]), int(row[1]), str(row[2]), row[3], int(row[4]), row[5], row[6], row[7], row[8], row[9], str(row[10]), row[11])
+    return ShiftRecord(int(row[0]), int(row[1]), str(row[2]), row[3], int(row[4]), row[5], row[6], row[7], row[8], row[9], str(row[10]), row[11], row[12])
 
 
 def _cash_event(row: tuple[Any, ...]) -> CashEventRecord:
@@ -996,9 +1013,9 @@ def _cash_event(row: tuple[Any, ...]) -> CashEventRecord:
 class SqliteShiftStore:
     """``services.shift.ShiftStore``."""
 
-    def insert_shift(self, conn: sqlite3.Connection, *, user_id: int, opened_at: str, opening_float_paise: int) -> int:
+    def insert_shift(self, conn: sqlite3.Connection, *, user_id: int, opened_at: str, opening_float_paise: int, opening_denominations: str | None = None) -> int:
         """OPEN row (the partial unique index refuses a second open shift per user)."""
-        return int(conn.execute("INSERT INTO shift(user_id, opened_at, opening_float_paise, status) VALUES (?, ?, ?, 'OPEN')", (user_id, opened_at, opening_float_paise)).lastrowid)
+        return int(conn.execute("INSERT INTO shift(user_id, opened_at, opening_float_paise, opening_denominations, status) VALUES (?, ?, ?, ?, 'OPEN')", (user_id, opened_at, opening_float_paise, opening_denominations)).lastrowid)
 
     def shift(self, conn: sqlite3.Connection, shift_id: int) -> ShiftRecord | None:
         """One shift."""
