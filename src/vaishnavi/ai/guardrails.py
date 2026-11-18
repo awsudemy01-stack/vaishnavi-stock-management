@@ -138,13 +138,13 @@ _BLOCKED: Final[list[tuple[str, list[re.Pattern[str]]]]] = [
 ]
 
 _OWNER_ONLY: Final = _rx(
-    r"\b(sale|sales|total|turnover|revenue|bikri|bikree|kamai|collection)\b",
+    r"\b(sale|sales|sold|total|turnover|revenue|bikri|bikree|bik[aei]|bikay[ie]|becha|bech[ae]|kamai|collection)\b",
     r"\b(profit|margin|munafa|faida|loss|nuksan)\b",
-    r"\b(purchase|purchases|khareed|khareeda|kharida|bought|supplier)\b",
-    r"\b(forecast|predict|prediction|future|demand|trend|bhavishya|aage)\b",
+    r"\b(purchase|purchases|khareed|khareeda|kharida|bought|supplier|kharch|kharcha|spent|spend|expense)\b",
+    r"\b(forecast|predict|prediction|future|demand|trend|bhavishya|aage|agle|bikega|bikegi)\b",
     r"\b(cashier|staff|ramesh|variance|shift report|performance|attendance|who sold|kisne becha)\b",
     r"\b(report|reports|audit|discount audit|void|refund|shrinkage|backup|doctor|logs?)\b",
-    r"बिक्री|कुल|मुनाफ़ा|मुनाफा|लाभ|खरीद|पूर्वानुमान|माँग|मांग|रिपोर्ट|कैशियर",
+    r"बिक्री|बिका|बिकी|बिके|कुल|मुनाफ़ा|मुनाफा|लाभ|खरीद|खर्च|पूर्वानुमान|माँग|मांग|रिपोर्ट|कैशियर",
 )
 
 _OFF_TOPIC_HINTS: Final = _rx(
