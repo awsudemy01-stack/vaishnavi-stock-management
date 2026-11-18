@@ -801,6 +801,96 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   parameter `open` (a builtin name; the page's only peculiarity) was renamed `then_pos` — `/login?next=` also
   shadows a builtin and works, so this is hygiene, not the proven cause.
 
+### Added / Fixed — live run 4 (17-Nov, Windows VM; the owner's ten observations)
+- **AI answers business questions deterministically** (obs. 1 — "kitna paisa ab tak kharch kiya", "aaj pura din
+  kitna item bika", "har item ka sale", "which stock is high in demand", "no demand", "forecast next few days",
+  "next day sale growth" all fell to the 7B model, which did not call a tool and was then replaced by the honest
+  "I could not check" line). The fast path (`ai/fastpath.py`) gained Owner intents with period/horizon parsing in
+  EN · Hindi · Hinglish — `spend` → `purchases_summary` (new period `all_time` for "so far / ab tak"),
+  `item_sales` / `high_demand` → `demand_ranking` (period today / yesterday / this week / this month …),
+  `no_demand` → `dead_stock(30 d)`, `forecast` → `forecast_sales` + `reorder_plan` ("next week" 7 d, "agle
+  mahine" 30 d, "next day" 1 d), `sales_period` → `sales_summary(period)`; answered in < 100 ms with no model at
+  all. Comparisons / "why" / festival questions still go to the model (`_COMPLEX`). Tool descriptions carry the
+  Hinglish synonyms, the core prompt has a "which tool for which question" table, the grounding nudge lists the
+  business tools, and the guardrail's Owner-only vocabulary now includes *sold / bika / kharch / spent / agle*
+  so staff get the polite refusal instead of an "offline" shrug.
+- **Staff can book goods received** (obs. 2): `Permission.RECEIVE_STOCK` (Owner ALLOW · Staff ALLOW),
+  `InventoryService.receive_goods(actor, product, qty, note=)` — positive quantity only, note ≥ 3 chars
+  mandatory, type `PURCHASE`, audit `STOCK_RECEIVED`, `StockChanged(by_staff=True, user_id)` → Owner
+  notification "Goods received by staff: X +n" with a link to the movement. DB trigger
+  `trg_stock_movement_validate` admits `PURCHASE` with `qty_delta > 0` from any user (everything else stays
+  Owner-only, so stock can never be *reduced* by staff). Stock page: "Goods received" button for everyone; a
+  staff row-click opens the receive dialog (quantity in the item's pricing unit, note, time + name shown).
+- **Weighed items on the bill** (obs. 3): the product editor derived `sale_mode` from a separate "Sold by" select
+  (default PIECE) while the unit said kg → mixed state, so 500 g of ₹1000/kg ghee neither priced nor deducted.
+  The unit now drives everything (`_unit_for`: kg → WEIGHT/g/×1000, l → VOLUME/ml, m → LENGTH/cm, else PIECE)
+  and the pad accepts "500", "0.5 kg", "1.5kg", "250 g" (`parse_qty_text`). Opening stock and alerts are typed in
+  the pricing unit ("10" for 10 kg) and stored in base units.
+- **POS redesigned to the mock-up** (obs. 4, `docs/mockups/pos.html`): scan bar with F3/F6/F7 buttons, category
+  pill tabs, tiles for **every** active item (quick picks first) with an emoji icon from the name (`icon_for`),
+  price per unit and "N left / ⚠ low / ✖ out"; right-hand bill card with table (Item · Qty · Shelf · Discount ·
+  Amount), totals grid, **TOTAL** in saffron, "Customer saves", and the action grid Pay / F4 Discount / Esc Clear.
+  Second pass after the owner's check: the **left rail** is now the mock-up's 64 px icon rail (icon above a tiny
+  label, saffron square when active) instead of a wide text list; cart rows use the bordered **qty pill**
+  (`− 2 pc +`), mono `#id · code`, saffron `†`/`*` markers, discount chips with the small second line ("offer ·
+  locked" / the ad-hoc reason), a ✕ remover; amber **notice bar**; tile image 70 px; key legend as `code` chips
+  (`row_item_html`, `row_discount_html`, `keys_html` are pure and tested). **Customer saves**: shown in green under
+  TOTAL on screen (already) and on the receipt as `Item discounts` / `Bill discount (reason)` rows plus a now
+  **bold** "You saved ₹… today" line right under TOTAL (green in the PDF/HTML copy); receipt goldens regenerated.
+  **Per-line discount arithmetic on the receipt** (owner's sketch): a discounted item prints its **shelf** amount
+  on the item row and, beneath it, `discount 1% (Diwali Offer)   -0.20  = 19.80` (ad-hoc: `discount 10.00 (regular
+  customer)`), so the customer can follow every line to the total; long offer names wrap instead of being cut
+  (`ReceiptLine.discount_row`, thermal + HTML). **Extra discount on the final bill** (owner: unhappy customers
+  want "something more"): the F4 bill discount is now presented as a reward — totals row `Extra discount — Premier
+  customer`, and under TOTAL two bold lines *"You saved ₹1.00 on items"* / *"You saved another ₹9.00 as our
+  Premier customer"* followed by a thank-you (`receipt.savings_message`, default "Happy shopping! Aapka din shubh
+  ho — see you again soon."). Nothing of this prints when there is no bill discount (plain "You saved … today"
+  stays). Same two green lines on the POS bill card (`PosModel.saved_rows`). TOTAL remains the amount paid.
+- **Bill on WhatsApp — optional, off by default** (owner's request, then "make it optional, I doubt the
+  limitations"): switch `receipt.whatsapp_share` under Settings → Shop & GST → *Receipt extras*. When off nothing
+  WhatsApp-related appears (F8 stays as plain customer capture, `ReceiptShareService.share` refuses with a
+  plain message). When on, **F8 Customer** on the POS captures the mobile number (+ name) —
+  normalised to `+91 …`, stored in the hitherto unused `customer` table (one row per number, name kept) and
+  linked through `sale.customer_id`; green 📱 chip in the bill header; survives hold/resume. The "Bill done"
+  dialog has a phone box (prefilled) and **Send bill on WhatsApp**: with the Meta Cloud API configured under
+  Settings → Publishing the text is posted directly; otherwise a `wa.me` click-to-chat link opens WhatsApp
+  Desktop/Web with the whole bill (58 mm receipt in a monospace block under the bold shop name) pre-filled
+  and the cashier presses *Send*. API errors fall back to the link; audit `RECEIPT_SHARED`
+  (`services/receipt_share.py`, `BillingService.set_customer / customer_of / remember_customer`,
+  `normalise_phone`, `CustomerRecord`). F8 added to the key map and the action grid.
+  **Bill-level discount** (F4 with no line selected): customer tier (Regular 2 % · Premier 5 % · Festival ·
+  Round-off; editable via data key `billing.discount_tiers`), % or ₹, reason printed on the receipt, over-cap →
+  Owner PIN; shown as its own totals row and at the bottom of the bill card.
+- **GST** (obs. 5): new **Settings → Shop & GST** tab (first tab) — shop name/address/phone/email, GSTIN
+  (15-character pattern, required when registered, `E-CFG-003`), state code, "GST registered" switch, default
+  GST % for new items, "shelf prices include GST", and a live receipt-header preview. Reuses the onboarding
+  wizard's validated submits so the two paths cannot disagree. Per-item CGST/SGST is the item's GST % (the
+  editor shows the live split).
+- **Product editor simplified** (obs. 6/7): essentials only — name, category, "Sold as" unit (with a hint), purchase
+  price, selling price, opening stock, GST %; code/MRP/HSN/low-stock alert/usual order qty/tags/barcodes live
+  under "Advanced". Hindi name and the "Sold by" select are gone; "Restock" is now "Usual order quantity (for the
+  reorder list)".
+- **UPI payment did nothing** (obs. 8): the Pay dialog now changes with the mode — CASH quick notes + tendered +
+  change; **UPI shows a QR** (`upi://pay?pa=…&am=…` via the `qrcode` package, SVG) with the shop's UPI id and a
+  reference box; CARD a slip reference; SPLIT three amounts with the live shortfall.
+- **Shift open counts the drawer** (obs. 9): denomination grid (₹500 … ₹1; ₹2000 removed — withdrawn 2023) with a
+  live total; staff must fill it (type 0 for an empty drawer), the Owner may type a total. Stored as JSON in the
+  new `shift.opening_denominations` column. **End work** for staff: the primary button is "Close shift & count the
+  drawer"; Confirm is disabled until an Owner PIN is typed (server already enforced it).
+- **"Item with code 2 saved but invisible"** (obs. 10): the grid's one-click **Archive** (no confirmation) hid the
+  item while its code stayed reserved, and `E-CAT-004` talked about a *barcode*. Archive now asks for
+  confirmation; the grid has a "Show archived" switch and a status column; an archived item's editor shows a
+  banner with **Restore**; a duplicate code names the other item and its state (`E-CAT-005`: "…already used by
+  'X' (archived) — restore it or choose another code").
+- **Receipt rate column for weighed items** printed `500.00/1000g`, which the narrow column cut to `500.00/100` —
+  now `/kg`, `/100g`, `/L` (`ReceiptService._line`). Verified end-to-end: 100 g at ₹500/kg → ₹50.00, 50 g at
+  ₹5000/kg → ₹250.00, stock 10 kg → 9.9 kg (`test_weighed_items_price_proportionally_and_deduct_the_exact_weight`).
+- Schema **0002_staff_receive**: re-creates the movement trigger from `schema.sql` (`schema.statement_for()`) and
+  adds `shift.opening_denominations`; `HEAD_REVISION`/`SCHEMA_VERSION` → 0002; existing databases are upgraded
+  by `ensure_schema_current` at start (dry-run on a copy first). Tests replay the 0002 SQL with sqlite3 since
+  Alembic is not importable on the dev machine; a new test asserts exactly one migration head and that
+  `schema.py` names it.
+
 ### Removed — Phase 7
 - Never-imported Phase-1 placeholders: `db/repositories/` (ORM twins of `sqlite_stores`), `hardware/scanner.py`,
   `hardware/scale.py`, `hardware/printer/{discovery,os_print}.py`, `api/{auth,data}.py`,
