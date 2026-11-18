@@ -29,8 +29,9 @@ from vaishnavi.services.ledger import LedgerService
 
 log = logging.getLogger("vaishnavi.services.shift")
 
-DENOMINATIONS: Final = (2000, 500, 200, 100, 50, 20, 10, 5, 2, 1)
-"""Rupee notes and coins offered on the close screen."""
+DENOMINATIONS: Final = (500, 200, 100, 50, 20, 10, 5, 2, 1)
+"""Rupee notes and coins offered on the open/close count screens (₹2000 was withdrawn in 2023; a stray
+note can still be typed as a total)."""
 
 
 def count_denominations(counts: dict[int, int]) -> int:
@@ -89,7 +90,7 @@ class VarianceSummary:
 class ShiftStore(Protocol):
     """Rows the service needs."""
 
-    def insert_shift(self, session: Session, *, user_id: int, opened_at: str, opening_float_paise: int) -> int: ...  # pragma: no cover - protocol
+    def insert_shift(self, session: Session, *, user_id: int, opened_at: str, opening_float_paise: int, opening_denominations: str | None = None) -> int: ...  # pragma: no cover - protocol
     def shift(self, session: Session, shift_id: int) -> ShiftRecord | None: ...  # pragma: no cover - protocol
     def open_shift_for(self, session: Session, user_id: int) -> ShiftRecord | None: ...  # pragma: no cover - protocol
     def open_shifts(self, session: Session) -> list[ShiftRecord]: ...  # pragma: no cover - protocol
@@ -132,20 +133,28 @@ class ShiftService:
             return self._expected(session, shift_id)
 
     # -- lifecycle --------------------------------------------------------------------------------
-    def open(self, actor: Actor, *, opening_float_paise: int) -> ShiftRecord:
-        """Start a shift with the float counted into the drawer (one open shift per user, ``E-SHIFT-002``)."""
+    def open(self, actor: Actor, *, opening_float_paise: int | None = None, denominations: dict[int, int] | None = None) -> ShiftRecord:
+        """Start a shift with the float counted into the drawer (one open shift per user, ``E-SHIFT-002``).
+
+        Preferably note by note (``denominations``) so the opening count is as honest as the closing one;
+        a plain total is still accepted (Owner topping up quickly).
+        """
         require(actor, Permission.SHIFT_OWN)
-        if opening_float_paise < 0:
+        if denominations is None and opening_float_paise is None:
+            raise ValueError("count the float (denominations or a total)")
+        opening = count_denominations(denominations) if denominations is not None else int(opening_float_paise or 0)
+        if opening < 0:
             raise ValueError("opening float cannot be negative")
+        denoms_json = json.dumps({str(k): int(v) for k, v in denominations.items() if int(v)}) if denominations is not None else None
         with self._txn(label="shift.open") as session:
             existing = self._store.open_shift_for(session, actor.user_id)
             if existing is not None:
                 raise ShiftError("E-SHIFT-002", user=str(actor.user_id), detail=f"shift {existing.id} already open")
-            sid = self._store.insert_shift(session, user_id=actor.user_id, opened_at=iso_utc(), opening_float_paise=opening_float_paise)
-            self._audit.record(session, "SHIFT_OPENED", user_id=actor.user_id, entity="shift", entity_id=sid, after={"opening_float_paise": opening_float_paise})
+            sid = self._store.insert_shift(session, user_id=actor.user_id, opened_at=iso_utc(), opening_float_paise=opening, opening_denominations=denoms_json)
+            self._audit.record(session, "SHIFT_OPENED", user_id=actor.user_id, entity="shift", entity_id=sid, after={"opening_float_paise": opening, "denominations": denoms_json})
             record = self._store.shift(session, sid)
         assert record is not None
-        log.info("SHIFT_OPENED id=%s user=%s float=%d", sid, actor.user_id, opening_float_paise)
+        log.info("SHIFT_OPENED id=%s user=%s float=%d counted_by_note=%s", sid, actor.user_id, opening, denominations is not None)
         return record
 
     def cash_in(self, actor: Actor, amount_paise: int, *, reason: str, shift_id: int | None = None) -> CashEventRecord:
