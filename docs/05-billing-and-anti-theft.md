@@ -112,7 +112,8 @@ Permissions are enforced **server-side in the service layer** (`@requires(Permis
 | **Bank / UPI / payment details** (UPI ID for QR, bank account for reference) | ✔ (masked; re-enter password to edit) | — (never visible) |
 | **Stock** | | |
 | Create / edit products, barcodes, labels | ✔ | print replacement label only |
-| Purchase entry, stock adjustment / damage, stock-take & approval | ✔ | — |
+| **Goods received at the counter** (a delivery arrives while the Owner is away: *add* quantity, note mandatory, time + name recorded, Owner notified) | ✔ | ✔ — add only, never reduce |
+| Purchase entry (supplier bill with costs), stock adjustment / damage, stock-take & approval | ✔ | — |
 | **Reports** | | |
 | Own-shift summary & own bills | ✔ | ✔ |
 | Total sales per day / period, sales history (all), item history | ✔ | — |
@@ -141,9 +142,10 @@ listed here, with who may trigger it. There is no other way in the application, 
 
 | Path | Movement type | STAFF | OWNER | Notes |
 |------|---------------|:-----:|:-----:|-------|
-| Completed customer sale (checkout committed, invoice issued) | `SALE` (−) | **✔ — the only way staff can change stock** | ✔ | written in the same transaction as the sale; receipt follows |
+| Completed customer sale (checkout committed, invoice issued) | `SALE` (−) | **✔** | ✔ | written in the same transaction as the sale; receipt follows |
 | Void / refund of a sale | `SALE_VOID` / `RETURN` (+) | only with **Owner PIN** on the same screen | ✔ | reversing movement references the original invoice; both user ids audited |
-| Opening stock, purchase entry (goods received) | `OPENING` / `PURCHASE` (+) | — | ✔ | supplier, invoice no., cost |
+| **Goods received at the counter** (Stock → "Goods received", or click a row) | `PURCHASE` (+ only) | **✔ — the one stock *increase* staff may make** | ✔ | quantity > 0, note ≥ 3 chars mandatory, audit `STOCK_RECEIVED`, Owner notification; no cost — the Owner books the supplier bill later |
+| Opening stock, purchase entry (supplier bill with costs) | `OPENING` / `PURCHASE` (+) | — | ✔ | supplier, invoice no., cost → updates purchase price |
 | Manual adjustment (found / lost / correction) | `ADJUSTMENT` (±) | — | ✔ | reason mandatory; appears in override & shrinkage reports |
 | Damage / expiry write-off | `DAMAGE` (−) | — | ✔ | reason mandatory |
 | Stock-take approval | `STOCK_TAKE` (±) | — (staff may *count*, cannot approve) | ✔ | variance posted only on Owner approval |
@@ -174,7 +176,9 @@ BEGIN
          SELECT 1 FROM sale WHERE id = NEW.ref_id AND NEW.ref_type = 'SALE'
             AND status IN ('VOIDED','REFUND') AND approved_by_user_id IS NOT NULL)
       THEN RAISE(ABORT, 'E-INV-011 reversal without an approved void/refund')
-    WHEN NEW.type NOT IN ('SALE','SALE_VOID','RETURN') AND (
+    WHEN NEW.type NOT IN ('SALE','SALE_VOID','RETURN')
+         AND NOT (NEW.type = 'PURCHASE' AND NEW.qty_delta > 0)   -- goods received at the counter: anyone may *add*
+         AND (
          SELECT r.name FROM user u JOIN role r ON r.id = u.role_id WHERE u.id = NEW.user_id) <> 'OWNER'
       THEN RAISE(ABORT, 'E-INV-012 only the Owner may post this movement type')
   END;
@@ -190,19 +194,22 @@ Plus the hourly reconciliation ([14 §2a](14-database-backup-and-recovery.md#2a-
 and the stock-take shrinkage report, which catch the one thing software cannot prevent: an item
 leaving the shop with **no** transaction at all.
 
-What a billing-staff login can therefore do to stock: **nothing except sell with a bill.** Trying any
-other path yields `E-AUTH-010` in the UI and is audited (`PERMISSION_DENIED`); repeated attempts
-appear in the *Chat security / Overrides* reports and alert the Owner.
+What a billing-staff login can therefore do to stock: **sell with a bill, and book a delivery in.**
+Adding stock cannot hide a theft (the shelf would then show *more* than the system, which the stock-take
+reveals as a positive variance), and every receipt carries the cashier's name, the time and a note the Owner
+sees in Stock → Movements and as a notification. Trying any other path yields `E-AUTH-010` in the UI and is
+audited (`PERMISSION_DENIED`); repeated attempts appear in the *Chat security / Overrides* reports and alert
+the Owner.
 
 ## 6. Shift & cash reconciliation
 
 ```mermaid
 flowchart LR
   A[Login as Cashier] --> B{Open shift?}
-  B -- no --> C[Enter opening float<br/>e.g. ₹1,000] --> D[Shift OPEN]
+  B -- no --> C[Count the drawer note by note<br/>500×2, 100×5, 20×… → float] --> D[Shift OPEN]
   B -- yes --> D
   D --> E[Sales · Cash-in · Cash-out]
-  E --> F[F11 → Close shift]
+  E --> F[Close shift — also the only way<br/>for staff to End work without the Owner PIN]
   F --> G[Denomination count<br/>500×4, 200×3, ...]
   G --> H[System: expected vs counted]
   H --> I{Variance = 0?}
@@ -210,6 +217,11 @@ flowchart LR
   I -- no --> K[Cashier note + Owner ack] --> J
   J --> L[Auto backup]
 ```
+
+Both counts are stored note by note (`shift.opening_denominations`, `shift.denominations`) so the Owner can
+see not just "₹1,000" but *which* notes, and staff cannot type a round guess: the opening grid must be filled
+(type 0 for an empty drawer); only the Owner has the "just the total" shortcut. Denominations offered:
+₹500 · 200 · 100 · 50 · 20 · 10 · 5 · 2 · 1 (₹2000 was withdrawn in 2023 — a stray note goes in the note).
 
 Variance history per cashier is a report; repeated negative variance is the clearest theft signal.
 
@@ -307,21 +319,24 @@ Invoice: INV-2026-27-000123   14-Nov-2026 10:42
 Cashier: Ramesh               Shift: #41
 ----------------------------------------------
 Item                 Qty  Price  Disc   Amount
-Camphor 50g (कपूर)   2pc  60.00  -1%    118.80
-  #1042 · Diwali Offer 1%  (you saved 1.20)
-Krishna Dress 6" †   1pc 250.00   —     250.00
+Camphor 50g (कपूर)   2pc  60.00  -1%    120.00
+  discount 1% (Diwali Offer)    -1.20  = 118.80
+Krishna Dress 6" †   1pc 250.00 -10.00  250.00
+  discount 10.00 (regular customer) -10.00 = 240.00
 Kumkum (loose)      150g 40.00/100g —   60.00
 Agarbatti *          1pc  35.00   —      35.00
 ----------------------------------------------
 Subtotal (shelf price)                 465.00
-Item discounts                          -1.20
-Bill discount                          -10.00
-Taxable                                453.80
+Item discounts                         -11.20
+Extra discount — Premier customer      -10.00
+Taxable                                443.80
 CGST @ 2.5%                              x.xx
 SGST @ 2.5%                              x.xx
 Round-off                               +0.xx
 TOTAL                               ₹ 4xx.00
-You saved ₹ 11.20 today
+**You saved ₹ 11.20 on items**
+**You saved another ₹ 10.00 as our Premier customer**
+**Happy shopping! Aapka din shubh ho — see you again soon.**
 Paid: CASH ₹500  Change ₹xx
 † label damaged – looked up   * open item
 ----------------------------------------------
@@ -331,8 +346,13 @@ Paid: CASH ₹500  Change ₹xx
         [barcode: INV-2026-27-000123]
 ```
 
-Every line shows **shelf price, discount and final amount**; the offer name is printed under the
-line; a "You saved" total is shown so the customer can verify every rupee of discount. Lookup lines
+Every discounted line shows the **shelf amount** on the item row and, beneath it, the discount (with the offer
+name or the ad-hoc reason) and the **net amount actually charged** — the customer can follow the arithmetic
+line by line. Totals then list item discounts and — when the cashier gave one — the **extra discount** on the
+whole bill with the customer type; under TOTAL the savings are told in two bold lines ("You saved ₹… on items" /
+"You saved another ₹… as our Premier customer") followed by a thank-you (`receipt.savings_message`), so the
+customer leaves feeling the seller went beyond the shelf offers. Without a bill discount only the plain
+"You saved ₹… today" prints. TOTAL is always the amount actually paid. Lookup lines
 carry `†`, open items `*`. The invoice number is also printed as a barcode so a return can be started
 by scanning the receipt.
 
