@@ -18,7 +18,7 @@ from vaishnavi.hardware import receipts as renderers
 from vaishnavi.platform.paths import AppPaths
 from vaishnavi.platform.printing import PrinterStatus
 from vaishnavi.services.audit import AuditService
-from vaishnavi.services.billing import BillingService
+from vaishnavi.services.billing import BillingService, QuantitySpec
 from vaishnavi.services.catalog import CatalogService, ProductInput
 from vaishnavi.services.hardware_guard import HardwareGuard
 from vaishnavi.services.inventory import InventoryService
@@ -26,6 +26,7 @@ from vaishnavi.services.ledger import LedgerService
 from vaishnavi.services.offers import OfferInput, OfferService
 from vaishnavi.services.print_queue import PrintQueueService
 from vaishnavi.services.receipt import ReceiptService
+from vaishnavi.services.receipt_share import ReceiptShareService
 from vaishnavi.services.shift import ShiftService
 from vaishnavi.ui.i18n import UiTexts
 from vaishnavi.ui.pages import pos
@@ -73,6 +74,17 @@ class Base(unittest.TestCase):
         c.hardware = HardwareGuard(txn, SqliteHardwareStore(), audit, settings=lambda: self.settings, scanner_present=lambda hw: self.scanner_present, printer_status=lambda hw: self.printer, event_bus=self.bus)
         c.billing.add_checkout_hook(c.hardware.can_checkout)
         c.users = type("U", (), {"display_names": staticmethod(lambda: {1: "Owner", 2: "Ramesh"})})()
+        self.posts: list[tuple[str, dict]] = []
+        self.secrets: dict[str, str] = {}
+        self.post_fails = False
+
+        def fake_post(url: str, *, headers: dict, json_body: dict) -> dict:
+            if self.post_fails:
+                raise OSError("network down")
+            self.posts.append((url, json_body))
+            return {"messages": [{"id": "wamid.1"}]}
+
+        c.receipt_share = ReceiptShareService(txn, c.receipts, c.billing, audit, settings=lambda: self.settings, secret=self.secrets.get, post=fake_post, text_renderer=renderers.text_lines)
         self.c = c
         self.texts = UiTexts.load("en")
         self.carts = pos.CartRegistry()
@@ -149,7 +161,7 @@ class ModelTest(Base):
         self.c.billing.add_scan(OWNER, owner_cart, CAMPHOR)
         o = pos.do_checkout(self.c, OWNER, owner_cart, [pos.cash_payment(1000, tendered_paise=1000)])
         self.assertFalse(o.ok)
-        self.assertEqual(o.error_code, "E-BILL-042", "the page uses the code to jump to /shifts?open=1")
+        self.assertEqual(o.error_code, "E-BILL-042", "the page uses the code to jump to /shifts?then_pos=1")
         self.assertEqual([b.kind for b in pos.build_pos(self.c, self.texts, STAFF, self.carts.get(self.c.billing, STAFF)).banners], [], "staff has shift 1 open")
 
 
@@ -264,6 +276,213 @@ class FindAndPayTest(Base):
         back = pos.resume_held(self.c, STAFF, self.carts, held_id)
         self.assertEqual(len(back.lines), 1)
         self.assertIs(self.carts.get(self.c.billing, STAFF), back)
+
+
+class LiveRun4Test(Base):
+    """Observations 3, 4 and 8 of live run 4: weighed items on the pad, the tile/bill layout, UPI."""
+
+    def test_qty_pad_accepts_weights_in_kg_or_grams(self) -> None:
+        ghee = QuantitySpec(sale_mode="WEIGHT", base_unit="g", pricing_unit_qty=Decimal("1000"), pricing_unit_label="kg", min_qty=Decimal("50"), qty_step=Decimal("50"), presets=(), allow_decimal=True)
+        self.assertEqual(pos.parse_qty_text(ghee, "500"), Decimal("500"), "a bare number on a weighed item means base units (grams)")
+        self.assertEqual(pos.parse_qty_text(ghee, "0.5 kg"), Decimal("500"))
+        self.assertEqual(pos.parse_qty_text(ghee, "1.5kg"), Decimal("1500"))
+        self.assertEqual(pos.parse_qty_text(ghee, "250 g"), Decimal("250"))
+        piece = QuantitySpec(sale_mode="PIECE", base_unit="pcs", pricing_unit_qty=Decimal("1"), pricing_unit_label="pc", min_qty=Decimal("1"), qty_step=Decimal("1"), presets=(), allow_decimal=False)
+        self.assertEqual(pos.parse_qty_text(piece, "3"), Decimal("3"))
+        with self.assertRaises(ValueError):
+            pos.parse_qty_text(ghee, "half")
+
+    def test_tiles_show_every_active_item_with_icon_category_and_stock(self) -> None:
+        self.c.catalog.create(OWNER, ProductInput(name="Ghee 1kg", sku="GHEE-01", price_paise=100000, cost_paise=80000, unit="kg", category_id=None))
+        self.c.catalog.set_quick_pick(OWNER, 10, True)
+        m = pos.build_pos(self.c, self.texts, OWNER, self.carts.get(self.c.billing, OWNER))
+        self.assertEqual([t.name for t in m.tiles][:2], ["Camphor 50g", "Ghee 1kg"], "quick picks first, then every other active item")
+        by_name = {t.name: t for t in m.tiles}
+        self.assertEqual(by_name["Camphor 50g"].icon, "\U0001f56f\ufe0f")
+        self.assertEqual(by_name["Ghee 1kg"].icon, "\U0001f95b")
+        self.assertTrue(by_name["Ghee 1kg"].out, "no opening stock yet")
+        self.assertEqual(m.categories[0][0], None, "'All' pill comes first")
+        self.assertEqual(pos.icon_for("Something unknown"), "\U0001f6cd\ufe0f")
+
+    def test_bill_discount_tiers_and_totals_row(self) -> None:
+        tiers = pos.discount_tiers(self.c)
+        self.assertEqual([t.key for t in tiers], ["regular", "premier", "festival", "round"], "defaults when the Owner has not configured tiers")
+        cart = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart, CAMPHOR, qty=Decimal("10"))
+        self.c.billing.set_bill_discount(STAFF, cart, amount_paise=500, reason="Regular customer")
+        with self.assertRaises(Exception, msg="₹20 on ₹100 is 20 % — above the staff cap without the Owner PIN"):
+            self.c.billing.set_bill_discount(STAFF, cart, amount_paise=2000, reason="Premier customer")
+        m = pos.build_pos(self.c, self.texts, STAFF, cart)
+        bill_rows = [r for r in m.total_rows if r.kind == "billdisc"]
+        self.assertEqual(len(bill_rows), 1)
+        self.assertIn("Regular customer", bill_rows[0].label)
+        self.assertEqual(bill_rows[0].amount_text, "−5.00")
+        self.assertEqual(m.total_text, "₹95.00")
+        self.assertEqual(m.bill_discount_reason, "Regular customer")
+        self.assertEqual(m.saved_text, "₹5.00", "the green 'Customer saves' line under TOTAL")
+        self.assertEqual(m.saved_rows, [("Saved another, as our Regular customer", "₹5.00")])
+        self.assertEqual(bill_rows[0].label, "Extra discount — Regular customer")
+        # … and the same story on the printed receipt
+        done = pos.do_checkout(self.c, STAFF, cart, pos.make_payments(pos.build_payment(self.c, self.texts, cart), mode="CASH", tendered_paise=10000))
+        self.assertTrue(done.ok, done.error_code)
+        preview = done.receipt_preview
+        self.assertIn("Extra discount - Regular customer", preview)
+        self.assertIn("-5.00", preview)
+        self.assertIn("You saved Rs5.00 as our Regular customer", preview)
+        self.assertIn("Happy shopping!", preview)
+        self.assertLess(preview.index("TOTAL"), preview.index("You saved"), "saved line sits right under the total, as on screen")
+        self.assertLess(preview.index("Happy shopping"), preview.index("Paid:"))
+
+    def test_item_and_bill_discounts_together_tell_a_two_line_savings_story(self) -> None:
+        self.c.offers.create(OWNER, OfferInput(name="Diwali Offer", type="PCT", value=Decimal("1"), scope="PRODUCT", scope_id=10))
+        cart = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart, CAMPHOR, qty=Decimal("10"))  # ₹100 shelf, −1 % offer
+        self.c.billing.set_bill_discount(STAFF, cart, amount_paise=900, reason="Premier customer")
+        m = pos.build_pos(self.c, self.texts, STAFF, cart)
+        self.assertEqual(m.saved_rows, [("Saved on items", "₹1.00"), ("Saved another, as our Premier customer", "₹9.00")])
+        self.assertEqual(m.total_text, "₹90.00")
+        done = pos.do_checkout(self.c, STAFF, cart, pos.make_payments(pos.build_payment(self.c, self.texts, cart), mode="CASH", tendered_paise=10000))
+        self.assertTrue(done.ok, done.error_code)
+        lines = done.receipt_preview.splitlines()
+        i = next(k for k, ln in enumerate(lines) if ln.startswith("TOTAL"))
+        self.assertEqual(lines[i + 1 : i + 5], ["You saved Rs1.00 on items", "You saved another Rs9.00 as our Premier customer", "Happy shopping! Aapka din shubh ho - see you", "again soon."])
+        # no bill discount → one plain line, no celebration
+        cart2 = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart2, CAMPHOR, qty=Decimal("1"))
+        plain = pos.do_checkout(self.c, STAFF, cart2, pos.make_payments(pos.build_payment(self.c, self.texts, cart2), mode="CASH", tendered_paise=1000))
+        self.assertIn("You saved Rs0.10 today", plain.receipt_preview)
+        self.assertNotIn("Happy shopping", plain.receipt_preview)
+
+    def test_f8_customer_is_normalised_remembered_and_linked_to_the_sale(self) -> None:
+        cart = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart, CAMPHOR)
+        bad = pos.set_customer(self.c, STAFF, cart, phone="12345")
+        self.assertFalse(bad.ok)
+        self.assertIn("10-digit", bad.message)
+        ok = pos.set_customer(self.c, STAFF, cart, phone="098765-43210", name="Sharma ji")
+        self.assertTrue(ok.ok, ok.message)
+        self.assertEqual((cart.customer_phone, cart.customer_name), ("919876543210", "Sharma ji"))
+        self.assertEqual(pos.customer_text(cart), "+91 98765 43210 · Sharma ji")
+        self.assertEqual(pos.build_pos(self.c, self.texts, STAFF, cart).customer_text, "+91 98765 43210 · Sharma ji")
+        held = pos.hold_current(self.c, STAFF, self.carts, label=None)
+        cart = pos.resume_held(self.c, STAFF, self.carts, held)
+        self.assertEqual(cart.customer_phone, "919876543210", "customer survives hold / resume")
+        done = pos.do_checkout(self.c, STAFF, cart, pos.make_payments(pos.build_payment(self.c, self.texts, cart), mode="CASH", tendered_paise=1000))
+        self.assertTrue(done.ok, done.error_code)
+        self.assertEqual((done.customer_phone, done.customer_name), ("919876543210", "Sharma ji"))
+        sale = self.c.receipts.load(done.result.sale_id)  # type: ignore[union-attr]
+        record = self.c.billing.customer_of(sale)
+        self.assertEqual((record.phone, record.name), ("919876543210", "Sharma ji"))  # type: ignore[union-attr]
+        again = self.carts.get(self.c.billing, STAFF)
+        pos.set_customer(self.c, STAFF, again, phone="+91 98765 43210")
+        self.assertEqual(again.customer_id, record.id, "same number → same customer row; the stored name is kept")  # type: ignore[union-attr]
+        self.assertEqual(again.customer_name, "Sharma ji")
+        pos.set_customer(self.c, STAFF, again, phone="")
+        self.assertIsNone(again.customer_id)
+
+    def test_whatsapp_bill_uses_click_to_chat_link_or_cloud_api(self) -> None:
+        cart = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart, CAMPHOR, qty=Decimal("2"))
+        pos.set_customer(self.c, STAFF, cart, phone="98765 43210")
+        self.assertFalse(pos.build_pos(self.c, self.texts, STAFF, cart).whatsapp_enabled, "optional feature — off by default")
+        done = pos.do_checkout(self.c, STAFF, cart, pos.make_payments(pos.build_payment(self.c, self.texts, cart), mode="CASH", tendered_paise=5000))
+        sale_id = done.result.sale_id  # type: ignore[union-attr]
+        off = pos.share_receipt(self.c, STAFF, sale_id)
+        self.assertEqual((off.ok, off.via), (False, "none"))
+        self.assertIn("switched off", off.message)
+        self.settings.receipt.whatsapp_share = True
+        self.assertTrue(self.c.receipt_share.enabled())
+        # no API configured → click-to-chat link with the 58 mm receipt inside a monospace block
+        out = pos.share_receipt(self.c, STAFF, sale_id)
+        self.assertEqual((out.ok, out.via, out.phone_text), (True, "link", "+91 98765 43210"))
+        assert out.link is not None
+        self.assertTrue(out.link.startswith("https://wa.me/919876543210?text="))
+        from urllib.parse import unquote
+
+        text = unquote(out.link.split("text=", 1)[1])
+        self.assertTrue(text.startswith("*Vaishnavi Puja Store*\nBill VPS/26-27/000003\n```\n"))
+        self.assertIn("Camphor 50g", text)
+        self.assertIn("TOTAL", text)
+        self.assertIn("Paid: CASH", text)
+        self.assertTrue(text.endswith("\n```"))
+        self.assertTrue(all(len(ln) <= 32 for ln in text.split("```")[1].splitlines()), "58 mm width so it fits a phone screen")
+        self.assertEqual(self.posts, [])
+        # phone typed afterwards (customer asked at the end) → used for this send and remembered
+        later = pos.share_receipt(self.c, STAFF, sale_id, phone="91234 56789", name="Gupta")
+        self.assertEqual((later.via, later.phone_text), ("link", "+91 91234 56789"))
+        # Cloud API configured → sent directly; audit row written
+        self.settings.publishing.whatsapp_phone_id = "1234567890"
+        self.secrets["publish.whatsapp_token"] = "EAAB-token"
+        sent = pos.share_receipt(self.c, STAFF, sale_id)
+        self.assertEqual((sent.ok, sent.via), (True, "api"))
+        url, body = self.posts[-1]
+        self.assertEqual(url, "https://graph.facebook.com/v19.0/1234567890/messages")
+        self.assertEqual((body["to"], body["type"], body["messaging_product"]), ("919876543210", "text", "whatsapp"))
+        self.assertIn("Camphor 50g", body["text"]["body"])
+        # API down → falls back to the link, never fails the bill
+        self.post_fails = True
+        fallback = pos.share_receipt(self.c, STAFF, sale_id)
+        self.assertEqual((fallback.ok, fallback.via), (True, "link"))
+        # no number anywhere → polite refusal
+        cart2 = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart2, CAMPHOR)
+        anon = pos.do_checkout(self.c, STAFF, cart2, pos.make_payments(pos.build_payment(self.c, self.texts, cart2), mode="CASH", tendered_paise=1000))
+        none = pos.share_receipt(self.c, STAFF, anon.result.sale_id)  # type: ignore[union-attr]
+        self.assertEqual((none.ok, none.via), (False, "none"))
+        self.assertIn("no mobile number", none.message)
+
+    def test_upi_payload_and_split_shortfall(self) -> None:
+        payload = pos.upi_payload("shop@upi", "Vaishnavi Puja Store", 12345, note="VPS/26-27/000003")
+        self.assertTrue(payload.startswith("upi://pay?"))
+        self.assertIn("pa=shop%40upi", payload)
+        self.assertIn("am=123.45", payload)
+        self.assertIn("cu=INR", payload)
+        self.assertEqual(pos.split_shortfall(10000, cash_paise=5000, upi_paise=3000, card_paise=0), 2000)
+        self.assertEqual(pos.split_shortfall(10000, cash_paise=5000, upi_paise=6000, card_paise=0), -1000, "negative = over-assigned")
+        svg = pos.qr_svg(payload)
+        self.assertTrue(svg is None or svg.lstrip().startswith("<svg"), "QR is optional (needs the qrcode package)")
+
+    def test_weighed_items_price_proportionally_and_deduct_the_exact_weight(self) -> None:
+        """Owner's examples: 100 g ghee at ₹500/kg → ₹50; 50 g camphor at ₹5000/kg → ₹250; stock down by the grams sold."""
+        kg = dict(unit="kg", sale_mode="WEIGHT", base_unit="g", pricing_unit_qty=Decimal("1000"), pricing_unit_label="kg", min_qty=Decimal("10"), qty_step=Decimal("10"), allow_decimal_qty=True)
+        ghee = self.c.catalog.create(OWNER, ProductInput(name="Desi Ghee", price_paise=50000, **kg))
+        camphor = self.c.catalog.create(OWNER, ProductInput(name="Camphor loose", price_paise=500000, **kg))
+        self.c.inventory.opening_stock(OWNER, ghee.id, Decimal("10000"))
+        self.c.inventory.opening_stock(OWNER, camphor.id, Decimal("2000"))
+        cart = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart, ghee.internal_barcode, qty=Decimal("100"))
+        self.c.billing.add_scan(STAFF, cart, camphor.internal_barcode, qty=Decimal("50"))
+        m = pos.build_pos(self.c, self.texts, STAFF, cart)
+        self.assertEqual([(r.qty_text, r.shelf_text, r.amount_text) for r in m.rows], [("100 g", "500.00", "50.00"), ("50 g", "5000.00", "250.00")])
+        self.assertEqual(m.total_text, "₹300.00")
+        done = pos.do_checkout(self.c, STAFF, cart, pos.make_payments(pos.build_payment(self.c, self.texts, cart), mode="CASH", tendered_paise=50000))
+        self.assertTrue(done.ok, done.error_code)
+        lines = [ln for ln in done.receipt_preview.splitlines() if "Desi Ghee" in ln or "Camphor loose" in ln]
+        self.assertIn("500.00/kg", lines[0], "rate printed per kg, not per 1000 g")
+        self.assertIn("5000.00/kg", lines[1])
+        self.assertEqual(self.c.inventory.stock_of(ghee.id), Decimal("9900"))
+        self.assertEqual(self.c.inventory.stock_of(camphor.id), Decimal("1950"))
+
+    def test_bill_rows_render_like_the_mockup(self) -> None:
+        """Mock-up cart cells: mono '#id · code' sub-line, marker, discount chip with its small second line, key chips."""
+        self.c.offers.create(OWNER, OfferInput(name="Diwali Offer", type="PCT", value=Decimal("1"), scope="PRODUCT", scope_id=10))
+        cart = self.carts.get(self.c.billing, STAFF)
+        self.c.billing.add_scan(STAFF, cart, CAMPHOR, qty=Decimal("2"))
+        self.c.billing.add_lookup(STAFF, cart, 10, qty=Decimal("1"), reason="label damaged")
+        self.c.billing.set_line_discount(STAFF, cart, cart.lines[1].line_id, amount_paise=100, reason="regular customer")
+        self.c.billing.add_open_item(STAFF, cart, name="Garland", detail="fresh", qty=Decimal("1"), unit_price_paise=3500)
+        rows = pos.build_pos(self.c, self.texts, STAFF, cart).rows
+        offer, adhoc, open_item = rows
+        self.assertEqual(pos.row_item_html(offer), "<div class='nm'>Camphor 50g</div><div class='sub'><span class='id'>#10 · CAM-0001</span></div>")
+        html = pos.row_item_html(adhoc)
+        self.assertIn("<span class='mark'>†</span>", html)
+        self.assertIn("<span class='id'>#10 · CAM-0001</span> · found by name (label damaged)", html)
+        self.assertNotIn("class='id'", pos.row_item_html(open_item), "open items have no catalogue id")
+        self.assertEqual(pos.row_discount_html(offer, locked_text="offer · locked"), "<span class='disc OFFER'>Diwali Offer −1%<small>offer · locked</small></span>")
+        self.assertEqual(pos.row_discount_html(adhoc, locked_text="x"), "<span class='disc ADHOC'>−₹1.00<small>regular customer</small></span>")
+        self.assertEqual(pos.row_discount_html(open_item, locked_text="x"), "<span class='disc NONE'>—</span>")
+        keys = pos.keys_html("Enter add scanned · F9 pay · Esc clear")
+        self.assertEqual(keys, "<div class='vsm-keys'><code>Enter</code> add scanned <code>F9</code> pay <code>Esc</code> clear</div>")
 
 
 if __name__ == "__main__":
