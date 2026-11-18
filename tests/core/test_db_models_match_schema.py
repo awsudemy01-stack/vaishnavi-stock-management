@@ -133,11 +133,59 @@ class MigrateStdlibPartsTest(unittest.TestCase):
             self.assertEqual(verify_schema_objects(copy), ["festival"])  # type: ignore[operator]
 
     def test_initial_migration_file_executes_schema_statements(self) -> None:
-        text = (Path(__file__).resolve().parents[2] / "src" / "vaishnavi" / "db" / "alembic" / "versions" / "0001_initial.py").read_text(encoding="utf-8")
+        versions = Path(__file__).resolve().parents[2] / "src" / "vaishnavi" / "db" / "alembic" / "versions"
+        text = (versions / "0001_initial.py").read_text(encoding="utf-8")
         self.assertIn('revision = "0001_initial"', text)
         self.assertIn("down_revision = None", text)
         self.assertIn("load_statements()", text)
         ast.parse(text)
+
+    def test_head_revision_constant_matches_the_newest_migration_file(self) -> None:
+        from vaishnavi.db.schema import HEAD_REVISION
+
+        versions = Path(__file__).resolve().parents[2] / "src" / "vaishnavi" / "db" / "alembic" / "versions"
+        revisions: dict[str, str | None] = {}
+        for file in versions.glob("[0-9]*.py"):
+            tree = ast.parse(file.read_text(encoding="utf-8"))
+            values = {n.targets[0].id: ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign) and isinstance(n.targets[0], ast.Name) and n.targets[0].id in ("revision", "down_revision")}
+            revisions[values["revision"]] = values["down_revision"]
+        heads = set(revisions) - {d for d in revisions.values() if d}
+        self.assertEqual(heads, {HEAD_REVISION}, "exactly one head, and schema.py must name it")
+
+    def test_0002_steps_replayed_with_sqlite3_let_staff_receive_goods(self) -> None:
+        """Alembic is not importable here, so replay the 0002 SQL on a 0001-shaped database and check the effect."""
+        from vaishnavi.db.schema import statement_for
+
+        text = (Path(__file__).resolve().parents[2] / "src" / "vaishnavi" / "db" / "alembic" / "versions" / "0002_staff_receive.py").read_text(encoding="utf-8")
+        previous = re.search(r'_PREVIOUS = """(.*?)"""', text, re.S)
+        assert previous
+        with tempfile.TemporaryDirectory() as tmp:
+            conn = sqlite3.connect(Path(tmp) / "v1.db")
+            try:
+                apply_schema(conn)
+                # Shape it like a 0001 database: old trigger, no opening_denominations column.
+                conn.execute("DROP TRIGGER trg_stock_movement_validate")
+                conn.execute(previous.group(1).strip())
+                conn.executescript("CREATE TABLE shift_old AS SELECT id, user_id, opened_at, closed_at, opening_float_paise, expected_cash_paise, counted_cash_paise, denominations, variance_paise, closed_by_user_id, status, note FROM shift; DROP TABLE shift; ALTER TABLE shift_old RENAME TO shift;")
+                conn.executescript("INSERT INTO role(id, name) VALUES (1, 'OWNER'), (2, 'STAFF'); INSERT INTO user(id, username, display_name, role_id, password_hash) VALUES (1, 'o', 'O', 1, 'x'), (2, 's', 'S', 2, 'x'); INSERT INTO product(id, sku, name, price_paise) VALUES (10, 'C', 'Camphor', 1000);")
+                conn.commit()
+                with self.assertRaises(sqlite3.IntegrityError) as cm:
+                    conn.execute("INSERT INTO stock_movement(product_id, type, qty_delta, qty_after, user_id, created_at) VALUES (10, 'PURCHASE', 5, 5, 2, 'now')")
+                self.assertIn("E-INV-010", str(cm.exception))
+                conn.rollback()
+                # The upgrade steps.
+                conn.execute("DROP TRIGGER IF EXISTS trg_stock_movement_validate")
+                conn.execute(statement_for("trg_stock_movement_validate"))
+                columns = {row[1] for row in conn.execute("PRAGMA table_info(shift)").fetchall()}
+                self.assertNotIn("opening_denominations", columns)
+                conn.execute("ALTER TABLE shift ADD COLUMN opening_denominations TEXT")
+                conn.execute("INSERT INTO stock_movement(product_id, type, qty_delta, qty_after, user_id, created_at) VALUES (10, 'PURCHASE', 5, 5, 2, 'now')")
+                with self.assertRaises(sqlite3.IntegrityError):
+                    conn.execute("INSERT INTO stock_movement(product_id, type, qty_delta, qty_after, user_id, created_at) VALUES (10, 'ADJUSTMENT', -1, 4, 2, 'now')")
+                conn.execute("INSERT INTO shift(user_id, opened_at, opening_float_paise, opening_denominations) VALUES (2, 'now', 50000, '{\"500\": 1}')")
+                self.assertEqual(conn.execute("SELECT opening_denominations FROM shift").fetchone()[0], '{"500": 1}')
+            finally:
+                conn.close()
 
 
 if __name__ == "__main__":
