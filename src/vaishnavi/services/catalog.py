@@ -245,8 +245,9 @@ class CatalogService:
         with self._txn(label="catalog.create") as session:
             category_name = next((c.name for c in self._store.categories(session) if c.id == data.category_id), None) if data.category_id else None
             sku = data.sku.strip().upper() if data.sku else self._next_sku(session, sku_prefix(category_name))
-            if self._store.product_by_sku(session, sku) is not None:
-                raise CatalogError("E-CAT-004", name=sku, detail="duplicate code")
+            other = self._store.product_by_sku(session, sku)
+            if other is not None:
+                raise CatalogError("E-CAT-005", name=sku, other=other.name, state="archived" if (not other.is_active or other.deleted_at) else "active", detail="duplicate code")
             fields = {
                 "sku": sku, "name": data.name.strip(), "name_hi": (data.name_hi or None), "category_id": data.category_id, "unit": data.unit, "sale_mode": data.sale_mode,
                 "base_unit": data.base_unit, "pricing_unit_qty": data.pricing_unit_qty, "pricing_unit_label": data.pricing_unit_label, "min_qty": data.min_qty, "qty_step": data.qty_step,
@@ -292,7 +293,7 @@ class CatalogService:
                 sku = str(effective["sku"]).strip().upper()
                 other = self._store.product_by_sku(session, sku)
                 if other is not None and other.id != product_id:
-                    raise CatalogError("E-CAT-004", name=sku, detail="duplicate code")
+                    raise CatalogError("E-CAT-005", name=sku, other=other.name, state="archived" if (not other.is_active or other.deleted_at) else "active", detail="duplicate code")
                 effective["sku"] = sku
             if not effective:
                 return before
