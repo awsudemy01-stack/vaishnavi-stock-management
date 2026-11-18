@@ -18,7 +18,7 @@ from typing import Any, Final, Protocol
 from vaishnavi.core.clock import iso_utc, today_ist
 from vaishnavi.core.errors import InventoryError
 from vaishnavi.core.events import EventBus, StockChanged, bus
-from vaishnavi.core.permissions import Actor, Permission, require
+from vaishnavi.core.permissions import Actor, Permission, Role, require
 from vaishnavi.db.records import MovementRecord, ProductRecord, PurchaseRecord, StockCountLineRecord, StockCountRecord, SupplierRecord
 from vaishnavi.services.audit import AuditService
 from vaishnavi.services.common import Session, TxnFactory
@@ -189,6 +189,25 @@ class InventoryService:
         self._bus.publish(event)
         return record
 
+    def receive_goods(self, actor: Actor, product_id: int, qty: Decimal, *, note: str) -> MovementRecord:
+        """A parcel arrived at the counter: add stock with a mandatory note — the one stock movement staff may make.
+
+        Add only (the DB trigger refuses anything else from a non-Owner), so a dishonest count cannot hide a
+        theft: stock can only go *up* here, and every receipt is audited (``STOCK_RECEIVED`` with who/when/what)
+        for the Owner to review in Reports → Audit. No cost is recorded — the Owner books the supplier bill
+        later with :meth:`record_purchase`, which also updates the purchase price.
+        """
+        require(actor, Permission.RECEIVE_STOCK)
+        if qty <= 0:
+            raise ValueError("received quantity must be > 0")
+        if not note or len(note.strip()) < 3:
+            raise ValueError("a note is required (who delivered / which bill)")
+        with self._txn(label="inv.receive") as session:
+            record, event = self._move(session, actor, product_id, "PURCHASE", qty, reason=f"received at counter: {note.strip()}", unit_cost=None, ref=(None, None), audit_action="STOCK_RECEIVED")
+        self._bus.publish(event)
+        log.info("STOCK_RECEIVED product=%s qty=%s by=%s role=%s", product_id, qty, actor.user_id, actor.role.value)
+        return record
+
     # -- purchases --------------------------------------------------------------------------------
     def record_purchase(self, actor: Actor, *, supplier_name: str | None, invoice_no: str | None, lines: list[PurchaseLine], purchase_date: str | None = None, supplier_phone: str | None = None, supplier_gstin: str | None = None) -> PurchaseRecord:
         """Goods received: header + lines, PURCHASE movements, the product's cost follows the latest price (price history ``PURCHASE``)."""
@@ -338,7 +357,7 @@ class InventoryService:
         low = product.min_stock > 0 and after <= product.min_stock and before > product.min_stock
         log.info("STOCK_MOVED id=%s product=%s type=%s delta=%s after=%s low=%s by=%s", mid, product.sku, type_, qty_delta, after, low, actor.user_id)
         record = MovementRecord(mid, product_id, type_, qty_delta, after, unit_cost, ref[0], ref[1], reason, actor.user_id, now, None)
-        event = StockChanged(product_id=product_id, movement_type=type_, qty_delta=int(qty_delta), qty_after=int(after), low_stock=low, product_name=product.name)
+        event = StockChanged(product_id=product_id, movement_type=type_, qty_delta=int(qty_delta), qty_after=int(after), low_stock=low, product_name=product.name, user_id=actor.user_id, by_staff=actor.role is not Role.OWNER)
         return record, event
 
     def _require_draft(self, session: Session, count_id: int) -> StockCountRecord:
