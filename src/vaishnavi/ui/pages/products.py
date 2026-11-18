@@ -73,7 +73,7 @@ def build_grid(services: AppServices, texts: UiTexts, *, query: str = "", catego
         GridRow(p.id, p.sku, p.name, p.name_hi or "", names.get(p.category_id or -1, ""), format_inr(p.price_paise), format_inr(p.mrp_paise) if p.mrp_paise is not None else "", _qty_text(p.stock_qty, p.base_unit), p.low_stock, p.is_active, p.internal_barcode or "")
         for p in result.items
     ]
-    labels = {k: texts.t(f"products.{k}") for k in ("title", "search", "category", "all", "new", "edit", "archive", "labels", "import", "export", "low", "archived", "empty")}
+    labels = {k: texts.t(f"products.{k}") for k in ("title", "search", "category", "all", "new", "edit", "archive", "labels", "import", "export", "low", "archived", "empty", "show_archived", "archived_hint")}
     return GridModel(rows, result.total, page, page_size, query, category_id, cats, labels)
 
 
@@ -93,11 +93,18 @@ class EditorModel:
     labels: dict[str, str] = field(default_factory=dict)
 
 
-FORM_FIELDS = ("sku", "name", "name_hi", "category_id", "price", "mrp", "cost", "tax_rate", "hsn", "unit", "sale_mode", "min_stock", "reorder_qty", "quick_pick", "tags", "manufacturer_barcode", "reason")
+FORM_FIELDS = ("sku", "name", "name_hi", "category_id", "price", "mrp", "cost", "tax_rate", "hsn", "unit", "sale_mode", "min_stock", "reorder_qty", "quick_pick", "tags", "manufacturer_barcode", "reason", "stock")
+
+# Base unit → (min_qty, qty_step, presets) for measured items, so "500 g of ghee priced per kg" works out of the box.
+MEASURE_DEFAULTS: dict[str, tuple[Decimal, Decimal, str]] = {
+    "g": (Decimal("10"), Decimal("10"), "[100, 250, 500, 1000]"),
+    "ml": (Decimal("10"), Decimal("10"), "[100, 250, 500, 1000]"),
+    "cm": (Decimal("10"), Decimal("10"), "[50, 100, 200, 500]"),
+}
 
 
 def _blank_form() -> dict[str, str]:
-    return {k: "" for k in FORM_FIELDS} | {"sale_mode": "PIECE", "unit": "pc", "tax_rate": "0", "min_stock": "0", "reorder_qty": "0", "quick_pick": "0"}
+    return {k: "" for k in FORM_FIELDS} | {"sale_mode": "PIECE", "unit": "pc", "tax_rate": "0", "min_stock": "0", "reorder_qty": "0", "quick_pick": "0", "stock": ""}
 
 
 def _form_of(product: ProductRecord, tags: list[str]) -> dict[str, str]:
@@ -105,8 +112,26 @@ def _form_of(product: ProductRecord, tags: list[str]) -> dict[str, str]:
         "sku": product.sku, "name": product.name, "name_hi": product.name_hi or "", "category_id": str(product.category_id or ""), "price": f"{product.price_paise / 100:.2f}",
         "mrp": f"{product.mrp_paise / 100:.2f}" if product.mrp_paise is not None else "", "cost": f"{product.cost_paise / 100:.2f}" if product.cost_paise is not None else "",
         "tax_rate": f"{product.tax_rate_bp / 100:g}", "hsn": product.hsn_code or "", "unit": product.pricing_unit_label, "sale_mode": product.sale_mode,
-        "min_stock": f"{product.min_stock.normalize():f}", "reorder_qty": f"{product.reorder_qty.normalize():f}", "quick_pick": "1" if product.quick_pick else "0", "tags": ", ".join(tags),
+        "min_stock": f"{(product.min_stock / product.pricing_unit_qty).normalize():f}", "reorder_qty": f"{(product.reorder_qty / product.pricing_unit_qty).normalize():f}", "quick_pick": "1" if product.quick_pick else "0", "tags": ", ".join(tags),
     }
+
+
+def gst_split_text(rate_text: str) -> str:
+    """``"12"`` → ``"CGST 6% + SGST 6%"`` (what the receipt will print); empty for 0 / invalid."""
+    try:
+        bp = rate_to_bp((rate_text or "0").rstrip("%"))
+    except Exception:  # noqa: BLE001
+        return ""
+    if bp <= 0:
+        return ""
+    half = Decimal(bp) / 200
+    return f"CGST {half.normalize():f}% + SGST {half.normalize():f}%"
+
+
+def stock_text_for(product: ProductRecord) -> str:
+    """Current stock in the product's pricing unit (``10 kg`` not ``10000 g``)."""
+    qty = (product.stock_qty / product.pricing_unit_qty).normalize()
+    return f"{qty:f} {product.pricing_unit_label}"
 
 
 def build_editor(services: AppServices, texts: UiTexts, *, product_id: int | None) -> EditorModel:
@@ -116,7 +141,9 @@ def build_editor(services: AppServices, texts: UiTexts, *, product_id: int | Non
     form = _form_of(product, tags) if product else _blank_form()
     barcodes = services.catalog.barcodes(product.id) if product else []
     points = services.prices.chart_points(product.id, field="PRICE", window="1y") if product else []
-    labels = {k: texts.t(f"products.{k}") for k in ("editor_new", "editor_edit", "save", "name", "name_hi", "sku", "category", "price", "mrp", "cost", "tax_rate", "hsn", "unit", "sale_mode", "min_stock", "reorder_qty", "quick_pick", "tags", "barcodes", "add_barcode", "scan_hint", "reason", "price_history", "print_label", "archive")}
+    keys = ("editor_new", "editor_edit", "save", "name", "name_hi", "sku", "category", "price", "mrp", "cost", "tax_rate", "hsn", "unit", "sale_mode", "min_stock", "reorder_qty", "quick_pick", "tags", "barcodes", "add_barcode", "scan_hint", "reason", "price_history", "print_label", "archive",
+            "stock", "stock_current", "stock_adjust_hint", "advanced", "unit_hint", "archive_confirm", "restore", "archived_banner", "gst_hint", "price_per")
+    labels = {k: texts.t(f"products.{k}") for k in keys}
     return EditorModel(product, form, barcodes, tags, services.catalog.categories(), [dict(u) for u in UNITS], SALE_MODES, points, labels)
 
 
@@ -139,15 +166,15 @@ def validate_form(form: dict[str, str]) -> dict[str, str]:
         rate_to_bp((form.get("tax_rate") or "0").rstrip("%"))
     except Exception:  # noqa: BLE001
         problems["tax_rate"] = "not a percentage"
-    for key in ("min_stock", "reorder_qty"):
+    for key in ("min_stock", "reorder_qty", "stock"):
         value = (form.get(key) or "0").strip() or "0"
         try:
             if Decimal(value) < 0:
                 problems[key] = "must not be negative"
         except InvalidOperation:
             problems[key] = "not a number"
-    if (form.get("sale_mode") or "PIECE") not in dict(SALE_MODES):
-        problems["sale_mode"] = "unknown"
+    if (form.get("unit") or "pc") not in {u["label"] for u in UNITS}:
+        problems["unit"] = "unknown unit"
     return problems
 
 
@@ -162,11 +189,16 @@ class SaveResult:
     message: str = ""
 
 
-def _unit_for(label: str, sale_mode: str) -> tuple[str, Decimal]:
+def _unit_for(label: str) -> tuple[str, Decimal, str]:
+    """Unit label → ``(base_unit, factor, sale_mode)``. The unit decides how the item is sold: ``kg`` → WEIGHT in grams.
+
+    Live run 4: the owner picked unit *kg* but the separate *Sold by* select stayed PIECE, so ghee could not be
+    sold as 500 g and "10 kg" of stock became 10 pieces. One choice now drives everything.
+    """
     unit = next((u for u in UNITS if u["label"] == label), None)
     if unit is None:
-        return (dict(SALE_MODES)[sale_mode], Decimal("1"))
-    return (str(unit["base_unit"]), Decimal(str(unit["factor"])))
+        return ("pcs", Decimal("1"), "PIECE")
+    return (str(unit["base_unit"]), Decimal(str(unit["factor"])), str(unit["sale_mode"]))
 
 
 def save_editor(services: AppServices, actor: Actor, *, product_id: int | None, row_version: int | None, form: dict[str, str]) -> SaveResult:
@@ -174,36 +206,45 @@ def save_editor(services: AppServices, actor: Actor, *, product_id: int | None, 
     problems = validate_form(form)
     if problems:
         return SaveResult(False, problems=problems)
-    sale_mode = form.get("sale_mode") or "PIECE"
-    base_unit, factor = _unit_for(form.get("unit") or "", sale_mode)
+    unit_label = form.get("unit") or "pc"
+    base_unit, factor, sale_mode = _unit_for(unit_label)
+    min_qty, step, presets = MEASURE_DEFAULTS.get(base_unit, (Decimal("1"), Decimal("1"), "[]"))
     values: dict[str, Any] = {
         "name": form["name"].strip(), "name_hi": (form.get("name_hi") or "").strip() or None, "category_id": int(form["category_id"]) if (form.get("category_id") or "").strip() else None,
         "price_paise": parse_inr(form["price"]), "mrp_paise": parse_inr(form["mrp"]) if (form.get("mrp") or "").strip() else None, "cost_paise": parse_inr(form["cost"]) if (form.get("cost") or "").strip() else None,
         "tax_rate_bp": rate_to_bp((form.get("tax_rate") or "0").rstrip("%")), "hsn_code": (form.get("hsn") or "").strip() or None, "unit": base_unit, "sale_mode": sale_mode, "base_unit": base_unit,
-        "pricing_unit_qty": factor, "pricing_unit_label": form.get("unit") or dict(SALE_MODES)[sale_mode], "min_stock": Decimal((form.get("min_stock") or "0") or "0"), "reorder_qty": Decimal((form.get("reorder_qty") or "0") or "0"),
+        "pricing_unit_qty": factor, "pricing_unit_label": unit_label, "min_stock": Decimal((form.get("min_stock") or "0") or "0") * factor, "reorder_qty": Decimal((form.get("reorder_qty") or "0") or "0") * factor,
         "quick_pick": (form.get("quick_pick") or "0") in ("1", "true", "True"), "allow_decimal_qty": sale_mode != "PIECE",
+        "min_qty": min_qty, "qty_step": step, "qty_presets": presets,
     }
     tags = [t.strip() for t in (form.get("tags") or "").replace(";", ",").split(",") if t.strip()]
     reason = (form.get("reason") or "").strip() or None
+    stock = Decimal((form.get("stock") or "0").strip() or "0") * factor  # typed in the pricing unit (10 kg) → base units (10000 g)
     try:
         if product_id is None:
             product = services.catalog.create(actor, ProductInput(**values, sku=(form.get("sku") or "").strip() or None, manufacturer_barcode=(form.get("manufacturer_barcode") or "").strip() or None, tags=tags), reason=reason)
+            if stock > 0:
+                services.inventory.opening_stock(actor, product.id, stock)
             return SaveResult(True, product.id)
         if row_version is None:
             raise ValueError("row_version required for an update")
         if (form.get("sku") or "").strip():
             values["sku"] = form["sku"].strip().upper()
+        for key in ("min_qty", "qty_step", "qty_presets"):
+            values.pop(key, None)  # keep hand-tuned pad settings of an existing item
         services.catalog.update(actor, product_id, row_version=row_version, changes=values, reason=reason)
         services.catalog.set_tags(actor, product_id, tags)
         code = (form.get("manufacturer_barcode") or "").strip()
         if code:
             services.catalog.add_barcode(actor, product_id, code, kind="MANUFACTURER")
+        if stock > 0:
+            services.inventory.opening_stock(actor, product_id, stock)  # no-op once the item has moved
         return SaveResult(True, product_id)
     except PermissionDenied as exc:
         return SaveResult(False, error_code=exc.code, message=str(exc))
     except VaishnaviError as exc:
         log.info("PRODUCT_SAVE_REFUSED code=%s %s", exc.code, exc)
-        return SaveResult(False, error_code=exc.code, message=exc.user_message())
+        return SaveResult(False, error_code=exc.code, message=f"{exc.user_message()} {exc.what_to_do()}".strip())
     except ValueError as exc:
         return SaveResult(False, problems={"form": str(exc)})
 
@@ -269,7 +310,7 @@ def register(state: Any) -> None:
     services: AppServices = state.extra["services"]
 
     @ui.page("/products")
-    def _grid(q: str = "", category: str = "", page: int = 1) -> None:
+    def _grid(q: str = "", category: str = "", page: int = 1, archived: int = 0) -> None:
         client = load_client(app)
         decision = guards.decide("/products", client)
         if decision is not guards.Decision.ALLOW:
@@ -278,20 +319,23 @@ def register(state: Any) -> None:
         texts = UiTexts.load(client.lang)
         can_edit = client.role is Role.OWNER
         with frame(state, current_path="/products"):
-            model = build_grid(services, texts, query=q, category_id=int(category) if category else None, page=page)
+            model = build_grid(services, texts, query=q, category_id=int(category) if category else None, page=page, include_archived=bool(archived))
             with ui.row().classes("items-end gap-2 w-full"):
                 ui.label(model.labels["title"]).classes("text-xl font-semibold")
                 search = ui.input(model.labels["search"], value=q).props("clearable").classes("w-64")
-                search.on("keydown.enter", lambda _e: ui.navigate.to(f"/products?q={search.value or ''}&category={category}"))
-                ui.select({"": model.labels["all"], **{str(c.id): c.name for c in model.categories}}, value=category, label=model.labels["category"], on_change=lambda e: ui.navigate.to(f"/products?q={q}&category={e.value or ''}")).classes("w-56")
+                search.on("keydown.enter", lambda _e: ui.navigate.to(f"/products?q={search.value or ''}&category={category}&archived={archived}"))
+                ui.select({"": model.labels["all"], **{str(c.id): c.name for c in model.categories}}, value=category, label=model.labels["category"], on_change=lambda e: ui.navigate.to(f"/products?q={q}&category={e.value or ''}&archived={archived}")).classes("w-56")
+                if can_edit:
+                    ui.switch(model.labels["show_archived"], value=bool(archived), on_change=lambda e: ui.navigate.to(f"/products?q={q}&category={category}&archived={1 if e.value else 0}"))
                 ui.element("div").classes("flex-1")
                 if can_edit:
                     ui.button(model.labels["new"], icon="add", on_click=lambda: ui.navigate.to("/products/new")).props("unelevated color=primary")
                     ui.button(model.labels["import"], icon="upload", on_click=lambda: ui.navigate.to("/products/import")).props("outline")
                     ui.button(model.labels["export"], icon="download", on_click=lambda: ui.download.content(services.import_export.export_csv().encode("utf-8"), "products.csv")).props("outline")
                     labels_button = ui.button(model.labels["labels"], icon="label").props("outline")
-            columns = [{"name": k, "label": texts.t(f"products.{k}") if texts.has(f"products.{k}") else k, "field": k, "sortable": True} for k in ("sku", "name", "name_hi", "category", "price_text", "stock_text", "barcode")]
-            table = ui.table(columns=columns, rows=[r.__dict__ for r in model.rows], row_key="id", pagination=model.page_size, selection="multiple" if can_edit else None).classes("w-full")
+            columns = [{"name": k, "label": texts.t(f"products.{k}") if texts.has(f"products.{k}") else k, "field": k, "sortable": True} for k in ("sku", "name", "category", "price_text", "stock_text", "barcode", "status_text")]
+            rows = [r.__dict__ | {"status_text": "" if r.active else model.labels["archived"]} for r in model.rows]
+            table = ui.table(columns=columns, rows=rows, row_key="id", pagination=model.page_size, selection="multiple" if can_edit else None).classes("w-full")
             if can_edit:
                 table.on("rowClick", lambda e: ui.navigate.to(f"/products/{e.args[1]['id']}"))
 
@@ -301,7 +345,7 @@ def register(state: Any) -> None:
                     ui.navigate.to(f"/labels?ids={ids}" if ids else "/labels")
 
                 labels_button.on_click(to_labels)
-            ui.label(f"{model.total}").classes("text-xs text-gray-500")
+            ui.label(texts.t("products.count", n=model.total) + ("" if archived else f" · {model.labels['archived_hint']}")).classes("text-xs text-gray-500")
 
     @ui.page("/products/import")
     def _import() -> None:
@@ -354,37 +398,78 @@ def register(state: Any) -> None:
         with frame(state, current_path="/products"):
             model = build_editor(services, texts, product_id=pid)
             form = dict(model.form)
-            ui.label(model.labels["editor_edit"] if model.product else model.labels["editor_new"]).classes("text-xl font-semibold")
-            with ui.grid(columns=2).classes("w-full gap-2 max-w-4xl"):
-                for key in ("name", "name_hi", "sku", "hsn"):
-                    ui.input(model.labels[key]).bind_value(form, key)
+            product = model.product
+            ui.label(model.labels["editor_edit"] if product else model.labels["editor_new"]).classes("text-xl font-semibold")
+            if product and not product.is_active:
+                with ui.row().classes("w-full p-2 rounded items-center gap-3").style("background:#FFF3E0"):
+                    ui.label(model.labels["archived_banner"]).classes("flex-1 text-sm")
+                    ui.button(model.labels["restore"], icon="unarchive", on_click=lambda: (services.catalog.restore(client.actor(), pid), ui.navigate.to(f"/products/{pid}"))).props("unelevated color=primary dense no-caps")  # type: ignore[arg-type]
+            unit_options = {u["label"]: f"{u['label']}  ({'piece' if u['sale_mode'] == 'PIECE' else 'weight' if u['sale_mode'] == 'WEIGHT' else 'volume' if u['sale_mode'] == 'VOLUME' else 'length'})" for u in model.units}
+            # Essentials only (live run 4: the old form confused the owner). Everything else is under "Advanced".
+            with ui.grid(columns=2).classes("w-full gap-3 max-w-4xl"):
+                ui.input(model.labels["name"]).bind_value(form, "name").props("autofocus")
                 ui.select({"": "—", **{str(c.id): c.name for c in model.categories}}, label=model.labels["category"]).bind_value(form, "category_id")
-                ui.select({m: m for m, _ in model.sale_modes}, label=model.labels["sale_mode"]).bind_value(form, "sale_mode")
-                ui.select({u["label"]: u["label"] for u in model.units}, label=model.labels["unit"]).bind_value(form, "unit")
-                for key in ("price", "mrp", "cost", "tax_rate", "min_stock", "reorder_qty"):
-                    ui.input(model.labels[key]).bind_value(form, key).props("inputmode=decimal")
-                ui.input(model.labels["tags"]).bind_value(form, "tags")
-                ui.input(model.labels["reason"]).bind_value(form, "reason")
-            if model.product:
-                ui.label(model.labels["barcodes"]).classes("font-semibold mt-2")
-                for b in model.barcodes:
-                    ui.label(f"{b.barcode} · {b.kind}" + (f" ×{b.pack_qty.normalize():f}" if b.kind == "PACK" else "")).classes("vsm-mono text-sm")
-                ui.input(model.labels["add_barcode"], placeholder=model.labels["scan_hint"]).bind_value(form, "manufacturer_barcode").classes("w-80")
+                unit_select = ui.select(unit_options, label=model.labels["unit"]).bind_value(form, "unit")
+                unit_select.tooltip(model.labels["unit_hint"])
+                price_label = ui.label().classes("text-xs text-gray-500 self-end")
+                ui.input(model.labels["cost"]).bind_value(form, "cost").props("inputmode=decimal prefix=₹")
+                ui.input(model.labels["price"]).bind_value(form, "price").props("inputmode=decimal prefix=₹")
+                if product:
+                    with ui.column().classes("gap-0"):
+                        ui.label(f"{model.labels['stock_current']}: {stock_text_for(product)}").classes("font-semibold")
+                        ui.link(model.labels["stock_adjust_hint"], f"/stock?product={product.id}").classes("text-xs")
+                else:
+                    ui.input(model.labels["stock"]).bind_value(form, "stock").props("inputmode=decimal")
+                with ui.column().classes("gap-0"):
+                    tax_input = ui.input(model.labels["tax_rate"]).bind_value(form, "tax_rate").props("inputmode=decimal suffix=%").classes("w-full")
+                    gst_label = ui.label(gst_split_text(form["tax_rate"]) or model.labels["gst_hint"]).classes("text-xs text-gray-500")
+
+            def refresh_hints() -> None:
+                _, _, mode = _unit_for(form.get("unit") or "pc")
+                price_label.set_text(model.labels["price_per"].format(unit=form.get("unit") or "pc") + ("" if mode == "PIECE" else f"  ·  {texts.t('products.measured_hint')}"))
+                gst_label.set_text(gst_split_text(form.get("tax_rate") or "") or model.labels["gst_hint"])
+
+            unit_select.on_value_change(lambda _e: refresh_hints())
+            tax_input.on_value_change(lambda _e: refresh_hints())
+            ui.timer(0.3, refresh_hints, once=True)
+            with ui.expansion(model.labels["advanced"], icon="tune").classes("w-full max-w-4xl"):
+                with ui.grid(columns=2).classes("w-full gap-3"):
+                    ui.input(model.labels["sku"]).bind_value(form, "sku").tooltip(texts.t("products.sku_hint"))
+                    ui.input(model.labels["mrp"]).bind_value(form, "mrp").props("inputmode=decimal prefix=₹")
+                    ui.input(model.labels["hsn"]).bind_value(form, "hsn")
+                    ui.input(model.labels["min_stock"]).bind_value(form, "min_stock").props("inputmode=decimal")
+                    ui.input(model.labels["reorder_qty"]).bind_value(form, "reorder_qty").props("inputmode=decimal")
+                    ui.input(model.labels["tags"]).bind_value(form, "tags")
+                    ui.input(model.labels["reason"]).bind_value(form, "reason")
+                    if product:
+                        ui.label(model.labels["barcodes"]).classes("font-semibold mt-2")
+                        for b in model.barcodes:
+                            ui.label(f"{b.barcode} · {b.kind}" + (f" ×{b.pack_qty.normalize():f}" if b.kind == "PACK" else "")).classes("vsm-mono text-sm")
+                        ui.input(model.labels["add_barcode"], placeholder=model.labels["scan_hint"]).bind_value(form, "manufacturer_barcode").classes("w-80")
 
             def save() -> None:
-                result = save_editor(services, client.actor(), product_id=pid, row_version=model.product.row_version if model.product else None, form=form)
+                result = save_editor(services, client.actor(), product_id=pid, row_version=product.row_version if product else None, form=form)
                 if result.ok:
                     ui.notify(texts.t("common.saved"), type="positive")
                     ui.navigate.to(f"/products/{result.product_id}")
                 else:
                     ui.notify(result.message or "; ".join(f"{k}: {v}" for k, v in result.problems.items()), type="negative")
 
+            def confirm_archive() -> None:
+                with ui.dialog() as dlg, ui.card():
+                    ui.label(model.labels["archive_confirm"].format(name=product.name)).classes("text-sm")  # type: ignore[union-attr]
+                    with ui.row():
+                        ui.button(texts.t("common.cancel"), on_click=dlg.close).props("flat")
+                        ui.button(model.labels["archive"], icon="archive", on_click=lambda: (services.catalog.archive(client.actor(), pid), dlg.close(), ui.navigate.to("/products"))).props("unelevated color=negative")  # type: ignore[arg-type]
+                dlg.open()
+
             with ui.row().classes("gap-2 mt-3"):
                 ui.button(model.labels["save"], on_click=save).props("unelevated color=primary")
-                if model.product:
+                if product:
                     ui.button(model.labels["price_history"], icon="show_chart", on_click=lambda: _history_dialog(services, texts, pid)).props("outline")  # type: ignore[arg-type]
                     ui.button(model.labels["print_label"], icon="label", on_click=lambda: ui.navigate.to(f"/labels?ids={pid}")).props("outline")
-                    ui.button(model.labels["archive"], icon="archive", on_click=lambda: (services.catalog.archive(client.actor(), pid), ui.navigate.to("/products"))).props("flat color=negative")  # type: ignore[arg-type]
+                    if product.is_active:
+                        ui.button(model.labels["archive"], icon="archive", on_click=confirm_archive).props("flat color=negative")
 
 
 def _history_dialog(services: AppServices, texts: UiTexts, product_id: int) -> None:
