@@ -326,7 +326,18 @@ deterministic intents **before** the LLM is involved and answers from the same t
 | out of stock · khatam | `out_of_stock_items` | list |
 | stock kya hai · stock list · sab stock · kaun sa item … · स्टॉक लिस्ट | `stock_overview` | "12 items · 10 in stock · 2 low · 1 out. Most stock: Camphor (96 pc), …" |
 | today's sale · aaj ka total (Owner only) | `sales_summary(today)` | "₹18,420 · 142 bills · cash 61 %" |
+| kal ki sale · is hafte ka total · how much did we sell this month (Owner) | `sales_summary(period)` | period from the question: today · yesterday · this/last week · this/last month · this year · **all_time** ("so far / ab tak") |
+| kitna kharch kiya · how much have I spent · purchases (Owner) | `purchases_summary(period)` | "Spent on stock (all time): ₹45,500 across 4 bills. By supplier: …" — only booked supplier bills count |
+| har item ka sale · kitna item bika · which items sold today · item wise (Owner) | `demand_ranking(period, top, 15)` | "Item-wise sales 17-Nov-2026 (6 items): Camphor × 40 = ₹400, …" |
+| high demand · best sellers · sabse zyada bikta (Owner) | `demand_ranking(last_30_days, top)` | top 10 by quantity |
+| no demand · nahi bikta · not selling · unsold (Owner) | `dead_stock(30 d)` | "No demand — 3 items worth ₹1,200: Brass Bell (6), …" |
+| forecast · future sale · agle hafte · next day growth · kitna bikega (Owner) | `forecast_sales(h)` + `reorder_plan(h)` | horizon from the question: "next day" 1 · "few days" 3 · "week" 7 · "mahine" 30 · "10 din" 10; adds "Order soon: Camphor +60" |
 | how do I … (matches a user-guide heading) | doc lookup | the matching steps from [15](15-user-guide.md) |
+
+Business intents are matched *before* the stock ones (otherwise "which item is of no demand" looks like a stock
+list) and only for questions of ≤ 16 words without comparison / "why" / festival words — those still need the
+model with several tools. "kal" alone is yesterday only with a past-tense verb ("kal kitna bika"); "kal kitna
+bikega" is a forecast.
 
 Rules: < 100 ms; role rules identical to the LLM path (staff asking "aaj ka total" gets the owner-only
 refusal); every fast-path answer is logged `AI_FASTPATH intent=…`; if no intent matches, the message goes
