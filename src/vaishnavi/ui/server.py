@@ -300,18 +300,19 @@ def _register_frame_pages(state: AppState) -> None:
 
                 ui.label(texts.t("endwork.exit_time", time=format_ist(parse_iso_utc(preview.now), "%H:%M"))).classes("text-lg")
                 ui.label(texts.t("endwork.summary", login=format_ist(parse_iso_utc(preview.login_at), "%H:%M"), duration=preview.duration_text, bills=preview.bills, sales=format_inr(preview.sales_paise))).classes("text-sm text-gray-600")
+                staff_blocked = bool(preview.open_shift) and client.role is not Role.OWNER
                 if preview.open_shift:
                     with ui.element("div").classes("rounded-lg p-2 text-xs").style("border:1px solid #FFE0B2;background:#FFF8E1;color:#7a4b00"):
                         ui.label(texts.t("endwork.open_shift"))
-                    ui.button(texts.t("endwork.close_shift_first"), on_click=lambda: ui.navigate.to("/shifts")).props("flat no-caps")
-                    if client.role is not Role.OWNER:
-                        ui.input(texts.t("endwork.owner_pin"), password=True).bind_value(note, "pin").classes("w-full")
+                    ui.button(texts.t("endwork.close_shift_first"), icon="lock", on_click=lambda: ui.navigate.to("/shifts")).props("unelevated color=negative no-caps").classes("w-full vsm-touch")
+                    if staff_blocked:
+                        pin_box = ui.input(texts.t("endwork.owner_pin"), password=True).bind_value(note, "pin").classes("w-full")
                 ui.input(texts.t("endwork.note")).bind_value(note, "text").classes("w-full")
 
                 def confirm() -> None:
                     actor = client.actor()
                     try:
-                        if preview.open_shift and client.role is not Role.OWNER:
+                        if staff_blocked:
                             actor = services.users.verify_owner_pin(note["pin"], on_behalf_of=actor)
                         services.sessions.end(client.work_session_id, actor=actor, note=note["text"] or None)
                     except VaishnaviError as exc:
@@ -323,7 +324,11 @@ def _register_frame_pages(state: AppState) -> None:
 
                 with ui.row().classes("w-full justify-between"):
                     ui.button(texts.t("common.cancel"), on_click=lambda: ui.navigate.to("/")).props("flat no-caps")
-                    ui.button(texts.t("common.confirm"), on_click=confirm).props("unelevated color=primary").classes("vsm-touch")
+                    confirm_btn = ui.button(texts.t("common.confirm"), on_click=confirm).props("unelevated color=primary" if not staff_blocked else "outline color=primary").classes("vsm-touch")
+                    if staff_blocked:
+                        # Only the Owner's PIN skips the drawer count — the button wakes up once a PIN is typed.
+                        confirm_btn.set_enabled(False)
+                        pin_box.on("update:model-value", lambda e: confirm_btn.set_enabled(bool(str(e.args or "").strip())))
 
     @ui.page("/change-password")
     def _change_password() -> None:
