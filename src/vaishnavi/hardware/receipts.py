@@ -146,6 +146,18 @@ def render_escpos(model: Any, *, paper_mm: int = 80, hindi_raster: Callable[[str
             line(_row([("", 16, "<"), (ln.qty_text, 5, ">"), (ln.price_text, 10, ">"), (ln.discount_text, 5, ">"), (ln.amount_text, 8, ">")]))
         else:
             line(_row([(name, 16, "<"), (ln.qty_text, 5, ">"), (ln.price_text, 10, ">"), (ln.discount_text, 5, ">"), (ln.amount_text, 8, ">")]))
+        if ln.discount_row:
+            label, off, net = ln.discount_row
+            label_w = 22 if narrow else 30
+            if len(to_printer_text(label)) + 2 > label_w:
+                # Long offer name: print it on its own line, keep the figures aligned beneath.
+                wrapped(label, indent="  ")
+                label = ""
+            if narrow:
+                line(_row([(f"  {label}", label_w, "<"), (off, 9, ">")]))
+                line(_row([("", label_w, "<"), (f"= {net}", 9, ">")]))
+            else:
+                line(_row([(f"  {label}", label_w, "<"), (off, 7, ">"), (f"= {net}", 8, ">")]))
         if ln.note:
             wrapped(ln.note, indent="  ")
     line(rule)
@@ -157,8 +169,12 @@ def render_escpos(model: Any, *, paper_mm: int = 80, hindi_raster: Callable[[str
     out += ESC + b"!\x18"  # emphasised + double height
     line(_row([("TOTAL", width // 2 - 1, "<"), (model.total_text, width // 2, ">")]))
     out += ESC + b"!\x00"
-    if model.saved_text:
-        wrapped(f"You saved {model.saved_text} today")
+    saved = model.saved_lines or ([f"You saved {model.saved_text} today"] if model.saved_text else [])
+    if saved:
+        out += ESC + b"E\x01"  # emphasised — the lines the customer should notice after the total
+        for s in saved:
+            wrapped(s)
+        out += ESC + b"E\x00"
     for p in model.payment_lines:
         if narrow and "  Change " in p:
             paid, change = p.split("  Change ", 1)
@@ -250,10 +266,11 @@ table { width: 100%%; border-collapse: collapse; }
 td { padding: 1px 2px; vertical-align: top; }
 td.n { text-align: right; white-space: nowrap; }
 tr.note td { font-size: 9px; color: #333; padding-top: 0; }
+tr.disc td { font-size: 10px; color: #1B5E20; padding-top: 0; }
 .total td { font-weight: bold; font-size: 13px; }
 .copy { text-align: center; font-weight: bold; border: 1px solid #000; padding: 2px; margin: 3px 0; }
 .legend { font-size: 9px; }
-.saved { font-weight: bold; text-align: center; }
+.saved { font-weight: bold; text-align: center; color: #1B5E20; }
 .barcode { text-align: center; margin-top: 4px; }
 """
 
@@ -280,6 +297,9 @@ def render_html(model: Any) -> str:
     for ln in model.lines:
         name = e(ln.name) + (f" <b>{e(ln.marker)}</b>" if ln.marker else "")
         parts.append(f"<tr><td>{name}</td><td class='n'>{e(ln.qty_text)}</td><td class='n'>{e(ln.price_text)}</td><td class='n'>{e(ln.discount_text)}</td><td class='n'>{e(ln.amount_text)}</td></tr>")
+        if ln.discount_row:
+            label, off, net = ln.discount_row
+            parts.append(f"<tr class='disc'><td colspan='3'>&nbsp;&nbsp;{e(label)}</td><td class='n'>{e(off)}</td><td class='n'>= {e(net)}</td></tr>")
         if ln.note:
             parts.append(f"<tr class='note'><td colspan='5'>&nbsp;&nbsp;{e(ln.note)}</td></tr>")
     parts.append("</table><div class='rule'></div><table>")
@@ -288,8 +308,9 @@ def render_html(model: Any) -> str:
     for row in model.tax_rows:
         parts.append(f"<tr><td>{e(row.label)}</td><td class='n'>{e(row.amount_text)}</td></tr>")
     parts.append(f"<tr class='total'><td>TOTAL</td><td class='n'>{e(model.total_text)}</td></tr></table>")
-    if model.saved_text:
-        parts.append(f"<div class='saved'>You saved {e(model.saved_text)} today</div>")
+    saved = model.saved_lines or ([f"You saved {model.saved_text} today"] if model.saved_text else [])
+    for s in saved:
+        parts.append(f"<div class='saved'>{e(s)}</div>")
     for p in model.payment_lines:
         parts.append(f"<div>{e(p)}</div>")
     if model.legend:
