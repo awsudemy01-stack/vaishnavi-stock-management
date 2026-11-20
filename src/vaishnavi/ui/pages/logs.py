@@ -121,7 +121,7 @@ def register(state: AppState) -> None:
                 ui.input(model.labels["cid"]).bind_value(filters, "cid")
                 ui.input(model.labels["search"]).bind_value(filters, "q")
                 ui.button(texts.t("common.confirm"), on_click=lambda: ui.navigate.to(f"/system/logs?family={filters['family']}&level={filters['level']}&cid={filters['cid']}&q={filters['q']}")).props("unelevated color=primary")
-                ui.button(model.labels["download"], icon="download", on_click=lambda: ui.download(download_text(current["model"]).encode("utf-8"), f"{filters['family']}.log")).props("flat")
+                ui.button(model.labels["download"], icon="download", on_click=lambda: ui.download.content(download_text(current["model"]).encode("utf-8"), f"{filters['family']}.log")).props("flat")
                 ui.switch(model.labels["pause"]).bind_value(filters, "paused")
             table = ui.column().classes("w-full gap-0 vsm-mono text-xs")
             current = {"model": model}
