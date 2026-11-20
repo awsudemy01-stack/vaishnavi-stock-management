@@ -40,6 +40,7 @@ class ParseArgsTest(unittest.TestCase):
             "--selftest": Mode.SELFTEST,
             "--uninstall-autostart": Mode.UNINSTALL_AUTOSTART,
             "--stop": Mode.STOP,
+            "--fresh-start": Mode.FRESH_START,
         }
         for flag, mode in cases.items():
             with self.subTest(flag=flag):
