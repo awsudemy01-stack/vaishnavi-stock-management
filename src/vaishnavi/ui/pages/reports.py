@@ -359,7 +359,7 @@ def register(state: Any) -> None:
                     def export_all() -> None:
                         blob = export_all_zip(services, client.actor())
                         if blob:
-                            ui.download(blob, f"vaishnavi-reports-{format_ist(now_utc(), '%Y%m%d-%H%M')}.zip")
+                            ui.download.content(blob, f"vaishnavi-reports-{format_ist(now_utc(), '%Y%m%d-%H%M')}.zip")
 
                     ui.button(m.labels["export_all"], icon="archive", on_click=export_all).props("flat")
             with ui.grid(columns=3).classes("w-full gap-3"):
@@ -386,14 +386,14 @@ def register(state: Any) -> None:
                 ui.button(icon="arrow_back", on_click=lambda: ui.navigate.to("/reports")).props("flat")
                 ui.label(m.title).classes("text-xl font-semibold")
                 ui.element("div").classes("flex-1")
-                ui.button(m.labels["export"], icon="download", on_click=lambda: ui.download(export_csv(services, actor, key).encode("utf-8"), f"{key}.csv")).props("outline")
-                ui.button("XLSX", icon="table_view", on_click=lambda: ui.download(export_xlsx(services, texts, actor, key) or b"", f"{key}.xlsx")).props("outline")
+                ui.button(m.labels["export"], icon="download", on_click=lambda: ui.download.content(export_csv(services, actor, key).encode("utf-8"), f"{key}.csv")).props("outline")
+                ui.button("XLSX", icon="table_view", on_click=lambda: ui.download.content(export_xlsx(services, texts, actor, key) or b"", f"{key}.xlsx")).props("outline")
                 if client.role is Role.OWNER:
 
                     def export_pdf() -> None:
                         path = export_document(services, texts, actor, key)
                         if path is not None:
-                            ui.download(path.read_bytes(), path.name)
+                            ui.download.content(path.read_bytes(), path.name)
 
                     def send() -> None:
                         result = send_document(services, texts, actor, key)
