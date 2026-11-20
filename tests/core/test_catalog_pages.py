@@ -122,6 +122,27 @@ class ProductsPageTest(Base):
         self.assertEqual(products_page.gst_split_text("12"), "CGST 6% + SGST 6%")
         self.assertEqual(products_page.gst_split_text("0"), "")
 
+    def test_typed_category_is_created_and_50_litres_of_oil_is_stored_in_ml(self) -> None:
+        """Live run 4: there was no 'Oil' category and no way to add one; 50 L of coconut oil must not trip the 10 ml minimum."""
+        empty = products_page.build_editor(self.services, EN, product_id=None)
+        before = {c.name for c in self.services.catalog.categories()}
+        self.assertNotIn("Oil", before)
+        saved = products_page.save_editor(self.services, OWNER, product_id=None, row_version=None, form={**empty.form, "name": "Coconut Oil (loose)", "price": "300", "unit": "l", "stock": "50", "category_id": "Oil"})
+        self.assertTrue(saved.ok, saved.problems or saved.message)
+        oil = self.services.catalog.get(saved.product_id)  # type: ignore[arg-type]
+        assert oil is not None
+        cats = {c.name: c.id for c in self.services.catalog.categories()}
+        self.assertIn("Oil", cats, "a typed category name is created on save")
+        self.assertEqual(oil.category_id, cats["Oil"])
+        self.assertEqual((oil.sale_mode, oil.base_unit, oil.stock_qty), ("VOLUME", "ml", Decimal("50000")), "50 L → 50000 ml")
+        self.assertEqual(products_page.stock_text_for(oil), "50 l")
+        again = products_page.save_editor(self.services, OWNER, product_id=None, row_version=None, form={**empty.form, "name": "Mustard Oil", "price": "200", "unit": "l", "category_id": "oil"})
+        self.assertTrue(again.ok)
+        self.assertEqual(self.services.catalog.get(again.product_id).category_id, cats["Oil"], "same name (any case) reuses the category")  # type: ignore[union-attr]
+        self.assertEqual(products_page.resolve_category(self.services, OWNER, str(cats["Oil"])), cats["Oil"], "a plain id still works")
+        self.assertIsNone(products_page.resolve_category(self.services, OWNER, ""))
+        self.assertEqual(products_page.build_editor(self.services, EN, product_id=oil.id).form["stock"], "", "opening stock is a one-time field; after that the editor shows the current stock")
+
     def test_archive_is_recoverable_and_duplicate_code_names_the_archived_item(self) -> None:
         """Live run 4: an item with code 2 'vanished' (archived by one click) and re-adding said the code was taken."""
         empty = products_page.build_editor(self.services, EN, product_id=None)
