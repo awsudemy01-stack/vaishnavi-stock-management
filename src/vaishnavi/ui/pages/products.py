@@ -142,7 +142,7 @@ def build_editor(services: AppServices, texts: UiTexts, *, product_id: int | Non
     barcodes = services.catalog.barcodes(product.id) if product else []
     points = services.prices.chart_points(product.id, field="PRICE", window="1y") if product else []
     keys = ("editor_new", "editor_edit", "save", "name", "name_hi", "sku", "category", "price", "mrp", "cost", "tax_rate", "hsn", "unit", "sale_mode", "min_stock", "reorder_qty", "quick_pick", "tags", "barcodes", "add_barcode", "scan_hint", "reason", "price_history", "print_label", "archive",
-            "stock", "stock_current", "stock_adjust_hint", "advanced", "unit_hint", "archive_confirm", "restore", "archived_banner", "gst_hint", "price_per")
+            "stock", "stock_current", "stock_adjust_hint", "advanced", "unit_hint", "archive_confirm", "restore", "archived_banner", "gst_hint", "price_per", "category_new_hint")
     labels = {k: texts.t(f"products.{k}") for k in keys}
     return EditorModel(product, form, barcodes, tags, services.catalog.categories(), [dict(u) for u in UNITS], SALE_MODES, points, labels)
 
@@ -201,6 +201,22 @@ def _unit_for(label: str) -> tuple[str, Decimal, str]:
     return (str(unit["base_unit"]), Decimal(str(unit["factor"])), str(unit["sale_mode"]))
 
 
+def resolve_category(services: AppServices, actor: Actor, value: str | None) -> int | None:
+    """Category select value → id. A typed name that is not a known id creates the category (Owner only) —
+    live run 4: there was no "Oil" category and no screen to add one."""
+    text = (value or "").strip()
+    if not text:
+        return None
+    if text.isdigit():
+        return int(text)
+    for c in services.catalog.categories():
+        if c.name.strip().lower() == text.lower():
+            return c.id
+    created = services.catalog.create_category(actor, name=text)
+    log.info("CATEGORY_CREATED_FROM_EDITOR id=%s name=%r by=%s", created.id, text, actor.user_id)
+    return created.id
+
+
 def save_editor(services: AppServices, actor: Actor, *, product_id: int | None, row_version: int | None, form: dict[str, str]) -> SaveResult:
     """Create or update from the typed form."""
     problems = validate_form(form)
@@ -209,8 +225,14 @@ def save_editor(services: AppServices, actor: Actor, *, product_id: int | None, 
     unit_label = form.get("unit") or "pc"
     base_unit, factor, sale_mode = _unit_for(unit_label)
     min_qty, step, presets = MEASURE_DEFAULTS.get(base_unit, (Decimal("1"), Decimal("1"), "[]"))
+    try:
+        category_id = resolve_category(services, actor, form.get("category_id"))
+    except PermissionDenied as exc:
+        return SaveResult(False, error_code=exc.code, message=str(exc))
+    except VaishnaviError as exc:
+        return SaveResult(False, error_code=exc.code, message=f"{exc.user_message()} {exc.what_to_do()}".strip())
     values: dict[str, Any] = {
-        "name": form["name"].strip(), "name_hi": (form.get("name_hi") or "").strip() or None, "category_id": int(form["category_id"]) if (form.get("category_id") or "").strip() else None,
+        "name": form["name"].strip(), "name_hi": (form.get("name_hi") or "").strip() or None, "category_id": category_id,
         "price_paise": parse_inr(form["price"]), "mrp_paise": parse_inr(form["mrp"]) if (form.get("mrp") or "").strip() else None, "cost_paise": parse_inr(form["cost"]) if (form.get("cost") or "").strip() else None,
         "tax_rate_bp": rate_to_bp((form.get("tax_rate") or "0").rstrip("%")), "hsn_code": (form.get("hsn") or "").strip() or None, "unit": base_unit, "sale_mode": sale_mode, "base_unit": base_unit,
         "pricing_unit_qty": factor, "pricing_unit_label": unit_label, "min_stock": Decimal((form.get("min_stock") or "0") or "0") * factor, "reorder_qty": Decimal((form.get("reorder_qty") or "0") or "0") * factor,
@@ -408,7 +430,7 @@ def register(state: Any) -> None:
             # Essentials only (live run 4: the old form confused the owner). Everything else is under "Advanced".
             with ui.grid(columns=2).classes("w-full gap-3 max-w-4xl"):
                 ui.input(model.labels["name"]).bind_value(form, "name").props("autofocus")
-                ui.select({"": "—", **{str(c.id): c.name for c in model.categories}}, label=model.labels["category"]).bind_value(form, "category_id")
+                ui.select({"": "—", **{str(c.id): c.name for c in model.categories}}, label=model.labels["category"], with_input=True, new_value_mode="add-unique").bind_value(form, "category_id").tooltip(model.labels["category_new_hint"])
                 unit_select = ui.select(unit_options, label=model.labels["unit"]).bind_value(form, "unit")
                 unit_select.tooltip(model.labels["unit_hint"])
                 price_label = ui.label().classes("text-xs text-gray-500 self-end")
