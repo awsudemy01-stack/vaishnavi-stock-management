@@ -226,15 +226,18 @@ class Watchdog:
         startup_grace: float = 90.0,
         max_restarts_per_hour: int = 3,
         log_hook: Callable[[str], None] | None = None,
+        stop_requested: Callable[[], str | None] | None = None,
     ) -> None:
         self.launch, self.health, self.url = launch, health, url
         self.clock, self.sleep = clock, sleep
         self.poll_s, self.stale_after, self.startup_grace = poll_s, stale_after, startup_grace
         self.max_restarts_per_hour = max_restarts_per_hour
         self._log_hook = log_hook
+        self._stop_requested = stop_requested or (lambda: None)
         self.proc: Any = None
         self.restarts: list[float] = []
         self.gave_up = False
+        self.stopped_on_purpose = False
 
     def _log(self, level: int, text: str) -> None:
         log.log(level, text)
@@ -289,6 +292,12 @@ class Watchdog:
             self.sleep(self.poll_s)
             now = self.clock()
             if self.proc is not None and self.proc.poll() is not None:
+                reason = self._stop_requested()
+                if reason is not None:
+                    # The owner stopped it (main.py --stop / Settings → Shut down / --fresh-start): respect that.
+                    self.stopped_on_purpose = True
+                    self._log(logging.INFO, f"WATCHDOG_STOPPED_BY_OWNER reason={reason!r} — not relaunching; start again with main.py")
+                    break
                 if not self._restart(f"exited code={self.proc.returncode}"):
                     break
                 continue
@@ -355,12 +364,17 @@ class StartStage:
         ctx.console.ok(message)
         if self.watchdog:
             ctx.console.info(ctx.t("start.watchdog_note", url=url))
-            wd = Watchdog(launch=lambda: launch_detached(cmd, ctx.paths.install_log_dir), health=fetch_health, url=url)
+            from bootstrap.selftest import stop_requested  # noqa: PLC0415
+
+            wd = Watchdog(launch=lambda: launch_detached(cmd, ctx.paths.install_log_dir), health=fetch_health, url=url, stop_requested=lambda: stop_requested(ctx.paths.config_dir))
             wd.adopt(proc)
             try:
                 wd.run()
             except KeyboardInterrupt:
                 log.info("WATCHDOG_INTERRUPTED (app keeps running)")
+            if wd.stopped_on_purpose:
+                ctx.console.info(ctx.t("start.stopped_by_owner"))
+                return StageResult.ok(ctx.t("start.stopped_by_owner"), url=url, pid=proc.pid)
             if wd.gave_up:
                 return StageResult.fail(ctx.t("start.gave_up"), error_code="E-SYS-020", hint=ctx.t("start.exited_hint", path=str(ctx.paths.logs_dir / "app")), url=url)
         return StageResult.ok(message, url=url, pid=proc.pid)
