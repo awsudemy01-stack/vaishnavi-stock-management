@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from unittest import mock
 
+from vaishnavi import __version__
 from vaishnavi.api import system as api_system
 from vaishnavi.bootstrap import startup
 from vaishnavi.core.clock import UTC, FrozenClock, iso_utc, set_clock
@@ -163,7 +164,7 @@ class SystemApiTest(unittest.TestCase):
         self.state.chips["printer"] = ("amber", "not set up")
         status = api_system.status(self.state)
         self.assertEqual(status["chips"]["printer"], {"level": "amber", "text": "not set up"})
-        self.assertEqual(status["version"], "0.1.0")
+        self.assertEqual(status["version"], __version__)
         self.assertIn("uptime_s", status)
         self.assertTrue(status["database"]["exists"])
 
@@ -510,6 +511,41 @@ class InstallerAppStagesTest(unittest.TestCase):
         self.assertTrue(any("WATCHDOG_GAVE_UP" in line for line in log_lines), "after max restarts per hour it stops relaunching and reports")
         for proc in procs[:-1]:
             proc.kill.assert_called()
+
+    def test_watchdog_does_not_relaunch_after_a_deliberate_stop(self) -> None:
+        """Live run 5: `main.py --stop` closed the app and the installer window's watchdog started it straight back."""
+        from bootstrap import app_stages
+
+        procs: list[mock.Mock] = []
+
+        def fake_popen() -> mock.Mock:
+            proc = mock.Mock()
+            proc.pid = 200 + len(procs)
+            proc.poll.return_value = None
+            procs.append(proc)
+            return proc
+
+        marker = {"reason": None}
+        log_lines: list[str] = []
+        wd = app_stages.Watchdog(launch=fake_popen, health=lambda url, timeout=2.0: {"ok": True}, sleep=lambda s: None, log_hook=log_lines.append, stop_requested=lambda: marker["reason"])
+        wd.run(max_iterations=2)
+        self.assertEqual(len(procs), 1)
+        # the owner runs --stop: marker written, process exits
+        marker["reason"] = "main.py --stop"
+        procs[0].poll.return_value = 0
+        wd.run(max_iterations=5)
+        self.assertEqual(len(procs), 1, "no relaunch")
+        self.assertTrue(wd.stopped_on_purpose)
+        self.assertFalse(wd.gave_up)
+        self.assertTrue(any("WATCHDOG_STOPPED_BY_OWNER" in line for line in log_lines))
+        # … whereas a crash without the marker is still relaunched
+        marker["reason"] = None
+        wd2 = app_stages.Watchdog(launch=fake_popen, health=lambda url, timeout=2.0: {"ok": True}, sleep=lambda s: None, stop_requested=lambda: marker["reason"])
+        wd2.run(max_iterations=1)
+        procs[-1].poll.return_value = 1
+        wd2.run(max_iterations=1)
+        self.assertEqual(len(procs), 3, "crash → relaunched")
+        self.assertFalse(wd2.stopped_on_purpose)
 
 
 if __name__ == "__main__":
