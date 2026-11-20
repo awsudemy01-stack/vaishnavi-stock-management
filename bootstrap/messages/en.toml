@@ -75,6 +75,7 @@ exited_hint = "Look at the newest file in {path} — the last ERROR line says wh
 not_ready = "the application did not answer within {seconds} seconds"
 watchdog_note = "This window keeps watch over the application; you can minimise it. Closing it does not close the shop — but the setup log console (port 8081) closes with it; the app's own logs stay at {url}/system/logs (Owner → Settings → System → Logs)."
 gave_up = "the application kept stopping; it was restarted several times and will not be restarted again this hour"
+stopped_by_owner = "The application was stopped on purpose (main.py --stop / Settings → Shut down). This window will not restart it; run main.py or Start Vaishnavi when you want it back."
 
 [selftest]
 intro = "Running the built-in tests and the live health check on this computer — this takes a few minutes …"
@@ -101,6 +102,17 @@ stopped = "The application was shut down cleanly ({detail}). Start it again with
 no_pid = "Something answers on port {port}, but the application's heartbeat file has no process id — it may be a different program."
 no_pid_hint = "Inside the app: Settings → System → Shut down. Or find the process:  lsof -ti :{port}  (macOS/Linux) · Task Manager (Windows)."
 timeout = "The application did not stop within {seconds} seconds ({detail})."
+
+[fresh_start]
+intro = "Fresh start: every product, stock figure, bill and shift is cleared. Users, passwords, the Owner PIN, shop & GST settings, categories and assistant instructions are kept. A full copy of today's database is archived first."
+stopping = "Stopping the running application first…"
+confirm = "Type START FRESH to continue (anything else cancels)"
+ask_password = "Owner password (not shown):"
+cancelled = "Cancelled — nothing was changed."
+working = "Archiving the database and building the new one…"
+done = "Done. Archive: {archive}. Start the app and add your items."
+failed = "Could not complete the fresh start."
+app_missing = "The application is not installed yet — run python3 main.py once first."
 
 [offline]
 ok = "usable: {wheels} packages · Ollama installer: {ollama} · models: {models}"
