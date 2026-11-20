@@ -163,6 +163,92 @@ def stop_requested(config_dir: Path) -> str | None:
     return reason
 
 
+# ----------------------------------------------------------------------------- watchdog record
+WATCHDOG_RECORD_FILE = "watchdog.json"
+"""``<primary>/state/watchdog.json`` — pid of the ``main.py`` window that supervises the app, written by the start stage."""
+
+
+def write_watchdog_record(config_dir: Path, *, pid: int | None = None) -> bool:
+    """Record which process is the watchdog so ``--stop`` can end it — whatever code version it runs."""
+    folder = state_dir(config_dir)
+    if folder is None:
+        return False
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / WATCHDOG_RECORD_FILE).write_text(json.dumps({"pid": pid or os.getpid(), "at": time.time(), "program": sys.argv[0]}), encoding="utf-8")
+    except OSError as exc:
+        log.warning("WATCHDOG_RECORD_FAILED %s", exc)
+        return False
+    return True
+
+
+def clear_watchdog_record(config_dir: Path) -> None:
+    """Remove the record (the watchdog is leaving on its own)."""
+    folder = state_dir(config_dir)
+    if folder is not None:
+        (folder / WATCHDOG_RECORD_FILE).unlink(missing_ok=True)
+
+
+def watchdog_pid(config_dir: Path) -> int | None:
+    """PID from the record, or None."""
+    folder = state_dir(config_dir)
+    if folder is None:
+        return None
+    try:
+        data = json.loads((folder / WATCHDOG_RECORD_FILE).read_text(encoding="utf-8"))
+        pid = int(data["pid"]) if isinstance(data, dict) else 0
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return pid if pid > 1 else None
+
+
+def process_command(pid: int) -> str:
+    """Command line of a live process ('' when it is gone). Guards against killing a reused pid after a reboot."""
+    try:
+        if sys.platform.startswith("win"):
+            out = subprocess.run(["powershell", "-NoProfile", "-Command", f"(Get-CimInstance Win32_Process -Filter 'ProcessId={pid}').CommandLine"], check=False, capture_output=True, text=True, timeout=20).stdout
+        else:
+            out = subprocess.run(["ps", "-o", "command=", "-p", str(pid)], check=False, capture_output=True, text=True, timeout=10).stdout
+    except (OSError, subprocess.SubprocessError) as exc:
+        log.debug("process_command(%d): %s", pid, exc)
+        return ""
+    return out.strip()
+
+
+def kill_watchdog(pid: int) -> bool:
+    """End the supervising process (it holds no data; SIGTERM on POSIX is caught by the new watchdog and logged)."""
+    try:
+        os.kill(pid, signal.SIGTERM)
+        return True
+    except (ProcessLookupError, PermissionError, OSError):
+        return False
+
+
+def stop_watchdog(config_dir: Path, *, command_of: Callable[[int], str] = process_command, kill_fn: Callable[[int], bool] = kill_watchdog) -> tuple[str, str]:
+    """``(outcome, detail)``: ``none`` (no record) · ``stale`` (pid gone or not a main.py) · ``stopped``.
+
+    Live run 5b: the ``main.py`` window kept the *old* watchdog code in memory after the owner copied new
+    files, so the stop marker meant nothing to it and it relaunched the app after every ``--stop``. Ending
+    the watchdog process itself works for every version.
+    """
+    pid = watchdog_pid(config_dir)
+    if pid is None:
+        return "none", "no watchdog record"
+    if pid == os.getpid():
+        return "none", "record points at this process"
+    command = command_of(pid)
+    if not command or "main.py" not in command:
+        clear_watchdog_record(config_dir)
+        log.info("WATCHDOG_RECORD_STALE pid=%d command=%r", pid, command[:120])
+        return "stale", f"pid {pid} is not the watchdog any more"
+    if not kill_fn(pid):
+        clear_watchdog_record(config_dir)
+        return "stale", f"pid {pid} was already gone"
+    clear_watchdog_record(config_dir)
+    log.info("WATCHDOG_TERMINATED pid=%d command=%r", pid, command[:120])
+    return "stopped", f"watchdog pid {pid}"
+
+
 def running_pid(config_dir: Path) -> tuple[int | None, str]:
     """PID of the running application from ``<data>/state/heartbeat.json`` (fallback: the installer's start record)."""
     loc = locations.read_locations(config_dir / locations.LOCATIONS_FILE)
@@ -200,8 +286,13 @@ def terminate(pid: int, *, windows: bool | None = None) -> bool:
         return False
 
 
-def stop_app(config_dir: Path, *, host: str = "127.0.0.1", port: int = 8080, timeout_s: float = STOP_TIMEOUT_S, sleep: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic, terminate_fn: Callable[[int], bool] = terminate, in_use: Callable[[str, int], bool] | None = None) -> tuple[str, str]:
-    """``(outcome, detail)``: ``not_running`` · ``stopped`` · ``no_pid`` · ``timeout``."""
+def stop_app(config_dir: Path, *, host: str = "127.0.0.1", port: int = 8080, timeout_s: float = STOP_TIMEOUT_S, sleep: Callable[[float], None] = time.sleep, clock: Callable[[], float] = time.monotonic, terminate_fn: Callable[[int], bool] = terminate, in_use: Callable[[str, int], bool] | None = None, stop_watchdog_fn: Callable[[Path], tuple[str, str]] | None = None) -> tuple[str, str]:
+    """``(outcome, detail)``: ``not_running`` · ``stopped`` · ``no_pid`` · ``timeout``.
+
+    Order matters: the watchdog is ended **first** (else it sees the app exit and relaunches), then the
+    deliberate-stop marker is written (belt and braces for a watchdog this code did not record), then the
+    app gets SIGTERM and we wait for the port.
+    """
     busy = in_use or port_in_use
     if not busy(host, port):
         return "not_running", f"{host}:{port} is free"
@@ -209,17 +300,19 @@ def stop_app(config_dir: Path, *, host: str = "127.0.0.1", port: int = 8080, tim
     if pid is None:
         return "no_pid", source
     log.info("APP_STOP_REQUESTED pid=%d source=%s", pid, source)
+    wd_outcome, wd_detail = (stop_watchdog_fn or stop_watchdog)(config_dir)
+    suffix = f" · {wd_detail} stopped" if wd_outcome == "stopped" else ""
     write_stop_marker(config_dir, reason="main.py --stop")
     if not terminate_fn(pid):
-        return "not_running", f"process {pid} was already gone"
+        return "not_running", f"process {pid} was already gone{suffix}"
     deadline = clock() + timeout_s
     while clock() < deadline:
         if not busy(host, port):
-            log.info("APP_STOPPED pid=%d", pid)
-            return "stopped", f"pid {pid}"
+            log.info("APP_STOPPED pid=%d watchdog=%s", pid, wd_outcome)
+            return "stopped", f"pid {pid}{suffix}"
         sleep(0.5)
     log.warning("APP_STOP_TIMEOUT pid=%d after=%ss", pid, timeout_s)
-    return "timeout", f"pid {pid}"
+    return "timeout", f"pid {pid}{suffix}"
 
 
 @register_mode(Mode.STOP)
