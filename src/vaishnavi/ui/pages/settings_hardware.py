@@ -279,7 +279,7 @@ def render_tab(state: AppState, client: Any, texts: UiTexts) -> None:
                     payload = test_print_payload(state, paper_mm=int(choice["paper"]))
                     transport = transport_for(state.extra["services"].settings_service.effective().hardware)
                     if transport is None:
-                        ui.download(payload, "test-print.escpos")
+                        ui.download.content(payload, "test-print.escpos")
                         return
                     try:
                         transport.send(payload)
