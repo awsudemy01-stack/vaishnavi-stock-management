@@ -478,9 +478,26 @@ def pad_amount_text(scan: ScanResult, qty: Decimal) -> str:
     return format_inr(line_amount(scan.spec, price_paise=scan.product.price_paise, qty=qty))
 
 
-def add_measured(c: Any, actor: Actor, cart: Cart, scan: ScanResult, qty: Decimal, *, source: str) -> CartLine:
-    """Pad confirmed → the line."""
+def add_measured(c: Any, actor: Actor, cart: Cart, scan: ScanResult, qty: Decimal, *, source: str, entry: str = "SCAN", reason: str = "") -> CartLine:
+    """Pad confirmed → the line, through the same service path the item was picked by (scan · tile · F3 Find)."""
+    if entry == "QUICK_PICK":
+        return c.billing.add_quick_pick(actor, cart, scan.product.id, qty=qty)
+    if entry == "LOOKUP":
+        return c.billing.add_lookup(actor, cart, scan.product.id, qty=qty, reason=reason)
     return c.billing.add_scan(actor, cart, scan.barcode, qty=qty, qty_source=source)
+
+
+def scan_for_product(c: Any, product_id: int) -> ScanResult | None:
+    """A ``ScanResult`` for a catalogue item picked without a scanner (tile / F3 Find), so the same quantity pad opens.
+
+    Live run 4: tapping the ghee tile called ``add_quick_pick`` with qty 1 — one *gram* — which is below the
+    10 g minimum, so the owner saw "Quantity is below the minimum" and never reached the weight pad.
+    """
+    product = c.catalog.get(product_id)
+    if product is None:
+        return None
+    spec = spec_for(product)
+    return ScanResult(product=product, barcode=product.internal_barcode or "", pack_qty=Decimal(1), spec=spec, needs_qty=not spec.is_piece)
 
 
 # ----------------------------------------------------------------------------- F3 Find / Open item
@@ -1010,6 +1027,11 @@ def register(state: Any) -> None:
             render()
 
         def tile(product_id: int) -> None:
+            scan = scan_for_product(services, product_id)
+            if scan is not None and scan.needs_qty:
+                # Weighed / measured item: ask how much (500 g, 1.5 kg, ₹50 worth …) instead of adding "1 gram".
+                open_qty_pad(scan, entry="QUICK_PICK")
+                return
             try:
                 services.billing.add_quick_pick(actor, carts.get(services.billing, actor), product_id)
             except VaishnaviError as exc:
@@ -1058,28 +1080,47 @@ def register(state: Any) -> None:
                     ui.button(f"{h.label}{DOT}{h.lines} {texts.t('pos.lines')}{DOT}{h.since}", on_click=lambda _e, hid=h.id: (resume_held(services, actor, carts, hid), dlg.close(), render())).props("outline").classes("w-full")
             dlg.open()
 
-        def open_qty_pad(scan: ScanResult) -> None:
+        def open_qty_pad(scan: ScanResult, *, entry: str = "SCAN", reason: str = "", after: Any = None) -> None:
             pad = build_qty_pad(scan, texts)
             form = {"qty": "", "amount": ""}
+
+            def add(qty: Decimal, source: str) -> None:
+                add_measured(services, actor, carts.get(services.billing, actor), scan, qty, source=source, entry=entry, reason=reason)
+
             with ui.dialog() as dlg, ui.card().classes("gap-2"):
                 ui.label(f"{pad.labels['qty_title']}{DOT}{pad.product_name}").classes("font-semibold")
                 ui.label(pad.price_hint).classes("text-sm text-gray-600")
                 with ui.row().classes("gap-1"):
                     for text, q in pad.presets:
-                        ui.button(text, on_click=lambda _e, qq=q: (add_measured(services, actor, carts.get(services.billing, actor), scan, qq, source="PRESET"), dlg.close(), render())).props("outline")
-                ui.input(f"{pad.labels['qty_typed']} ({pad.unit})").bind_value(form, "qty").props("inputmode=decimal")
+
+                        def pick(qq: Decimal = q) -> None:
+                            try:
+                                add(qq, "PRESET")
+                            except VaishnaviError as exc:
+                                ui.notify(f"{exc.user_message()} {exc.what_to_do()}", type="negative")
+                                return
+                            dlg.close()
+                            if after:
+                                after()
+                            render()
+
+                        ui.button(text, on_click=pick).props("outline")
+                qty_box = ui.input(f"{pad.labels['qty_typed']} ({pad.unit})", placeholder=f"500 {pad.unit} · 1.5 kg" if pad.unit == "g" else f"500 {pad.unit} · 1.5 L" if pad.unit == "ml" else "").bind_value(form, "qty").props("inputmode=decimal autofocus")
                 ui.input(pad.labels["by_amount"]).bind_value(form, "amount").props("inputmode=decimal")
 
                 def confirm() -> None:
                     try:
                         qty = qty_from_pad(scan, qty_text=form["qty"], amount_text=form["amount"])
-                        add_measured(services, actor, carts.get(services.billing, actor), scan, qty, source="BY_AMOUNT" if form["amount"].strip() else "TYPED")
+                        add(qty, "BY_AMOUNT" if form["amount"].strip() else "TYPED")
                     except VaishnaviError as exc:
                         ui.notify(f"{exc.user_message()} {exc.what_to_do()}", type="negative")
                         return
                     dlg.close()
+                    if after:
+                        after()
                     render()
 
+                qty_box.on("keydown.enter", lambda _e: confirm())
                 ui.button(texts.t("common.confirm"), on_click=confirm).props("unelevated color=primary")
             dlg.open()
 
@@ -1106,7 +1147,18 @@ def register(state: Any) -> None:
                                             ui.label(f"{h.name}{DOT}#{h.product_id}{DOT}{h.sku}").classes("font-semibold")
                                             ui.label(f"{h.price_text}{DOT}{h.stock_text}{DOT}{h.barcode}").classes("text-xs text-gray-500 vsm-mono")
                                         reason = ui.select({k: t for t, k in m2.reasons}, value=m2.reasons[0][1]).props("dense")
-                                        ui.button(m2.labels["find_add"], on_click=lambda _e, pid=h.product_id, r=reason: (find_add(services, actor, cart, pid, qty_text="1", reason=str(r.value)), dlg.close(), render())).props("unelevated color=primary")
+
+                                        def add_hit(pid: int = h.product_id, r: Any = reason) -> None:
+                                            scan = scan_for_product(services, pid)
+                                            if scan is not None and scan.needs_qty:
+                                                dlg.close()
+                                                open_qty_pad(scan, entry="LOOKUP", reason=str(r.value))
+                                                return
+                                            find_add(services, actor, cart, pid, qty_text="1", reason=str(r.value))
+                                            dlg.close()
+                                            render()
+
+                                        ui.button(m2.labels["find_add"], on_click=add_hit).props("unelevated color=primary")
                                         ui.button(icon="label", on_click=lambda _e, pid=h.product_id: (find_print_label(services, actor, pid), ui.notify(texts.t("common.saved")))).props("flat").tooltip(m2.labels["find_label"])
 
                         box.on("keydown.enter", lambda _e: refresh())
