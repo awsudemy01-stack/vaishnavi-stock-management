@@ -195,6 +195,11 @@ class InstallerModesTest(unittest.TestCase):
         self.assertEqual(outcome, "stopped")
         self.assertEqual(killed, [4242])
         self.assertIn("4242", detail)
+        # the deliberate-stop marker is left for the watchdog in the installer window, and consumed once
+        self.assertTrue((primary / "state" / mode.STOP_MARKER_FILE).exists())
+        self.assertEqual(mode.stop_requested(cfg), "main.py --stop")
+        self.assertIsNone(mode.stop_requested(cfg), "consumed")
+        self.assertFalse((primary / "state" / mode.STOP_MARKER_FILE).exists())
         self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: False, terminate_fn=term)[0], "not_running")
         # pid gone already → not_running, never an error
         self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: True, terminate_fn=lambda pid: False)[0], "not_running")
