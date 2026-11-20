@@ -4,6 +4,10 @@ python3 tools/manifest.py --out there.txt
 python tools/manifest.py --compare there.txt
 
 
+git rm -r --cached logs
+git add .gitignore
+git commit -m "stop tracking logs and local files"
+
 rohit@Rohits-MacBook-Pro logs % git rev-parse --short HEAD
 07976d1b
 rohit@Rohits-MacBook-Pro logs % git status --short
