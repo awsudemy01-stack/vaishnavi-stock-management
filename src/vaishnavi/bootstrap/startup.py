@@ -30,6 +30,7 @@ from vaishnavi.db.lock import WriterLock
 from vaishnavi.db.guardian import TriageKind
 from vaishnavi.db.schema import HEAD_REVISION, apply_schema, current_revision, stamp_head
 from vaishnavi.platform.paths import AppPaths
+from vaishnavi.platform.watchdog import consume_stop_request
 from vaishnavi.scheduler.jobs import bind_jobs, build_jobs
 from vaishnavi.scheduler.simple import SimpleScheduler
 from vaishnavi.ui.components.status_chip import chips_from_hardware
@@ -68,6 +69,25 @@ def ensure_database(paths: AppPaths) -> seed.SeedReport | None:
         conn.close()
     log.info("DB_CREATED path=%s seeded_rows=%d", db, report.total)
     return report
+
+
+def top_up_reference_rows(paths: AppPaths) -> int:
+    """Insert reference rows a newer build added (e.g. a new default category) into an existing database.
+
+    ``seed.apply_seed`` only inserts what is missing, so this is safe on every start and never touches the
+    owner's own rows. Failures are logged, not fatal — the shop can open without a new category.
+    """
+    conn = sqlite3.connect(paths.database)
+    try:
+        report = seed.apply_seed(conn)
+    except sqlite3.DatabaseError as exc:  # pragma: no cover - defensive
+        log.warning("SEED_TOP_UP_FAILED error=%s", exc)
+        return 0
+    finally:
+        conn.close()
+    if report.total:
+        log.info("SEED_TOP_UP inserted=%d tables=%s", report.total, ",".join(sorted(report.inserted)))
+    return report.total
 
 
 def ensure_schema_current(paths: AppPaths) -> str:
@@ -180,6 +200,11 @@ def run_app(*, settings: Settings, paths: AppPaths, config_dir: Path, serve: Ser
                 log.error("APP_REFUSED %s", exc)
                 return 2
             log.info("DB_SCHEMA revision=%s", revision)
+            if not created:
+                top_up_reference_rows(paths)
+            stale_stop = consume_stop_request(paths.state)
+            if stale_stop:
+                log.info("STOP_MARKER_CLEARED reason=%r (a fresh start is always allowed)", stale_stop)
             if triage.kind is TriageKind.RESTORED:
                 bus.publish(DbRestoredDetected(backup_id=str(triage.params.get("backup_id", "")), taken_at=str(triage.params.get("taken_at", "?"))))
 
