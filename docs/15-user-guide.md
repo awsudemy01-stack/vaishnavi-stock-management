@@ -96,7 +96,8 @@ The wizard walks you through, in order; you can stop and come back — the dashb
 
 ### C2. Make a bill
 1. **Scan** each item. The line appears with price and any offer discount. You can also tap an item
-   **tile** on the left (the owner may lock tiles so that everything is scanned).
+   **tile** on the left (the owner may lock tiles so that everything is scanned). Tapping a **ghee / oil**
+   tile opens the weight box — choose 100 g · 250 g · 500 g · 1 kg, or type the weight or the ₹ amount.
 2. **Loose items** (ghee, oil, kumkum): scan the **shelf label**, then choose a preset (50 g · 100 g · 250 g)
    or type the weight — "500", "0.5 kg" and "250 g" all work; or type the **amount** (₹50 of ghee) and
    the app works out the quantity. Stock goes down by exactly that weight.
@@ -150,7 +151,7 @@ low?"*, *"how do I hold a bill?"*. It cannot tell you sales totals or anything a
 
 | Task | Where | Notes |
 |---|---|---|
-| Add a product | Products → **New** | Name, category, **Sold as** (pc / kg / l …), purchase price, selling price, opening stock, GST %. Code and barcode are generated for you; MRP, HSN, alerts and barcodes are under *Advanced* |
+| Add a product | Products → **New** | Name, category (pick one or **type a new name**, e.g. *Oil* — created on save), **Sold as** (pc / kg / l …), purchase price, selling price, opening stock **in that unit** (50 for 50 litres), GST %. Code and barcode are generated for you; MRP, HSN, alerts and barcodes are under *Advanced* |
 | Print barcode labels | Products → select → **Print labels** | thermal strip, label roll or A4 sticker sheet |
 | Attach the manufacturer's barcode | Product → Advanced → Barcodes → **Scan to add** | both barcodes then work |
 | Change a price | Product → Price → reason | recorded in **Price history** (pop-up chart: 1 m / 6 m / 1 y / custom) |
@@ -162,6 +163,7 @@ low?"*, *"how do I hold a bill?"*. It cannot tell you sales totals or anything a
 | Items staff sold as "Open item" | Products → **Open-item review** | one click converts them into real products with labels |
 | Reorder | Reports → **Forecast** → *Create reorder list* → PDF | send to the supplier |
 | Hidden an item by mistake? | Products → **Show archived** → open → **Restore** | its code stays reserved while archived |
+| Start over after the trial (delete all items, stock, bills) | Terminal: `python3 main.py --fresh-start` | asks `START FRESH` + your Owner password; archives everything first; keeps users, PIN, shop/GST settings, categories |
 
 ---
 
