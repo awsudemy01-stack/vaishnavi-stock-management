@@ -58,9 +58,10 @@ class Mode(str, Enum):
     UNINSTALL_AUTOSTART = "uninstall-autostart"
     MAKE_OFFLINE_BUNDLE = "make-offline-bundle"
     STOP = "stop"
+    FRESH_START = "fresh-start"
 
 
-MUTATING_MODES = frozenset({Mode.INSTALL_RUN, Mode.INSTALL_ONLY, Mode.RESTORE, Mode.UPDATE, Mode.RESET_OWNER_PASSWORD, Mode.UNINSTALL_AUTOSTART})
+MUTATING_MODES = frozenset({Mode.INSTALL_RUN, Mode.INSTALL_ONLY, Mode.RESTORE, Mode.UPDATE, Mode.RESET_OWNER_PASSWORD, Mode.UNINSTALL_AUTOSTART, Mode.FRESH_START})
 """Modes that change the installation — only one of them may run at a time (``InstallLock``)."""
 
 
@@ -137,6 +138,7 @@ def build_parser() -> argparse.ArgumentParser:
     action.add_argument("--selftest", action="store_true", help="run the test suite with fakes plus live checks on this PC")
     action.add_argument("--uninstall-autostart", action="store_true", help="remove the start-at-logon entry; nothing else is removed")
     action.add_argument("--stop", action="store_true", help="shut the running shop application down cleanly (then start it again with main.py)")
+    action.add_argument("--fresh-start", action="store_true", help="archive the database and start with an empty catalogue (keeps users, settings, categories; asks the Owner password)")
     action.add_argument("--make-offline-bundle", metavar="TARGET_OS", choices=BUNDLE_TARGETS, help="on a connected PC, prepare offline/ for a shop PC without internet")
 
     p.add_argument("--fix", action="store_true", help="with --doctor: apply the safe automatic fixes")
@@ -172,6 +174,8 @@ def _mode_from(ns: argparse.Namespace) -> Mode:
         return Mode.UNINSTALL_AUTOSTART
     if ns.stop:
         return Mode.STOP
+    if ns.fresh_start:
+        return Mode.FRESH_START
     if ns.make_offline_bundle is not None:
         return Mode.MAKE_OFFLINE_BUNDLE
     return Mode.INSTALL_RUN
