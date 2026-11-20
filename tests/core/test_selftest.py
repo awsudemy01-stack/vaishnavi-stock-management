@@ -212,6 +212,75 @@ class InstallerModesTest(unittest.TestCase):
         (primary / "state" / "heartbeat.json").unlink()
         self.assertEqual(mode.stop_app(cfg, in_use=lambda h, p: True, terminate_fn=term)[0], "no_pid")
 
+    def test_stop_mode_ends_the_recorded_watchdog_before_the_app(self) -> None:
+        """Live run 5b: the main.py window still ran OLD watchdog code after a code update, ignored the marker and relaunched."""
+        from bootstrap import selftest as mode
+
+        cfg = self.program_dir / "config"
+        cfg.mkdir(exist_ok=True)
+        primary = self.program_dir / "data"
+        (primary / "state").mkdir(parents=True)
+        cfg.joinpath("locations.toml").write_text(f'[locations]\nprimary = "{primary.as_posix()}"\nsecondary = "{(self.program_dir / "bk").as_posix()}"\nsame_device = true\n', encoding="utf-8")
+        (primary / "state" / "heartbeat.json").write_text('{"at": "2026-11-20T09:00:00Z", "pid": 4242, "loops": {}}', encoding="utf-8")
+        self.assertTrue(mode.write_watchdog_record(cfg, pid=777))
+        self.assertEqual(mode.watchdog_pid(cfg), 777)
+        order: list[str] = []
+        busy = {"value": True}
+
+        def term(pid: int) -> bool:
+            order.append(f"app:{pid}")
+            busy["value"] = False
+            return True
+
+        def kill(pid: int) -> bool:
+            order.append(f"watchdog:{pid}")
+            return True
+
+        wd_stop = lambda c: mode.stop_watchdog(c, command_of=lambda pid: "/usr/bin/python3 /Users/rohit/vaishnavi/main.py", kill_fn=kill)  # noqa: E731
+        outcome, detail = mode.stop_app(cfg, in_use=lambda h, p: busy["value"], terminate_fn=term, sleep=lambda s: None, clock=lambda: 0.0, stop_watchdog_fn=wd_stop)
+        self.assertEqual(outcome, "stopped")
+        self.assertEqual(order, ["watchdog:777", "app:4242"], "watchdog first — otherwise it sees the app exit and relaunches")
+        self.assertIn("watchdog pid 777", detail)
+        self.assertIsNone(mode.watchdog_pid(cfg), "record cleared")
+        # a reused / dead pid is never killed: the record must point at a main.py process
+        mode.write_watchdog_record(cfg, pid=778)
+        killed: list[int] = []
+        self.assertEqual(mode.stop_watchdog(cfg, command_of=lambda pid: "Safari", kill_fn=lambda pid: killed.append(pid) or True)[0], "stale")
+        self.assertEqual(killed, [])
+        self.assertIsNone(mode.watchdog_pid(cfg), "stale record removed")
+        mode.write_watchdog_record(cfg, pid=779)
+        self.assertEqual(mode.stop_watchdog(cfg, command_of=lambda pid: "", kill_fn=lambda pid: True)[0], "stale", "process gone")
+        # own pid (the --stop process itself) is never a target
+        mode.write_watchdog_record(cfg)
+        self.assertEqual(mode.stop_watchdog(cfg, command_of=lambda pid: "python main.py", kill_fn=lambda pid: True)[0], "none")
+        mode.clear_watchdog_record(cfg)
+        self.assertEqual(mode.stop_watchdog(cfg)[0], "none")
+
+    @unittest.skipIf(sys.platform.startswith("win"), "SIGTERM delivery is POSIX only")
+    def test_supervise_treats_sigterm_as_a_deliberate_stop(self) -> None:
+        """``--stop`` ends the watchdog window with SIGTERM; the new watchdog logs it instead of dying mid-loop."""
+        import os
+        import signal
+
+        from bootstrap.app_stages import Watchdog, supervise
+
+        class Proc:
+            pid = 1
+            returncode = None
+
+            def poll(self) -> None:
+                return None
+
+        def sleep(_s: float) -> None:
+            os.kill(os.getpid(), signal.SIGTERM)
+
+        wd = Watchdog(launch=lambda: Proc(), health=lambda url: {"ok": True}, sleep=sleep, clock=lambda: 0.0)
+        wd.adopt(Proc())
+        before = signal.getsignal(signal.SIGTERM)
+        supervise(wd)
+        self.assertTrue(wd.stopped_on_purpose)
+        self.assertIs(signal.getsignal(signal.SIGTERM), before, "handler restored")
+
 
 if __name__ == "__main__":
     unittest.main()
