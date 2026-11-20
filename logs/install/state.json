@@ -74,16 +74,70 @@
       ],
       "exit_code": 0,
       "finished_at": "2026-11-16T08:22:33"
+    },
+    {
+      "run_id": "261116162950394c",
+      "started_at": "2026-11-16T16:29:50",
+      "argv": [
+        "--stop"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-16T16:29:50"
+    },
+    {
+      "run_id": "261116163105d134",
+      "started_at": "2026-11-16T16:31:05",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T16:37:05"
+    },
+    {
+      "run_id": "261116163710797b",
+      "started_at": "2026-11-16T16:37:10",
+      "argv": [
+        "--stop"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-16T16:37:11"
+    },
+    {
+      "run_id": "261116163715180c",
+      "started_at": "2026-11-16T16:37:15",
+      "argv": [],
+      "exit_code": 1,
+      "finished_at": "2026-11-16T17:59:12"
+    },
+    {
+      "run_id": "261116175918d275",
+      "started_at": "2026-11-16T17:59:18",
+      "argv": [
+        "--stop"
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-11-16T17:59:19"
+    },
+    {
+      "run_id": "2611172031183986",
+      "started_at": "2026-11-17T20:31:18",
+      "argv": [],
+      "exit_code": 2,
+      "finished_at": "2026-11-18T10:58:06"
+    },
+    {
+      "run_id": "261118190934993b",
+      "started_at": "2026-11-18T19:09:34",
+      "argv": [],
+      "exit_code": null
     }
   ],
   "stages": {
     "log_console": {
       "status": "OK",
-      "at": "2026-11-16T08:13:46",
+      "at": "2026-11-18T19:09:34",
       "cache_key": null,
       "message": "watch at http://192.168.0.190:8081/",
       "error_code": "",
-      "elapsed_ms": 10,
+      "elapsed_ms": 63,
       "detail": "",
       "data": {
         "url": "http://192.168.0.190:8081/",
@@ -92,7 +146,7 @@
     },
     "language": {
       "status": "OK",
-      "at": "2026-11-16T08:13:46",
+      "at": "2026-11-18T19:09:34",
       "cache_key": null,
       "message": "English",
       "error_code": "",
@@ -104,11 +158,12 @@
     },
     "survey": {
       "status": "OK",
-      "at": "2026-11-16T04:07:09",
-      "cache_key": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3|2026-W47",
+      "at": "2026-11-17T20:31:19",
+      "cache_key": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python|2026-W47",
       "message": "macOS 27.2.1, 16 GB memory, Apple silicon → local AI will work on this PC",
       "error_code": "",
-      "elapsed_ms": 297,
+      "elapsed_ms": 742,
+      "detail": "",
       "data": {
         "survey": {
           "os_family": "macos",
@@ -117,8 +172,8 @@
           "arch": "arm64",
           "hostname": "Rohits-MacBook-Pro.local",
           "python_version": "3.13.5",
-          "python_executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
-          "in_venv": false,
+          "python_executable": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
+          "in_venv": true,
           "cpu_count": 10,
           "cpu_name": "arm",
           "ram_gib": 16.0,
@@ -130,18 +185,16 @@
             }
           ],
           "apple_silicon": true,
-          "disk_free_program_gib": 51.9,
-          "disk_free_home_gib": 51.9,
+          "disk_free_program_gib": 50.2,
+          "disk_free_home_gib": 50.2,
           "printers": [],
           "serial_ports": [],
           "usb_hid_devices": [],
           "internet": true,
-          "package_managers": [
-            "brew"
-          ],
-          "ollama_found": true,
+          "package_managers": [],
+          "ollama_found": false,
           "probe_errors": {},
-          "surveyed_on": "2026-11-16"
+          "surveyed_on": "2026-11-17"
         },
         "ai_provider": "ollama",
         "ai_local_tier": "7b",
@@ -151,7 +204,7 @@
     },
     "offline_bundle": {
       "status": "SKIP",
-      "at": "2026-11-16T08:13:46",
+      "at": "2026-11-18T19:09:34",
       "cache_key": null,
       "message": "not needed on this computer",
       "error_code": "",
@@ -161,7 +214,7 @@
     },
     "python_check": {
       "status": "OK",
-      "at": "2026-11-16T08:13:46",
+      "at": "2026-11-18T19:09:34",
       "cache_key": null,
       "message": "Python 3.13 found",
       "error_code": "",
@@ -169,12 +222,12 @@
       "detail": "",
       "data": {
         "version": "3.13",
-        "executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3"
+        "executable": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python"
       }
     },
     "venv": {
       "status": "OK",
-      "at": "2026-11-16T08:13:46",
+      "at": "2026-11-18T19:09:34",
       "cache_key": null,
       "message": "ready (.venv)",
       "error_code": "",
@@ -187,11 +240,11 @@
     },
     "packages": {
       "status": "WARN",
-      "at": "2026-11-16T08:13:47",
+      "at": "2026-11-18T19:09:36",
       "cache_key": null,
       "message": "verified (7 packages load correctly)",
       "error_code": "E-SYS-041",
-      "elapsed_ms": 1020,
+      "elapsed_ms": 1705,
       "detail": "",
       "data": {
         "python": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
@@ -205,11 +258,11 @@
     },
     "system_components": {
       "status": "OK",
-      "at": "2026-11-16T08:13:47",
+      "at": "2026-11-18T19:09:36",
       "cache_key": null,
       "message": "all 3 present",
       "error_code": "",
-      "elapsed_ms": 2,
+      "elapsed_ms": 4,
       "detail": "",
       "data": {
         "missing": []
@@ -217,11 +270,11 @@
     },
     "ai_provider": {
       "status": "OK",
-      "at": "2026-11-16T08:13:47",
+      "at": "2026-11-18T19:09:36",
       "cache_key": null,
       "message": "Ollama ready — qwen2.5:7b-instruct · bge-m3",
       "error_code": "",
-      "elapsed_ms": 97,
+      "elapsed_ms": 67,
       "detail": "",
       "data": {
         "provider": "ollama",
@@ -234,11 +287,11 @@
     },
     "locations": {
       "status": "WARN",
-      "at": "2026-11-16T08:13:47",
+      "at": "2026-11-18T19:09:36",
       "cache_key": null,
       "message": "primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups",
       "error_code": "E-SYS-012",
-      "elapsed_ms": 1,
+      "elapsed_ms": 0,
       "detail": "",
       "data": {
         "primary": "/Users/rohit/VaishnaviStore",
@@ -248,7 +301,7 @@
     },
     "autostart": {
       "status": "OK",
-      "at": "2026-11-16T08:13:47",
+      "at": "2026-11-18T19:09:36",
       "cache_key": null,
       "message": "already set up",
       "error_code": "",
@@ -260,43 +313,42 @@
     },
     "database": {
       "status": "OK",
-      "at": "2026-11-16T08:13:48",
+      "at": "2026-11-18T19:09:37",
       "cache_key": null,
       "message": "database is ready.",
       "error_code": "",
-      "elapsed_ms": 554,
+      "elapsed_ms": 1170,
       "detail": "",
       "data": {
         "created": false,
         "migrated": false,
-        "revision": "0001_initial",
+        "revision": "0002_staff_receive",
         "owner_setup_pending": false,
         "secrets_stored": 0
       }
     },
     "doctor": {
       "status": "WARN",
-      "at": "2026-11-16T08:13:49",
+      "at": "2026-11-18T19:09:39",
       "cache_key": null,
       "message": "finished with notes — the shop can open; see the lines marked '!' above.",
       "error_code": "",
-      "elapsed_ms": 1321,
+      "elapsed_ms": 1631,
       "detail": "",
       "data": {
         "exit_code": 1
       }
     },
     "start": {
-      "status": "OK",
-      "at": "2026-11-16T08:22:30",
+      "status": "FAIL",
+      "at": "2026-11-18T10:58:06",
       "cache_key": null,
-      "message": "Ready to open the shop:  http://127.0.0.1:8080",
-      "error_code": "",
-      "elapsed_ms": 521146,
+      "message": "the application kept stopping; it was restarted several times and will not be restarted again this hour",
+      "error_code": "E-SYS-020",
+      "elapsed_ms": 10763362,
       "detail": "",
       "data": {
-        "url": "http://127.0.0.1:8080",
-        "pid": 8275
+        "url": "http://127.0.0.1:8080"
       }
     }
   }

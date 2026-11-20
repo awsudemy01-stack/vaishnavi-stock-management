@@ -1,0 +1,11 @@
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.logsetup: install log opened: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-18_102918_261118102918a310.log
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.i18n: i18n: loaded lang=en keys=309 fallback_keys=309
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.console: console: unicode=True encoding=utf-8
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.stages: state: loaded 14 stage records, 17 runs
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.wizard: answers: loaded 5 answers from /Users/rohit/Documents/vaishnavi-stock-management/config/install-answers.toml
+2026-11-18 10:29:18 INFO    run=261118102918a310 bootstrap.cli: RUN_START run=261118102918a310 mode=stop argv=--stop
+2026-11-18 10:29:18 INFO    run=261118102918a310 bootstrap.cli: ENV python=3.13.5 exe=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 os=macOS-27.2.1-arm64-arm-64bit-Mach-O arch=arm64 program_dir=/Users/rohit/Documents/vaishnavi-stock-management
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.console: console: Vaishnavi Store Manager Setup       Log: logs/install/2026-11-18_102918_261118102918a310.log
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.console: console[info]: The application is not running (127.0.0.1:8080 is free). Nothing to stop.
+2026-11-18 10:29:18 DEBUG   run=261118102918a310 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-18 10:29:18 INFO    run=261118102918a310 bootstrap.cli: RUN_END run=261118102918a310 exit=0

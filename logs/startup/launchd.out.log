@@ -2,3 +2,110 @@ Vaishnavi Store Manager Setup       Log: logs/install/2026-11-15_203303_26111520
 ────────────────────────────────────────────────────────────────────────────────────────────
  !  Setup is already running in another window on this computer — use that window. (If you are sure it is not, wait a minute and try again.)  (E-SYS-016)
 Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-15_203303_261115203303ab7c.log
+Vaishnavi Store Manager Setup       Log: logs/install/2026-11-17_203118_2611172031183986.log
+────────────────────────────────────────────────────────────────────────────────────────────
+ ✔  Log console — watch at http://192.168.0.190:8081/
+ i  Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे? → English  (from your saved answers)
+ ✔  Language — English
+ ✔  Computer — macOS 27.2.1, 16 GB memory, Apple silicon → local AI will work on this PC
+ –  Offline bundle — not needed on this computer
+ ✔  Python — Python 3.13 found
+ ✔  Private Python environment — ready (.venv)
+ !  Software packages — verified (7 packages load correctly)  (E-SYS-041)
+      requirements.lock is missing from this release folder, so package versions could not be hash-verified. The app will run; ask for a release that includes the lock file.
+ ✔  System components — all 3 present
+ i  This computer can run the AI locally (model size: 7b).
+ i  Which AI engine should the assistant use? → Local — Ollama on this PC  (from your saved answers)
+ ✔  AI assistant — Ollama ready — qwen2.5:7b-instruct · bge-m3
+ !  Data locations — primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups  (E-SYS-012)
+      Move the backups to another disk when you can: Settings → Backups → Secondary location.
+ ✔  Start automatically — already set up
+ ✔  Shop database — database is ready.
+ i     DB_UNCLEAN_CLOSE last_open=2026-11-16T16:37:20Z last_close=2026-11-16T08:22:01Z code=E-DB-022
+ i     DOCTOR_CHECK key=database status=WARN code=E-DB-022 ms=10 msg=did not close properly last time — all saved data is intact detail=last_open=2026-11-16T16:37:20Z fixed=False
+ i     DOCTOR_CHECK key=backup status=WARN code=- ms=1 msg=last backup is 28 h old detail=- fixed=False
+ i     DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=3 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+ i     DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+ i     DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+ i     Vaishnavi Store Manager Health Check — 18-Nov-2026 02:01  (ref 01M7NKA1CXC36E4J8CF68MNXYP)
+ i     ──────────────────────────────────────────────────────────────────────────────────────────
+ i      ✔    Python                 Python 3.13 in the private environment         3 ms
+ i      ✔    Software packages      13 packages load correctly       775 ms
+ i      ✔    Folders & disk         50.2 GB free · data in /Users/rohit/VaishnaviStore         1 ms
+ i      ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
+ i      !    Shop database          did not close properly last time — all saved data is intact  (E-DB-022)        10 ms
+ i      ✔    Sales integrity        4 bills verified · no gaps · stock matches         2 ms
+ i      !    Backup                 last backup is 28 h old         1 ms
+ i           → A backup is taken at every shift close and nightly; run one now if the shop was open since.
+ i      ✔    Secure key store       computer key store in use         6 ms
+ i      ✔    Clock & ports          clock in sync · ports 8080/8443 free         1 ms
+ i      ✔    Start automatically    will start when the computer is switched on         0 ms
+ i      !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)         3 ms
+ i           → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+ i      !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+ i           → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+ i      ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)       153 ms
+ i      !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+ i           → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+ i     ──────────────────────────────────────────────────────────────────────────────────────────
+ i      RESULT: Ready to open the shop (5 note(s) to look at).
+ !  Health check — finished with notes — the shop can open; see the lines marked '!' above.
+      Fix the notes when convenient; they are also shown on the Status page inside the app.
+ i  Starting the application … (this takes a few seconds)
+ ✔  Ready to open the shop:  http://127.0.0.1:8080
+ i  This window keeps watch over the application; you can minimise it. Closing it does not close the shop — but the setup log console (port 8081) closes with it; the app's own logs stay at http://127.0.0.1:8080/system/logs (Owner → Settings → System → Logs).
+ ✖  Start Vaishnavi — the application kept stopping; it was restarted several times and will not be restarted again this hour  (E-SYS-020)
+      Look at the newest file in /Users/rohit/Documents/vaishnavi-stock-management/logs/app — the last ERROR line says why.
+────────────────────────────────────────────────────────────────────────────────────────────
+ ✖  Stopped: something essential is not right. Follow the 'What to do' hint above, then run Start Vaishnavi again.
+Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-17_203118_2611172031183986.log
+Vaishnavi Store Manager Setup       Log: logs/install/2026-11-18_190934_261118190934993b.log
+────────────────────────────────────────────────────────────────────────────────────────────
+ ✔  Log console — watch at http://192.168.0.190:8081/
+ i  Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे? → English  (from your saved answers)
+ ✔  Language — English
+ –  Computer — already done
+ –  Offline bundle — not needed on this computer
+ ✔  Python — Python 3.13 found
+ ✔  Private Python environment — ready (.venv)
+ !  Software packages — verified (7 packages load correctly)  (E-SYS-041)
+      requirements.lock is missing from this release folder, so package versions could not be hash-verified. The app will run; ask for a release that includes the lock file.
+ ✔  System components — all 3 present
+ i  This computer can run the AI locally (model size: 7b).
+ i  Which AI engine should the assistant use? → Local — Ollama on this PC  (from your saved answers)
+ ✔  AI assistant — Ollama ready — qwen2.5:7b-instruct · bge-m3
+ !  Data locations — primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups  (E-SYS-012)
+      Move the backups to another disk when you can: Settings → Backups → Secondary location.
+ ✔  Start automatically — already set up
+ ✔  Shop database — database is ready.
+ i     DB_UNCLEAN_CLOSE last_open=2026-11-18T10:29:56Z last_close=2026-11-17T20:32:17Z code=E-DB-022
+ i     DOCTOR_CHECK key=database status=WARN code=E-DB-022 ms=14 msg=did not close properly last time — all saved data is intact detail=last_open=2026-11-18T10:29:56Z fixed=False
+ i     DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=3 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+ i     DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+ i     DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+ i     Vaishnavi Store Manager Health Check — 19-Nov-2026 00:39  (ref 01M7R112C6K5MKJNPQGZ1NR814)
+ i     ──────────────────────────────────────────────────────────────────────────────────────────
+ i      ✔    Python                 Python 3.13 in the private environment         3 ms
+ i      ✔    Software packages      13 packages load correctly       785 ms
+ i      ✔    Folders & disk         50.0 GB free · data in /Users/rohit/VaishnaviStore         2 ms
+ i      ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
+ i      !    Shop database          did not close properly last time — all saved data is intact  (E-DB-022)        14 ms
+ i      ✔    Sales integrity        7 bills verified · no gaps · stock matches         3 ms
+ i      ✔    Backup                 last backup 23 h ago · verified · /Users/rohit/VaishnaviStore-Backups         1 ms
+ i      ✔    Secure key store       computer key store in use         8 ms
+ i      ✔    Clock & ports          clock in sync · ports 8080/8443 free         1 ms
+ i      ✔    Start automatically    will start when the computer is switched on         0 ms
+ i      !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)         3 ms
+ i           → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+ i      !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+ i           → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+ i      ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)       178 ms
+ i      !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+ i           → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+ i     ──────────────────────────────────────────────────────────────────────────────────────────
+ i      RESULT: Ready to open the shop (4 note(s) to look at).
+ !  Health check — finished with notes — the shop can open; see the lines marked '!' above.
+      Fix the notes when convenient; they are also shown on the Status page inside the app.
+ i  Starting the application … (this takes a few seconds)
+ ✔  Ready to open the shop:  http://127.0.0.1:8080
+ i  This window keeps watch over the application; you can minimise it. Closing it does not close the shop — but the setup log console (port 8081) closes with it; the app's own logs stay at http://127.0.0.1:8080/system/logs (Owner → Settings → System → Logs).

@@ -5,8 +5,8 @@
   "arch": "arm64",
   "hostname": "Rohits-MacBook-Pro.local",
   "python_version": "3.13.5",
-  "python_executable": "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
-  "in_venv": false,
+  "python_executable": "/Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python",
+  "in_venv": true,
   "cpu_count": 10,
   "cpu_name": "arm",
   "ram_gib": 16.0,
@@ -18,16 +18,14 @@
     }
   ],
   "apple_silicon": true,
-  "disk_free_program_gib": 51.9,
-  "disk_free_home_gib": 51.9,
+  "disk_free_program_gib": 50.2,
+  "disk_free_home_gib": 50.2,
   "printers": [],
   "serial_ports": [],
   "usb_hid_devices": [],
   "internet": true,
-  "package_managers": [
-    "brew"
-  ],
-  "ollama_found": true,
+  "package_managers": [],
+  "ollama_found": false,
   "probe_errors": {},
-  "surveyed_on": "2026-11-16"
+  "surveyed_on": "2026-11-17"
 }

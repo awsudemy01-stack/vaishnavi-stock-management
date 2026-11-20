@@ -1,0 +1,164 @@
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.logsetup: install log opened: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-16_163105_261116163105d134.log
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.i18n: i18n: loaded lang=en keys=309 fallback_keys=309
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console: unicode=True encoding=utf-8
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: state: loaded 14 stage records, 11 runs
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.wizard: answers: loaded 5 answers from /Users/rohit/Documents/vaishnavi-stock-management/config/install-answers.toml
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.cli: RUN_START run=261116163105d134 mode=install-run argv=
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.cli: ENV python=3.13.5 exe=/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 os=macOS-27.2.1-arm64-arm-64bit-Mach-O arch=arm64 program_dir=/Users/rohit/Documents/vaishnavi-stock-management
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console: Vaishnavi Store Manager Setup       Log: logs/install/2026-11-16_163105_261116163105d134.log
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: INSTALL_LOCK_ACQUIRED pid=8754
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: pipeline: 14 stages registered (install_only=False)
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: PIPELINE_START run=261116163105d134 stages=14
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=log_console index=1/14
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=log_console title=Log console
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.minilog: MINILOG_STARTED url=http://192.168.0.190:8081/ dir=/Users/rohit/Documents/vaishnavi-stock-management/logs/install
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=log_console ms=7 code=- msg=watch at http://192.168.0.190:8081/ detail=-
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Log console — watch at http://192.168.0.190:8081/
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=language index=2/14
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=language title=Language
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.wizard: WIZARD_ANSWER key=language source=answers_file value=en
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[info]: Which language should the installer use? / इंस्टॉलर किस भाषा में बात करे? → English  (from your saved answers)
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.wizard: LANGUAGE_SELECTED lang=en source=wizard
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=language ms=0 code=- msg=English detail=-
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Language — English
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=survey index=3/14
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_SKIP key=survey ms=0 code=- msg=already done detail=-
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[skip]: Computer — already done
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=offline_bundle index=4/14
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_SKIP key=offline_bundle ms=0 code=- msg=not needed on this computer detail=-
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[skip]: Offline bundle — not needed on this computer
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=python_check index=5/14
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=python_check title=Python
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=python_check ms=3 code=- msg=Python 3.13 found detail=-
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Python — Python 3.13 found
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=venv index=6/14
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=venv title=Private Python environment
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=venv ms=0 code=- msg=ready (.venv) detail=-
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Private Python environment — ready (.venv)
+2026-11-16 16:31:05 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=packages index=7/14
+2026-11-16 16:31:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=packages title=Software packages
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.python_env: VERIFY_IMPORTS checked=7 missing=-
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.python_env: PACKAGES_VERIFIED cached=true hash_verified=False
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:06 WARNING run=261116163105d134 bootstrap.stages: STAGE_WARN key=packages ms=963 code=E-SYS-041 msg=verified (7 packages load correctly) detail=-
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[warn]: Software packages — verified (7 packages load correctly)  (E-SYS-041)
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console:       requirements.lock is missing from this release folder, so package versions could not be hash-verified. The app will run; ask for a release that includes the lock file.
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=system_components index=8/14
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=system_components title=System components
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.pkg_manager: SYSCOMP os=macos checked=['libusb', 'cups', 'fonts'] missing=[]
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=system_components ms=6 code=- msg=all 3 present detail=-
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: System components — all 3 present
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=ai_provider index=9/14
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=ai_provider title=AI assistant
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[info]: This computer can run the AI locally (model size: 7b).
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.wizard: WIZARD_ANSWER key=ai_provider source=answers_file value=ollama
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[info]: Which AI engine should the assistant use? → Local — Ollama on this PC  (from your saved answers)
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.ai_provider: AI_PROVIDER_SELECTED provider=ollama recommended=ollama tier=7b
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.ai_provider: AI_SETTINGS_WRITTEN provider=ollama path=/Users/rohit/Documents/vaishnavi-stock-management/config/settings.toml
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=ai_provider ms=95 code=- msg=Ollama ready — qwen2.5:7b-instruct · bge-m3 detail=-
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: AI assistant — Ollama ready — qwen2.5:7b-instruct · bge-m3
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=locations index=10/14
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=locations title=Data locations
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.locations: LOCATIONS_REUSED primary=/Users/rohit/VaishnaviStore secondary=/Users/rohit/VaishnaviStore-Backups same_device=True
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:06 WARNING run=261116163105d134 bootstrap.stages: STAGE_WARN key=locations ms=1 code=E-SYS-012 msg=primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups detail=-
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[warn]: Data locations — primary /Users/rohit/VaishnaviStore · backups /Users/rohit/VaishnaviStore-Backups  (E-SYS-012)
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console:       Move the backups to another disk when you can: Settings → Backups → Secondary location.
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=autostart index=11/14
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=autostart title=Start automatically
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=autostart ms=0 code=- msg=already set up detail=-
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Start automatically — already set up
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=database index=12/14
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=database title=Shop database
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.handover: APP_EXEC init-db --json secrets=0
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.handover: app| {"created": false, "seeded_rows": 0, "migrated": false, "revision": "0001_initial", "secrets_stored": [], "secrets_failed": [], "owner_setup_pending": false, "database": "/Users/rohit/VaishnaviStore/data/vaishnavi.db"}
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.handover: APP_EXIT args=init-db --json code=0 ms=463 timed_out=False
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=database ms=553 code=- msg=database is ready. detail=-
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Shop database — database is ready.
+2026-11-16 16:31:06 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=doctor index=13/14
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=doctor title=Health check
+2026-11-16 16:31:06 INFO    run=261116163105d134 bootstrap.handover: APP_EXEC doctor --lang en secrets=0
+2026-11-16 16:31:07 DEBUG   run=261116163105d134 bootstrap.handover: app| DB_UNCLEAN_CLOSE last_open=2026-11-16T08:22:09Z last_close=2026-11-16T08:22:01Z code=E-DB-022
+2026-11-16 16:31:07 DEBUG   run=261116163105d134 bootstrap.handover: app| DOCTOR_CHECK key=database status=WARN code=E-DB-022 ms=9 msg=did not close properly last time — all saved data is intact detail=last_open=2026-11-16T08:22:09Z fixed=False
+2026-11-16 16:31:07 DEBUG   run=261116163105d134 bootstrap.handover: app| DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=12 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-16 16:31:07 DEBUG   run=261116163105d134 bootstrap.handover: app| DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app| DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app| Vaishnavi Store Manager Health Check — 16-Nov-2026 22:01  (ref 01M7JK5CD449ZQS7G752GF2BCD)
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app| ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Python                 Python 3.13 in the private environment         3 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Software packages      13 packages load correctly       755 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Folders & disk         51.6 GB free · data in /Users/rohit/VaishnaviStore         5 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  !    Shop database          did not close properly last time — all saved data is intact  (E-DB-022)         9 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Sales integrity        0 bills verified · no gaps · stock matches         2 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Backup                 last backup 20 h ago · verified · /Users/rohit/VaishnaviStore-Backups         1 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Secure key store       computer key store in use         9 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Clock & ports          clock in sync · ports 8080/8443 free         1 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    Start automatically    will start when the computer is switched on         0 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)        12 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|       → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|       → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)        85 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|       → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app| ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.handover: app|  RESULT: Ready to open the shop (4 note(s) to look at).
+2026-11-16 16:31:08 INFO    run=261116163105d134 bootstrap.handover: APP_EXIT args=doctor --lang en code=1 ms=1287 timed_out=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    DB_UNCLEAN_CLOSE last_open=2026-11-16T08:22:09Z last_close=2026-11-16T08:22:01Z code=E-DB-022
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    DOCTOR_CHECK key=database status=WARN code=E-DB-022 ms=9 msg=did not close properly last time — all saved data is intact detail=last_open=2026-11-16T08:22:09Z fixed=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    DOCTOR_CHECK key=system_components status=WARN code=E-SYS-003 ms=12 msg=missing: USB library (USB printers and scanner pairing will not work) detail=libusb fixed=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    DOCTOR_CHECK key=code_integrity status=WARN code=- ms=0 msg=no release manifest — this is a development copy, files are not verified detail=/Users/rohit/Documents/vaishnavi-stock-management fixed=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    DOCTOR_CHECK key=hardware status=WARN code=E-SCN-001 ms=0 msg=no barcode scanner paired yet · printer not set up (bills saved as PDF) detail=- fixed=False
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    Vaishnavi Store Manager Health Check — 16-Nov-2026 22:01  (ref 01M7JK5CD449ZQS7G752GF2BCD)
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Python                 Python 3.13 in the private environment         3 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Software packages      13 packages load correctly       755 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Folders & disk         51.6 GB free · data in /Users/rohit/VaishnaviStore         5 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Settings file          settings valid · shop: Vaishnavi Puja Store         1 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     !    Shop database          did not close properly last time — all saved data is intact  (E-DB-022)         9 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Sales integrity        0 bills verified · no gaps · stock matches         2 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Backup                 last backup 20 h ago · verified · /Users/rohit/VaishnaviStore-Backups         1 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Secure key store       computer key store in use         9 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Clock & ports          clock in sync · ports 8080/8443 free         1 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    Start automatically    will start when the computer is switched on         0 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     !    System components      missing: USB library (USB printers and scanner pairing will not work)  (E-SYS-003)        12 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:          → Run Start Vaishnavi again and allow the installation when asked, or install the component by hand.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     !    Application files      no release manifest — this is a development copy, files are not verified         0 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:          → Fine for development. A shop release is installed from a packaged version with MANIFEST.sha256.json.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     ✔    AI assistant           Ollama running · models ready (qwen2.5:7b-instruct, bge-m3)        85 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     !    Scanner, printer, scale no barcode scanner paired yet · printer not set up (bills saved as PDF)  (E-SCN-001)         0 ms
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:          → Plug the scanner in and pair it: Settings → Hardware → Scanner (the first-day wizard also does this). Staff cannot sell until a scanner is paired.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:    ──────────────────────────────────────────────────────────────────────────────────────────
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]:     RESULT: Ready to open the shop (4 note(s) to look at).
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:31:08 WARNING run=261116163105d134 bootstrap.stages: STAGE_WARN key=doctor ms=1378 code=- msg=finished with notes — the shop can open; see the lines marked '!' above. detail=-
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[warn]: Health check — finished with notes — the shop can open; see the lines marked '!' above.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console:       Fix the notes when convenient; they are also shown on the Status page inside the app.
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.stages: STAGE_PREPARE key=start index=14/14
+2026-11-16 16:31:08 INFO    run=261116163105d134 bootstrap.stages: STAGE_START key=start title=Start Vaishnavi
+2026-11-16 16:31:08 INFO    run=261116163105d134 bootstrap.app_stages: APP_LAUNCH /Users/rohit/Documents/vaishnavi-stock-management/.venv/bin/python -m vaishnavi run --lang en
+2026-11-16 16:31:08 DEBUG   run=261116163105d134 bootstrap.console: console[info]: Starting the application … (this takes a few seconds)
+2026-11-16 16:31:10 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Ready to open the shop:  http://127.0.0.1:8080
+2026-11-16 16:31:10 DEBUG   run=261116163105d134 bootstrap.console: console[info]: This window keeps watch over the application; you can minimise it. Closing it does not close the shop — but the setup log console (port 8081) closes with it; the app's own logs stay at http://127.0.0.1:8080/system/logs (Owner → Settings → System → Logs).
+2026-11-16 16:37:05 INFO    run=261116163105d134 bootstrap.app_stages: WATCHDOG_INTERRUPTED (app keeps running)
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:37:05 INFO    run=261116163105d134 bootstrap.stages: STAGE_OK key=start ms=357107 code=- msg=Ready to open the shop:  http://127.0.0.1:8080 detail=-
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.console: console[ok]: Start Vaishnavi — Ready to open the shop:  http://127.0.0.1:8080
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:37:05 INFO    run=261116163105d134 bootstrap.stages: PIPELINE_END run=261116163105d134 exit=1 worst=WARN stopped_at=None
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.console: console[warn]: Setup steps complete, with 3 note(s) to look at — see the lines marked '!' above.
+2026-11-16 16:37:05 INFO    run=261116163105d134 bootstrap.minilog: MINILOG_STOPPED port=8081
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.stages: INSTALL_LOCK_RELEASED
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.console: console: Technical details: /Users/rohit/Documents/vaishnavi-stock-management/logs/install/2026-11-16_163105_261116163105d134.log
+2026-11-16 16:37:05 DEBUG   run=261116163105d134 bootstrap.stages: state: saved /Users/rohit/Documents/vaishnavi-stock-management/logs/install/state.json
+2026-11-16 16:37:05 INFO    run=261116163105d134 bootstrap.cli: RUN_END run=261116163105d134 exit=1

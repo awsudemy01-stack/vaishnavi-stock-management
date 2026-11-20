@@ -2,3 +2,64 @@ git rev-parse --short HEAD
 git status --short
 python3 tools/manifest.py --out there.txt
 python tools/manifest.py --compare there.txt
+
+
+rohit@Rohits-MacBook-Pro logs % git rev-parse --short HEAD
+07976d1b
+rohit@Rohits-MacBook-Pro logs % git status --short
+ M ../config/settings.toml
+ M install/.lock
+ M install/app-stdout.log
+ M install/state.json
+ M install/survey.json
+ M startup/launchd.out.log
+?? ../.nicegui/
+?? ../.venv/
+?? ../bootstrap/__pycache__/
+?? ../config/install-answers.toml
+?? ../config/locations.toml
+?? install/2026-11-16_162950_261116162950394c.log
+?? install/2026-11-16_163105_261116163105d134.log
+?? install/2026-11-16_163710_261116163710797b.log
+?? install/2026-11-16_163715_261116163715180c.log
+?? install/2026-11-16_175918_261116175918d275.log
+?? install/2026-11-17_203118_2611172031183986.log
+?? install/2026-11-18_102912_261118102912c2ee.log
+?? install/2026-11-18_102918_261118102918a310.log
+?? install/2026-11-18_102931_2611181029315ef0.log
+?? install/2026-11-18_102951_261118102951510b.log
+?? install/2026-11-18_102954_2611181029542f95.log
+?? install/2026-11-18_103000_2611181030007701.log
+?? install/2026-11-18_105751_261118105751c7ad.log
+?? install/2026-11-18_190934_261118190934993b.log
+?? ../src/vaishnavi/__pycache__/
+?? ../src/vaishnavi/ai/__pycache__/
+?? ../src/vaishnavi/ai/prompts/__pycache__/
+?? ../src/vaishnavi/ai/providers/__pycache__/
+?? ../src/vaishnavi/api/__pycache__/
+?? ../src/vaishnavi/bootstrap/__pycache__/
+?? ../src/vaishnavi/bootstrap/checks/__pycache__/
+?? ../src/vaishnavi/commands/__pycache__/
+?? ../src/vaishnavi/core/__pycache__/
+?? ../src/vaishnavi/db/__pycache__/
+?? ../src/vaishnavi/db/alembic/__pycache__/
+?? ../src/vaishnavi/db/alembic/versions/__pycache__/
+?? ../src/vaishnavi/db/models/__pycache__/
+?? ../src/vaishnavi/forecast/__pycache__/
+?? ../src/vaishnavi/hardware/__pycache__/
+?? ../src/vaishnavi/hardware/printer/__pycache__/
+?? ../src/vaishnavi/platform/__pycache__/
+?? ../src/vaishnavi/publishing/__pycache__/
+?? ../src/vaishnavi/publishing/channels/__pycache__/
+?? ../src/vaishnavi/scheduler/__pycache__/
+?? ../src/vaishnavi/services/__pycache__/
+?? ../src/vaishnavi/ui/__pycache__/
+?? ../src/vaishnavi/ui/components/__pycache__/
+?? ../src/vaishnavi/ui/i18n/__pycache__/
+?? ../src/vaishnavi/ui/pages/__pycache__/
+?? ../src/vaishnavi_store_manager.egg-info/
+rohit@Rohits-MacBook-Pro logs % python3 tools/manifest.py --out there.txt
+/Library/Frameworks/Python.framework/Versions/3.13/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/rohit/Documents/vaishnavi-stock-management/logs/tools/manifest.py': [Errno 2] No such file or directory
+rohit@Rohits-MacBook-Pro logs % cd ..
+rohit@Rohits-MacBook-Pro vaishnavi-stock-management % python3 tools/manifest.py --out there.txt
+# 337 files · overall 19b07f7d5a4483df
