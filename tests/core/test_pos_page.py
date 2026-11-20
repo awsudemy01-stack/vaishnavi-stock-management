@@ -353,6 +353,23 @@ class LiveRun4Test(Base):
         self.assertIn("You saved Rs0.10 today", plain.receipt_preview)
         self.assertNotIn("Happy shopping", plain.receipt_preview)
 
+    def test_tapping_a_weighed_tile_opens_the_pad_instead_of_adding_one_gram(self) -> None:
+        """Live run 4: the ghee tile called add_quick_pick(qty=1) → 1 g < 10 g minimum → 'Quantity is below the minimum'."""
+        kg = dict(unit="kg", sale_mode="WEIGHT", base_unit="g", pricing_unit_qty=Decimal("1000"), pricing_unit_label="kg", min_qty=Decimal("10"), qty_step=Decimal("10"), allow_decimal_qty=True)
+        ghee = self.c.catalog.create(OWNER, ProductInput(name="Desi Ghee", price_paise=50000, **kg))
+        self.c.inventory.opening_stock(OWNER, ghee.id, Decimal("10000"))
+        scan = pos.scan_for_product(self.c, ghee.id)
+        assert scan is not None
+        self.assertTrue(scan.needs_qty, "weighed → the POS must open the quantity pad")
+        self.assertEqual((scan.spec.base_unit, scan.spec.min_qty), ("g", Decimal("10")))
+        self.assertFalse(pos.scan_for_product(self.c, 10).needs_qty, "camphor is counted → straight into the bill")  # type: ignore[union-attr]
+        cart = self.carts.get(self.c.billing, OWNER)
+        line = pos.add_measured(self.c, OWNER, cart, scan, Decimal("500"), source="PRESET", entry="QUICK_PICK")
+        self.assertEqual((line.qty, line.entry_method), (Decimal("500"), "QUICK_PICK"))
+        line2 = pos.add_measured(self.c, STAFF, self.carts.get(self.c.billing, STAFF), scan, pos.parse_qty_text(scan.spec, "0.25 kg"), source="TYPED", entry="LOOKUP", reason="label damaged")
+        self.assertEqual((line2.qty, line2.entry_method, line2.entry_reason), (Decimal("250"), "LOOKUP", "label damaged"))
+        self.assertIsNone(pos.scan_for_product(self.c, 9999))
+
     def test_f8_customer_is_normalised_remembered_and_linked_to_the_sale(self) -> None:
         cart = self.carts.get(self.c.billing, STAFF)
         self.c.billing.add_scan(STAFF, cart, CAMPHOR)
