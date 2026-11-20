@@ -12,6 +12,7 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 
+from vaishnavi import __version__
 from vaishnavi.core.clock import UTC, FrozenClock, set_clock
 from vaishnavi.core.errors import AuthError
 from vaishnavi.core.permissions import Actor, Role
@@ -139,7 +140,7 @@ class SqliteStoresTest(unittest.TestCase):
         with self.txn(label="s") as conn:
             identity = system.identity(conn)
             assert identity is not None
-            self.assertEqual(identity["app_version"], "0.1.0")
+            self.assertEqual(identity["app_version"], __version__)
             self.assertEqual(len(system.setup_steps(conn)), 11)
             self.assertTrue(system.mark_setup_step(conn, "shop_profile", done_at="2026-11-14T09:00:00Z", done_by=1))
             self.assertFalse(system.mark_setup_step(conn, "no_such_step", done_at="x", done_by=1))
