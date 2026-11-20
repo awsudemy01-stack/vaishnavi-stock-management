@@ -209,9 +209,9 @@ def register(state: Any) -> None:
                 if m.role is Role.OWNER:
                     with ui.column().classes("vsm-card p-3 gap-1"):
                         ui.label(m.labels["trend"]).classes("font-semibold")
-                        ui.html(m.sparkline_svg)
+                        ui.html(m.sparkline_svg, sanitize=False)
                         ui.label(m.labels["mix"]).classes("font-semibold mt-2")
-                        ui.html(m.by_mode_svg)
+                        ui.html(m.by_mode_svg, sanitize=False)
                         ui.label(" · ".join(f"{k} {format_inr(v)}" for k, v in m.by_mode.items())).classes("text-xs text-gray-600")
                 with ui.column().classes("vsm-card p-3 gap-1 flex-1"):
                     ui.label(m.labels["attention"]).classes("font-semibold")
