@@ -1,0 +1,31 @@
+# virtual environment and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.nicegui/
+*.egg-info/
+
+# secrets and generated local config — never commit
+config/secrets.env
+config/secrets.toml
+config/install-answers.toml
+config/locations.toml
+
+# manifests saved for tools/manifest.py --compare
+here.txt
+there.txt
+
+# runtime data lives outside the repo (~/VaishnaviStore), but just in case
+data/
+logs/
+backups/
+
+# offline bundle is distributed with releases, not committed
+offline/
+
+# OS noise
+.DS_Store
+Thumbs.db
