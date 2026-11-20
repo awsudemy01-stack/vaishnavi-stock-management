@@ -1,233 +1,38 @@
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git rm -r --cached logs
-rm 'logs/Image 16-11-2026 at 05.00.png'
-rm 'logs/Image 16-11-2026 at 05.03.png'
-rm 'logs/access/http.log'
-rm 'logs/access/http.log.2026-11-15'
-rm 'logs/ai/ai.log'
-rm 'logs/ai/ai.log.2026-11-15'
-rm 'logs/app/vaishnavi.jsonl'
-rm 'logs/app/vaishnavi.jsonl.2026-11-15'
-rm 'logs/app/vaishnavi.log'
-rm 'logs/app/vaishnavi.log.2026-11-15'
-rm 'logs/audit/audit.jsonl'
-rm 'logs/audit/audit.jsonl.2026-11-15'
-rm 'logs/errors/errors.log'
-rm 'logs/errors/errors.log.2026-11-15'
-rm 'logs/hardware/hardware.log'
-rm 'logs/hardware/hardware.log.2026-11-15'
-rm 'logs/install/.lock'
-rm 'logs/install/2026-11-15_202711_26111520271180ae.log'
-rm 'logs/install/2026-11-15_203303_261115203303ab7c.log'
-rm 'logs/install/2026-11-15_205708_261115205708264c.log'
-rm 'logs/install/2026-11-16_040709_26111604070990d6.log'
-rm 'logs/install/2026-11-16_040758_2611160407584c63.log'
-rm 'logs/install/2026-11-16_045427_2611160454270ec8.log'
-rm 'logs/install/2026-11-16_045739_261116045739d2db.log'
-rm 'logs/install/2026-11-16_071559_2611160715590972.log'
-rm 'logs/install/2026-11-16_081330_261116081330dcdd.log'
-rm 'logs/install/2026-11-16_081346_2611160813467752.log'
-rm 'logs/install/2026-11-16_082233_26111608223321e8.log'
-rm 'logs/install/2026-11-16_162950_261116162950394c.log'
-rm 'logs/install/2026-11-16_163105_261116163105d134.log'
-rm 'logs/install/2026-11-16_163710_261116163710797b.log'
-rm 'logs/install/2026-11-16_163715_261116163715180c.log'
-rm 'logs/install/2026-11-16_175918_261116175918d275.log'
-rm 'logs/install/2026-11-17_203118_2611172031183986.log'
-rm 'logs/install/2026-11-18_102912_261118102912c2ee.log'
-rm 'logs/install/2026-11-18_102918_261118102918a310.log'
-rm 'logs/install/2026-11-18_102931_2611181029315ef0.log'
-rm 'logs/install/2026-11-18_102951_261118102951510b.log'
-rm 'logs/install/2026-11-18_102954_2611181029542f95.log'
-rm 'logs/install/2026-11-18_103000_2611181030007701.log'
-rm 'logs/install/2026-11-18_105751_261118105751c7ad.log'
-rm 'logs/install/2026-11-18_190934_261118190934993b.log'
-rm 'logs/install/app-stdout.log'
-rm 'logs/install/state.json'
-rm 'logs/install/survey.json'
-rm 'logs/log.log'
-rm 'logs/startup/launchd.err.log'
-rm 'logs/startup/launchd.out.log'
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git add .gitignore
-fatal: pathspec '.gitignore' did not match any files
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git rev-parse --short HEAD
-3bccb0e8
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git status --short
-python3 tools/manifest.py --out there.txt
- M config/settings.toml
-D  "logs/Image 16-11-2026 at 05.00.png"
-D  "logs/Image 16-11-2026 at 05.03.png"
-D  logs/access/http.log
-D  logs/access/http.log.2026-11-15
-D  logs/ai/ai.log
-D  logs/ai/ai.log.2026-11-15
-D  logs/app/vaishnavi.jsonl
-D  logs/app/vaishnavi.jsonl.2026-11-15
-D  logs/app/vaishnavi.log
-D  logs/app/vaishnavi.log.2026-11-15
-D  logs/audit/audit.jsonl
-D  logs/audit/audit.jsonl.2026-11-15
-D  logs/errors/errors.log
-D  logs/errors/errors.log.2026-11-15
-D  logs/hardware/hardware.log
-D  logs/hardware/hardware.log.2026-11-15
-D  logs/install/.lock
-D  logs/install/2026-11-15_202711_26111520271180ae.log
-D  logs/install/2026-11-15_203303_261115203303ab7c.log
-D  logs/install/2026-11-15_205708_261115205708264c.log
-D  logs/install/2026-11-16_040709_26111604070990d6.log
-D  logs/install/2026-11-16_040758_2611160407584c63.log
-D  logs/install/2026-11-16_045427_2611160454270ec8.log
-D  logs/install/2026-11-16_045739_261116045739d2db.log
-D  logs/install/2026-11-16_071559_2611160715590972.log
-D  logs/install/2026-11-16_081330_261116081330dcdd.log
-D  logs/install/2026-11-16_081346_2611160813467752.log
-D  logs/install/2026-11-16_082233_26111608223321e8.log
-D  logs/install/2026-11-16_162950_261116162950394c.log
-D  logs/install/2026-11-16_163105_261116163105d134.log
-D  logs/install/2026-11-16_163710_261116163710797b.log
-D  logs/install/2026-11-16_163715_261116163715180c.log
-D  logs/install/2026-11-16_175918_261116175918d275.log
-D  logs/install/2026-11-17_203118_2611172031183986.log
-D  logs/install/2026-11-18_102912_261118102912c2ee.log
-D  logs/install/2026-11-18_102918_261118102918a310.log
-D  logs/install/2026-11-18_102931_2611181029315ef0.log
-D  logs/install/2026-11-18_102951_261118102951510b.log
-D  logs/install/2026-11-18_102954_2611181029542f95.log
-D  logs/install/2026-11-18_103000_2611181030007701.log
-D  logs/install/2026-11-18_105751_261118105751c7ad.log
-D  logs/install/2026-11-18_190934_261118190934993b.log
-D  logs/install/app-stdout.log
-D  logs/install/state.json
-D  logs/install/survey.json
-D  logs/log.log
-D  logs/startup/launchd.err.log
-D  logs/startup/launchd.out.log
-?? .nicegui/
-?? .venv/
-?? bootstrap/__pycache__/
-?? config/install-answers.toml
-?? config/locations.toml
-?? logs/
-?? src/vaishnavi/__pycache__/
-?? src/vaishnavi/ai/__pycache__/
-?? src/vaishnavi/ai/prompts/__pycache__/
-?? src/vaishnavi/ai/providers/__pycache__/
-?? src/vaishnavi/api/__pycache__/
-?? src/vaishnavi/bootstrap/__pycache__/
-?? src/vaishnavi/bootstrap/checks/__pycache__/
-?? src/vaishnavi/commands/__pycache__/
-?? src/vaishnavi/core/__pycache__/
-?? src/vaishnavi/db/__pycache__/
-?? src/vaishnavi/db/alembic/__pycache__/
-?? src/vaishnavi/db/alembic/versions/__pycache__/
-?? src/vaishnavi/db/models/__pycache__/
-?? src/vaishnavi/forecast/__pycache__/
-?? src/vaishnavi/hardware/__pycache__/
-?? src/vaishnavi/hardware/printer/__pycache__/
-?? src/vaishnavi/platform/__pycache__/
-?? src/vaishnavi/publishing/__pycache__/
-?? src/vaishnavi/publishing/channels/__pycache__/
-?? src/vaishnavi/scheduler/__pycache__/
-?? src/vaishnavi/services/__pycache__/
-?? src/vaishnavi/ui/__pycache__/
-?? src/vaishnavi/ui/components/__pycache__/
-?? src/vaishnavi/ui/i18n/__pycache__/
-?? src/vaishnavi/ui/pages/__pycache__/
-?? src/vaishnavi_store_manager.egg-info/
-# 337 files · overall 437e6370f1a12baf
-rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git status
-On branch main
-Your branch is up to date with 'origin/main'.
+cat > .gitignore <<'EOF'
+# virtual environment and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.nicegui/
+*.egg-info/
 
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-	deleted:    logs/Image 16-11-2026 at 05.00.png
-	deleted:    logs/Image 16-11-2026 at 05.03.png
-	deleted:    logs/access/http.log
-	deleted:    logs/access/http.log.2026-11-15
-	deleted:    logs/ai/ai.log
-	deleted:    logs/ai/ai.log.2026-11-15
-	deleted:    logs/app/vaishnavi.jsonl
-	deleted:    logs/app/vaishnavi.jsonl.2026-11-15
-	deleted:    logs/app/vaishnavi.log
-	deleted:    logs/app/vaishnavi.log.2026-11-15
-	deleted:    logs/audit/audit.jsonl
-	deleted:    logs/audit/audit.jsonl.2026-11-15
-	deleted:    logs/errors/errors.log
-	deleted:    logs/errors/errors.log.2026-11-15
-	deleted:    logs/hardware/hardware.log
-	deleted:    logs/hardware/hardware.log.2026-11-15
-	deleted:    logs/install/.lock
-	deleted:    logs/install/2026-11-15_202711_26111520271180ae.log
-	deleted:    logs/install/2026-11-15_203303_261115203303ab7c.log
-	deleted:    logs/install/2026-11-15_205708_261115205708264c.log
-	deleted:    logs/install/2026-11-16_040709_26111604070990d6.log
-	deleted:    logs/install/2026-11-16_040758_2611160407584c63.log
-	deleted:    logs/install/2026-11-16_045427_2611160454270ec8.log
-	deleted:    logs/install/2026-11-16_045739_261116045739d2db.log
-	deleted:    logs/install/2026-11-16_071559_2611160715590972.log
-	deleted:    logs/install/2026-11-16_081330_261116081330dcdd.log
-	deleted:    logs/install/2026-11-16_081346_2611160813467752.log
-	deleted:    logs/install/2026-11-16_082233_26111608223321e8.log
-	deleted:    logs/install/2026-11-16_162950_261116162950394c.log
-	deleted:    logs/install/2026-11-16_163105_261116163105d134.log
-	deleted:    logs/install/2026-11-16_163710_261116163710797b.log
-	deleted:    logs/install/2026-11-16_163715_261116163715180c.log
-	deleted:    logs/install/2026-11-16_175918_261116175918d275.log
-	deleted:    logs/install/2026-11-17_203118_2611172031183986.log
-	deleted:    logs/install/2026-11-18_102912_261118102912c2ee.log
-	deleted:    logs/install/2026-11-18_102918_261118102918a310.log
-	deleted:    logs/install/2026-11-18_102931_2611181029315ef0.log
-	deleted:    logs/install/2026-11-18_102951_261118102951510b.log
-	deleted:    logs/install/2026-11-18_102954_2611181029542f95.log
-	deleted:    logs/install/2026-11-18_103000_2611181030007701.log
-	deleted:    logs/install/2026-11-18_105751_261118105751c7ad.log
-	deleted:    logs/install/2026-11-18_190934_261118190934993b.log
-	deleted:    logs/install/app-stdout.log
-	deleted:    logs/install/state.json
-	deleted:    logs/install/survey.json
-	deleted:    logs/log.log
-	deleted:    logs/startup/launchd.err.log
-	deleted:    logs/startup/launchd.out.log
+# secrets and generated local config — never commit
+config/secrets.env
+config/secrets.toml
+config/install-answers.toml
+config/locations.toml
 
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-	modified:   config/settings.toml
-	modified:   there.txt
+# manifests saved for tools/manifest.py --compare
+here.txt
+there.txt
 
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-	.nicegui/
-	.venv/
-	bootstrap/__pycache__/
-	config/install-answers.toml
-	config/locations.toml
-	logs/
-	src/vaishnavi/__pycache__/
-	src/vaishnavi/ai/__pycache__/
-	src/vaishnavi/ai/prompts/__pycache__/
-	src/vaishnavi/ai/providers/__pycache__/
-	src/vaishnavi/api/__pycache__/
-	src/vaishnavi/bootstrap/__pycache__/
-	src/vaishnavi/bootstrap/checks/__pycache__/
-	src/vaishnavi/commands/__pycache__/
-	src/vaishnavi/core/__pycache__/
-	src/vaishnavi/db/__pycache__/
-	src/vaishnavi/db/alembic/__pycache__/
-	src/vaishnavi/db/alembic/versions/__pycache__/
-	src/vaishnavi/db/models/__pycache__/
-	src/vaishnavi/forecast/__pycache__/
-	src/vaishnavi/hardware/__pycache__/
-	src/vaishnavi/hardware/printer/__pycache__/
-	src/vaishnavi/platform/__pycache__/
-	src/vaishnavi/publishing/__pycache__/
-	src/vaishnavi/publishing/channels/__pycache__/
-	src/vaishnavi/scheduler/__pycache__/
-	src/vaishnavi/services/__pycache__/
-	src/vaishnavi/ui/__pycache__/
-	src/vaishnavi/ui/components/__pycache__/
-	src/vaishnavi/ui/i18n/__pycache__/
-	src/vaishnavi/ui/pages/__pycache__/
-	src/vaishnavi_store_manager.egg-info/
+# runtime data lives outside the repo (~/VaishnaviStore), but just in case
+data/
+logs/
+backups/
 
+# offline bundle is distributed with releases, not committed
+offline/
+
+# OS noise
+.DS_Store
+Thumbs.db
+EOF
+git rm --cached there.txt
+rm there.txt
+git add .gitignore
+git commit -m "stop tracking logs, manifests and local files; add .gitignore"
+git status --short
