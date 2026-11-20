@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import signal
 import subprocess
 import sys
 import time
@@ -364,20 +365,50 @@ class StartStage:
         ctx.console.ok(message)
         if self.watchdog:
             ctx.console.info(ctx.t("start.watchdog_note", url=url))
-            from bootstrap.selftest import stop_requested  # noqa: PLC0415
+            from bootstrap.selftest import clear_watchdog_record, stop_requested, write_watchdog_record  # noqa: PLC0415
 
             wd = Watchdog(launch=lambda: launch_detached(cmd, ctx.paths.install_log_dir), health=fetch_health, url=url, stop_requested=lambda: stop_requested(ctx.paths.config_dir))
             wd.adopt(proc)
+            write_watchdog_record(ctx.paths.config_dir)
             try:
-                wd.run()
+                supervise(wd)
             except KeyboardInterrupt:
                 log.info("WATCHDOG_INTERRUPTED (app keeps running)")
+            finally:
+                clear_watchdog_record(ctx.paths.config_dir)
             if wd.stopped_on_purpose:
                 ctx.console.info(ctx.t("start.stopped_by_owner"))
                 return StageResult.ok(ctx.t("start.stopped_by_owner"), url=url, pid=proc.pid)
             if wd.gave_up:
                 return StageResult.fail(ctx.t("start.gave_up"), error_code="E-SYS-020", hint=ctx.t("start.exited_hint", path=str(ctx.paths.logs_dir / "app")), url=url)
         return StageResult.ok(message, url=url, pid=proc.pid)
+
+
+class _StopSignal(Exception):
+    """Raised inside the watchdog loop when ``main.py --stop`` sends SIGTERM to this process."""
+
+
+def supervise(wd: Watchdog) -> None:
+    """Run the watchdog; a SIGTERM from ``--stop`` ends it as a deliberate stop (POSIX only — Windows has no SIGTERM delivery, there the process simply ends)."""
+    if os.name == "nt" or not hasattr(signal, "SIGTERM"):
+        wd.run()
+        return
+
+    def on_term(signum: int, frame: Any) -> None:  # noqa: ARG001
+        raise _StopSignal()
+
+    try:
+        previous = signal.signal(signal.SIGTERM, on_term)
+    except ValueError:  # not the main thread (tests) — no handler, plain run
+        wd.run()
+        return
+    try:
+        wd.run()
+    except _StopSignal:
+        wd.stopped_on_purpose = True
+        log.info("WATCHDOG_TERMINATED_BY_STOP — main.py --stop ended this window; the app is being stopped separately")
+    finally:
+        signal.signal(signal.SIGTERM, previous)
 
 
 def register(options: Options) -> list[Any]:
