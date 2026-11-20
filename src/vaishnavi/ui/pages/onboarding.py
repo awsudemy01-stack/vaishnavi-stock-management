@@ -107,12 +107,20 @@ def submit_shop_profile(services: AppServices, actor: Actor, form: dict[str, Any
 
 
 def submit_tax(services: AppServices, actor: Actor, form: dict[str, Any]) -> StepResult:
-    """Registered? default GST %, prices inclusive?"""
+    """Registered? GSTIN, default GST %, prices inclusive? — GSTIN is required (and validated) when registered."""
     try:
         rate_bp = rate_to_bp(str(form.get("default_rate") or "0").rstrip("%"))
     except Exception:  # noqa: BLE001
         return StepResult(False, problems={"default_rate": "not a percentage"})
-    changes = {"tax.registered": bool(form.get("registered")), "tax.default_rate_bp": rate_bp, "tax.prices_include_tax": bool(form.get("prices_include_tax", True))}
+    registered = bool(form.get("registered"))
+    gstin = str(form.get("gstin") or "").strip().upper()
+    if gstin and not GSTIN_RE.match(gstin):
+        return StepResult(False, problems={"gstin": "15 characters, e.g. 09ABCDE1234F1Z5"})
+    if registered and not gstin and not services.settings_service.effective().shop.gstin.strip():
+        return StepResult(False, problems={"gstin": "required when GST registered"}, error_code="E-CFG-003")
+    changes: dict[str, Any] = {"tax.registered": registered, "tax.default_rate_bp": rate_bp, "tax.prices_include_tax": bool(form.get("prices_include_tax", True))}
+    if gstin:
+        changes["shop.gstin"] = gstin
     return _guard(services.settings_service.set_many, actor, changes)
 
 
@@ -280,9 +288,11 @@ def _render_shop_profile(ui: Any, services: AppServices, actor: Actor, texts: Ui
 
 
 def _render_tax(ui: Any, services: AppServices, actor: Actor, texts: UiTexts, key: str) -> Any:
-    tax = services.settings_service.effective().tax
-    form = {"registered": bool(tax.registered), "default_rate": str(Decimal(tax.default_rate_bp) / 100), "prices_include_tax": bool(tax.prices_include_tax)}
+    eff = services.settings_service.effective()
+    tax = eff.tax
+    form = {"registered": bool(tax.registered), "gstin": eff.shop.gstin or "", "default_rate": str(Decimal(tax.default_rate_bp) / 100), "prices_include_tax": bool(tax.prices_include_tax)}
     ui.switch("GST registered").bind_value(form, "registered")
+    ui.input("GSTIN (needed when registered)", placeholder="09ABCDE1234F1Z5").bind_value(form, "gstin").classes("w-72").props("maxlength=15")
     ui.input("Default GST %", placeholder="5").bind_value(form, "default_rate").classes("w-48").props("inputmode=decimal")
     ui.switch("Shelf prices include tax").bind_value(form, "prices_include_tax")
     return lambda: submit_tax(services, actor, form)
