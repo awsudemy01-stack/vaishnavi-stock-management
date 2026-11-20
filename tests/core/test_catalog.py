@@ -170,7 +170,10 @@ class CatalogServiceTest(Base):
 
     def test_categories_tags_and_quick_picks(self) -> None:
         cats = self.catalog.categories()
-        self.assertEqual(len(cats), 10, "seeded puja categories")
+        from vaishnavi.db.seed import CATEGORIES
+
+        self.assertEqual(len(cats), len(CATEGORIES), "seeded puja categories")
+        self.assertIn("Oil & Wicks", {c.name for c in cats})
         new = self.catalog.create_category(OWNER, name="Rudraksha", name_hi="रुद्राक्ष")
         self.assertGreater(new.sort_order, max(c.sort_order for c in cats), "appended at the end of the order")
         p = self.catalog.create(OWNER, ProductInput(name="Rudraksha Mala 108", category_id=new.id, price_paise=35000))
