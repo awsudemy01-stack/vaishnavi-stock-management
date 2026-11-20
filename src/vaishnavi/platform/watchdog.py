@@ -20,6 +20,40 @@ log = logging.getLogger("vaishnavi.platform.watchdog")
 
 STALE_AFTER_S: Final = 90.0
 HEARTBEAT_FILE: Final = "heartbeat.json"
+STOP_MARKER_FILE: Final = "stop-requested"
+"""Written next to the heartbeat by whoever stops the app *on purpose* (``main.py --stop``, Settings → System →
+Shut down, ``--fresh-start``). The supervising watchdog in the installer window sees it and does **not**
+relaunch — otherwise every deliberate stop was followed by an automatic restart (live run 5)."""
+
+
+def request_stop(state_dir: Path, *, reason: str) -> Path:
+    """Leave the marker (best effort; the stop itself must not depend on it)."""
+    path = Path(state_dir) / STOP_MARKER_FILE
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"reason": reason, "at": time.time()}), encoding="utf-8")
+        log.info("WATCHDOG_STOP_MARKER written reason=%s", reason)
+    except OSError as exc:
+        log.warning("WATCHDOG_STOP_MARKER_FAILED %s", exc)
+    return path
+
+
+def consume_stop_request(state_dir: Path) -> str | None:
+    """The reason when a deliberate stop was requested (and remove the marker), else None."""
+    path = Path(state_dir) / STOP_MARKER_FILE
+    if not path.exists():
+        return None
+    reason = "stop requested"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        reason = str(data.get("reason", reason)) if isinstance(data, dict) else reason
+    except (OSError, ValueError):
+        pass
+    try:
+        path.unlink()
+    except OSError as exc:
+        log.debug("stop marker unlink: %s", exc)
+    return reason
 
 
 @dataclass(frozen=True)
