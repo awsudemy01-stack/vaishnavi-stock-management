@@ -47,14 +47,18 @@ ROLES: Final[tuple[tuple[int, str], ...]] = ((1, "OWNER"), (2, "STAFF"))
 CATEGORIES: Final[tuple[tuple[str, str, str], ...]] = (
     ("Agarbatti & Dhoop", "अगरबत्ती और धूप", "incense"),
     ("Camphor & Ghee", "कपूर और घी", "camphor"),
+    ("Oil & Wicks", "तेल और बाती", "oil"),
     ("Deity Clothes", "भगवान के वस्त्र", "clothes"),
     ("Idols & Frames", "मूर्तियाँ और फ़्रेम", "idol"),
     ("Puja Thali & Metalware", "पूजा थाली और धातु सामान", "thali"),
     ("Colours & Kumkum", "रंग और कुमकुम", "kumkum"),
     ("Flowers & Garlands (artificial)", "फूल और मालाएँ (कृत्रिम)", "garland"),
+    ("Threads & Malas", "धागे और मालाएँ", "mala"),
     ("Decoration", "सजावट", "decoration"),
     ("Books & Yantras", "पुस्तकें और यंत्र", "book"),
+    ("Prasad & Dry Fruits", "प्रसाद और मेवे", "prasad"),
     ("Festival Specials", "त्योहार विशेष", "festival"),
+    ("Others", "अन्य", "other"),
 )
 
 UNITS: Final[tuple[dict[str, Any], ...]] = (
