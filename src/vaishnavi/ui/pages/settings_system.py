@@ -209,10 +209,15 @@ def build_support_bundle(state: AppState, *, max_log_bytes: int = 5 * 1024 * 102
 
 # ----------------------------------------------------------------------------- control actions (requests only)
 def request_shutdown(state: AppState, actor: Actor, *, reason: str) -> None:
-    """Owner asks the app to stop; the server loop performs it (``APP_SHUTDOWN_REQUESTED`` audited)."""
+    """Owner asks the app to stop; the server loop performs it (``APP_SHUTDOWN_REQUESTED`` audited).
+
+    The stop marker tells the installer-window watchdog this exit is deliberate — otherwise it relaunches the app."""
     require(actor, Permission.MANAGE_SYSTEM)
     _audit(state, actor, "APP_SHUTDOWN_REQUESTED", reason)
     state.extra["shutdown_requested"] = True
+    from vaishnavi.platform.watchdog import request_stop  # noqa: PLC0415
+
+    request_stop(state.paths.state, reason=f"owner shutdown: {reason}")
     log.warning("APP_SHUTDOWN_REQUESTED by=%s reason=%s", actor.user_id, reason)
 
 
@@ -243,7 +248,7 @@ def render_tab(state: AppState, client: Any, texts: UiTexts) -> None:
         ui.label(f"{m.labels['version']}: {m.version} · Python {m.python} · {m.program_dir}").classes("text-sm vsm-mono")
         with ui.row().classes("gap-2"):
             ui.button(m.labels["run_doctor"], icon="medical_services", on_click=lambda: (run_doctor(state, client.lang), ui.navigate.reload())).props("unelevated color=primary")
-            ui.button(m.labels["support_bundle"], icon="archive", on_click=lambda: ui.download(build_support_bundle(state))).props("outline")
+            ui.button(m.labels["support_bundle"], icon="archive", on_click=lambda: ui.download.file(build_support_bundle(state))).props("outline")
             ui.link("/system/logs", "/system/logs").classes("self-center")
             ui.link("/system/status", "/system/status").classes("self-center")
         if m.last_doctor:
