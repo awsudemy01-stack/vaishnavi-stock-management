@@ -88,7 +88,7 @@ def _import_commands() -> None:
     """Command modules register themselves on import (kept lazy so a broken optional dependency never blocks ``doctor``)."""
     import vaishnavi.commands.doctor  # noqa: F401, PLC0415
 
-    for optional in ("run", "init_db", "verify_chain", "backup", "restore", "reset_owner_password", "selftest"):
+    for optional in ("run", "init_db", "verify_chain", "backup", "restore", "reset_owner_password", "selftest", "fresh_start"):
         try:
             __import__(f"vaishnavi.commands.{optional}")
         except ImportError as exc:
