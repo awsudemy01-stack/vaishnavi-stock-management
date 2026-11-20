@@ -1,2 +1,4 @@
 git rev-parse --short HEAD
 git status --short
+python3 tools/manifest.py --out there.txt
+python tools/manifest.py --compare there.txt
