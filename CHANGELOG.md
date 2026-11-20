@@ -801,6 +801,38 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   parameter `open` (a builtin name; the page's only peculiarity) was renamed `then_pos` — `/login?next=` also
   shadows a builtin and works, so this is hygiene, not the proven cause.
 
+### Fixed / Added — live run 5 (18-Nov, after the owner's second round)
+- **Version 0.2.0** — shown in the page footer so the owner can tell at a glance whether the shop PC runs the
+  code just pulled (several reports this round — shift-open denominations, final-bill discount — were features
+  already shipped yesterday, i.e. the Mac was on the old build).
+- **Ghee / oil tile "disabled", "Quantity is below the minimum (10 ml)"**: tapping a weighed tile called
+  `add_quick_pick(qty=1)` — one *gram* / *millilitre* — which the 10 g/ml minimum rejected, so the weight pad never
+  appeared. Tiles and F3 Find now open the **quantity pad** for measured items (`scan_for_product`,
+  `add_measured(entry=QUICK_PICK|LOOKUP)`), with presets, "0.5 kg" / "250 g" typing and ₹-amount; Enter confirms.
+- **"No Oil category"**: default categories gained *Oil & Wicks*, *Threads & Malas*, *Prasad & Dry Fruits*,
+  *Others*; `top_up_reference_rows` re-runs the idempotent seed on every start so existing databases get them. The
+  product editor's category box now accepts a **typed new name** (created on save, case-insensitive reuse) —
+  there was no screen to add a category before.
+- **Chat "connection lost, trying to reconnect"**: the model call ran synchronously inside NiceGUI's event loop
+  (10–30 s on a small PC), starving the WebSocket heartbeat. The widget now awaits `run.io_bound(send)` and shows a
+  "Sahayak is thinking…" spinner; provider errors become a polite bubble instead of a dead widget.
+- **`main.py --fresh-start`** (owner: "delete all entries and start from scratch"): stops the app, requires the
+  typed word `START FRESH` and the Owner password, archives database + receipts to `<backups>/fresh-start-<date>/`,
+  builds a new database and carries over users/passwords/PIN, settings, secrets, categories, units, assistant
+  instructions and onboarding progress; everything else starts empty; the guardian fingerprint is removed so the
+  new instance is not called FOREIGN (`services/fresh_start.py`, `commands/fresh_start.py`, bootstrap mode
+  `FRESH_START`). Refuses while the app is running. Documented in docs/17 §5.
+- **`main.py --stop` was followed by an automatic restart**: the `main.py` window that started the app keeps a
+  **watchdog** (relaunch on crash/hang, max 3/h). `--stop` from another terminal looked like a crash to it. Now
+  every deliberate stop (`--stop`, Settings → System → Shut down, `--fresh-start`) writes `state/stop-requested`;
+  the watchdog consumes it on process exit, logs `WATCHDOG_STOPPED_BY_OWNER`, tells the owner and exits instead of
+  relaunching. The app clears a leftover marker at start so a manual start is never blocked. *Restart* (after a
+  restore) deliberately leaves no marker so the watchdog still brings the app back
+  (`platform/watchdog.request_stop/consume_stop_request`, `bootstrap/selftest.write_stop_marker/stop_requested`,
+  `Watchdog(stop_requested=)`).
+- Opening stock for a litre item: "50" with unit *l* stores 50 000 ml (`stock_text_for` → "50 l") — covered by a
+  test alongside the new-category case.
+
 ### Added / Fixed — live run 4 (17-Nov, Windows VM; the owner's ten observations)
 - **AI answers business questions deterministically** (obs. 1 — "kitna paisa ab tak kharch kiya", "aaj pura din
   kitna item bika", "har item ka sale", "which stock is high in demand", "no demand", "forecast next few days",
