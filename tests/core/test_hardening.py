@@ -167,6 +167,18 @@ class TlsAndWatchdogTest(unittest.TestCase):
             (state / "heartbeat.json").write_text("garbage", encoding="utf-8")
             self.assertEqual(watchdog.decide(state, now=2000.0).action, "start")
 
+    def test_stop_marker_round_trip_shares_the_installer_file_name(self) -> None:
+        from bootstrap import selftest as installer
+
+        self.assertEqual(watchdog.STOP_MARKER_FILE, installer.STOP_MARKER_FILE, "app and installer must agree on the marker name")
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d) / "state"
+            self.assertIsNone(watchdog.consume_stop_request(state))
+            path = watchdog.request_stop(state, reason="owner shutdown: closing time")
+            self.assertTrue(path.exists())
+            self.assertEqual(watchdog.consume_stop_request(state), "owner shutdown: closing time")
+            self.assertFalse(path.exists(), "consumed once — a fresh start is never blocked by an old marker")
+
 
 class SweepTest(unittest.TestCase):
     def test_no_docstring_only_placeholder_modules_remain(self) -> None:
