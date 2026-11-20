@@ -55,7 +55,7 @@ def build_widget_model(state: Any, client: ClientState, texts: UiTexts) -> Widge
     online = bool(health.ok)
     hint = texts.t("chat.hint_owner" if role is Role.OWNER else "chat.hint_staff")
     suggestions = [texts.t("chat.sugg_owner_1"), texts.t("chat.sugg_owner_2"), texts.t("chat.sugg_owner_3")] if role is Role.OWNER else [texts.t("chat.sugg_staff_1"), texts.t("chat.sugg_staff_2"), texts.t("chat.sugg_staff_3")]
-    labels = {k: texts.t(f"chat.{k}") for k in ("send", "placeholder", "open_report", "offline", "language", "new_chat", "restricted")}
+    labels = {k: texts.t(f"chat.{k}") for k in ("send", "placeholder", "open_report", "offline", "language", "new_chat", "restricted", "thinking", "failed")}
     log.debug("CHAT_WIDGET_MODEL role=%s online=%s provider=%s", role.value, online, health.provider)
     return WidgetModel(texts.t("chat.title"), hint, LANGUAGES, ai.default_language, online, "" if online else labels["offline"], role, suggestions, labels)
 
@@ -75,7 +75,7 @@ def history(state: Any, client: ClientState, session_id: int) -> list[HistoryRow
 # ----------------------------------------------------------------------------- NiceGUI (thin, untested here)
 def open_window(state: Any, client: ClientState, texts: UiTexts) -> None:
     """Open the chat dialog (called from the bubble)."""
-    from nicegui import ui  # noqa: PLC0415
+    from nicegui import run, ui  # noqa: PLC0415
 
     m = build_widget_model(state, client, texts)
     log.debug("CHAT_WINDOW_OPEN user=%s lang=%s offline=%s", client.user.user_id if client.user else "-", m.language, bool(m.offline_note))
@@ -98,13 +98,25 @@ def open_window(state: Any, client: ClientState, texts: UiTexts) -> None:
             with log_box, ui.row().classes("w-full " + ("justify-end" if role == "user" else "justify-start")):
                 ui.label(text).classes("px-3 py-2 rounded-lg text-sm").style(("background:#B4532A;color:white" if role == "user" else "background:#F4EDE2") + "; max-width: 85%; white-space: pre-wrap")
 
-        def ask(text: str) -> None:
+        async def ask(text: str) -> None:
             text = (text or "").strip()
             if not text:
                 return
             bubble("user", text)
             form["text"] = ""
-            reply = send(state, client, text, language=str(form["language"]), session_id=form["session"])
+            # The model can take 10–30 s on a small PC. Running it on a worker thread keeps NiceGUI's event loop
+            # (and the browser's heartbeat) alive — a blocking call here showed "connection lost, trying to reconnect".
+            with log_box, ui.row().classes("w-full justify-start") as typing:
+                ui.spinner("dots", size="sm").style("color:#B4532A")
+                ui.label(m.labels["thinking"]).classes("text-xs text-gray-500")
+            try:
+                reply = await run.io_bound(send, state, client, text, language=str(form["language"]), session_id=form["session"])
+            except Exception as exc:  # noqa: BLE001 - the widget must never die on a provider error
+                log.error("CHAT_WIDGET_FAILED error=%s", exc)
+                typing.delete()
+                bubble("assistant", m.labels["failed"])
+                return
+            typing.delete()
             form["session"] = reply.session_id
             bubble("assistant", reply.text)
             chips.clear()
