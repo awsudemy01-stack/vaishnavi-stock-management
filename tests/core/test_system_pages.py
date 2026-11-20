@@ -13,6 +13,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
+from vaishnavi import __version__
 from vaishnavi.api.system import AppState
 from vaishnavi.app_services import AppServices
 from vaishnavi.core.clock import FrozenClock, iso_utc, set_clock
@@ -117,7 +118,7 @@ class StatusPageTest(Base):
         self.state.scheduler_status = lambda: [{"name": "heartbeat", "every_s": 15, "daily_at": None, "next_run": None, "runs": 10, "failures": 0, "last_ms": 2, "last_error": None, "enabled": True}]
         self.services.backup.snapshot("manual")
         model = status_page.build_status_model(self.state, EN)
-        self.assertEqual(model.version, "0.1.0")
+        self.assertEqual(model.version, __version__)
         self.assertTrue(model.healthy)
         self.assertEqual(model.uptime_text, "0 m")
         self.assertEqual([c.key for c in model.chips][:2], ["database", "ledger"])
@@ -197,7 +198,7 @@ class BackupsPageTest(Base):
 class SystemPageTest(Base):
     def test_system_model_redacts_config_and_reports_integrity_autostart_and_remote_access(self) -> None:
         model = settings_system.build_system_model(self.state, EN)
-        self.assertEqual(model.version, "0.1.0")
+        self.assertEqual(model.version, __version__)
         self.assertNotIn("sk-should-never-show", model.config_text, "API keys never reach the screen")
         self.assertIn("api_key = \"***\"", model.config_text)
         self.assertIn('name = "Vaishnavi Puja Store"', model.config_text)
