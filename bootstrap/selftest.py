@@ -118,6 +118,51 @@ def run_where(ctx: StageContext) -> ExitCode:
 
 
 # ----------------------------------------------------------------------------- --stop
+STOP_MARKER_FILE = "stop-requested"
+"""Same name as ``vaishnavi.platform.watchdog.STOP_MARKER_FILE`` (the installer is stdlib-only and cannot import it)."""
+
+
+def state_dir(config_dir: Path) -> Path | None:
+    """``<primary>/state`` from the recorded locations (None before the locations stage ran)."""
+    loc = locations.read_locations(config_dir / locations.LOCATIONS_FILE)
+    return loc.primary / "state" if loc is not None else None
+
+
+def write_stop_marker(config_dir: Path, *, reason: str) -> bool:
+    """Tell the supervising watchdog this stop is deliberate — without it the app came straight back (live run 5)."""
+    folder = state_dir(config_dir)
+    if folder is None:
+        return False
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / STOP_MARKER_FILE).write_text(json.dumps({"reason": reason, "at": time.time()}), encoding="utf-8")
+    except OSError as exc:
+        log.warning("STOP_MARKER_FAILED %s", exc)
+        return False
+    return True
+
+
+def stop_requested(config_dir: Path) -> str | None:
+    """Reason from the marker (and remove it), or None."""
+    folder = state_dir(config_dir)
+    if folder is None:
+        return None
+    path = folder / STOP_MARKER_FILE
+    if not path.exists():
+        return None
+    reason = "stop requested"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        reason = str(data.get("reason", reason)) if isinstance(data, dict) else reason
+    except (OSError, ValueError):
+        pass
+    try:
+        path.unlink()
+    except OSError:
+        pass
+    return reason
+
+
 def running_pid(config_dir: Path) -> tuple[int | None, str]:
     """PID of the running application from ``<data>/state/heartbeat.json`` (fallback: the installer's start record)."""
     loc = locations.read_locations(config_dir / locations.LOCATIONS_FILE)
@@ -164,6 +209,7 @@ def stop_app(config_dir: Path, *, host: str = "127.0.0.1", port: int = 8080, tim
     if pid is None:
         return "no_pid", source
     log.info("APP_STOP_REQUESTED pid=%d source=%s", pid, source)
+    write_stop_marker(config_dir, reason="main.py --stop")
     if not terminate_fn(pid):
         return "not_running", f"process {pid} was already gone"
     deadline = clock() + timeout_s
@@ -198,4 +244,49 @@ def run_stop(ctx: StageContext) -> ExitCode:
         return ExitCode.OK
     console.fail(ctx.t("stop.timeout", detail=detail, seconds=STOP_TIMEOUT_S))
     console.hint(ctx.t("stop.no_pid_hint", port=port))
+    return ExitCode.FAIL
+
+
+@register_mode(Mode.FRESH_START)
+def run_fresh_start(ctx: StageContext) -> ExitCode:
+    """``--fresh-start``: stop the app, confirm, ask the Owner password, hand over to ``python -m vaishnavi fresh-start``."""
+    import getpass  # noqa: PLC0415
+
+    from bootstrap import handover  # noqa: PLC0415
+    from bootstrap.app_stages import app_url  # noqa: PLC0415
+
+    console = ctx.console
+    console.info(ctx.t("fresh_start.intro"))
+    url = app_url(ctx.paths.config_dir)
+    host, _, port_text = url.rsplit("://", 1)[-1].partition(":")
+    outcome, detail = stop_app(ctx.paths.config_dir, host=host or "127.0.0.1", port=int(port_text or 8080))
+    if outcome == "stopped":
+        console.ok(ctx.t("stop.stopped", detail=detail))
+    elif outcome != "not_running":
+        console.fail(ctx.t("stop.timeout", detail=detail, seconds=STOP_TIMEOUT_S))
+        return ExitCode.FAIL
+    python = handover.venv_python_from(ctx)
+    available, reason = handover.app_available(python) if python else (False, "venv not installed")
+    if not python or not available:
+        log.error("FRESH_START_REFUSED reason=app-unavailable detail=%s code=E-SYS-002", reason)
+        console.fail(ctx.t("fresh_start.app_missing") + "  (E-SYS-002)")
+        return ExitCode.FAIL
+    console.line("    " + ctx.t("fresh_start.confirm") + ": ")
+    typed = input("    > ").strip()
+    if typed != "START FRESH":
+        console.info(ctx.t("fresh_start.cancelled"))
+        return ExitCode.CANCELLED
+    password = getpass.getpass("    " + ctx.t("fresh_start.ask_password") + " ").strip()
+    if not password:
+        console.info(ctx.t("fresh_start.cancelled"))
+        return ExitCode.CANCELLED
+    console.busy(ctx.t("fresh_start.working"))
+    result = handover.run_app(python, ["fresh-start", "--yes"], secrets={"owner_password": password}, timeout=300)
+    archive = next((ln.split("archive=", 1)[1] for ln in result.output.splitlines() if ln.startswith("FRESH_START_OK")), "")
+    if result.ok:
+        console.ok(ctx.t("fresh_start.done", archive=archive or "-"))
+        return ExitCode.OK
+    log.error("FRESH_START_FAILED exit=%s", result.exit_code)
+    last = next((ln for ln in reversed(result.output.strip().splitlines()) if ln.strip()), "")
+    console.fail(ctx.t("fresh_start.failed") + (f"  {last}" if last else ""))
     return ExitCode.FAIL
