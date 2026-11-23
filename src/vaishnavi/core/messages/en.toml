@@ -217,6 +217,7 @@ E-SHIFT-001 = { msg = "No open shift for this cash movement", fix = "Open your s
 E-SHIFT-002 = { msg = "A shift is already open for {user}", fix = "Continue that shift, or close it before opening a new one." }
 E-SHIFT-003 = { msg = "This shift is already closed", fix = "Open a new shift. The closed one stays in Reports → Shifts." }
 E-SHIFT-004 = { msg = "Cash-out of {amount} is more than the drawer holds ({drawer})", fix = "Count the drawer; take out at most what is there, or record a cash-in first." }
+E-SHIFT-005 = { msg = "The count does not match the system ({detail})", fix = "Recount the drawer and re-check the UPI app. If it still differs, write what happened in the note — the Owner's PIN is needed to close with a difference." }
 
 # ---------------------------------------------------------------- integrity
 E-LEDGER-001 = { msg = "The sales record has been tampered with (bill {invoice_no})", fix = "Stop and contact the owner. Records are protected; the change is visible in Reports → Audit trail." }
