@@ -73,65 +73,90 @@ def history(state: Any, client: ClientState, session_id: int) -> list[HistoryRow
 
 
 # ----------------------------------------------------------------------------- NiceGUI (thin, untested here)
-def open_window(state: Any, client: ClientState, texts: UiTexts) -> None:
-    """Open the chat dialog (called from the bubble)."""
+def open_window(state: Any, client: ClientState, texts: UiTexts, *, host: Any = None, on_close: Any = None) -> None:
+    """Open the chat.
+
+    With ``host`` (the frame's right-side panel) the chat is rendered **inside** that column, so it sits beside
+    the page content instead of floating over the billing keys — the owner's complaint. Without a host it falls
+    back to the old bottom-right dialog.
+    """
     from nicegui import run, ui  # noqa: PLC0415
 
     m = build_widget_model(state, client, texts)
-    log.debug("CHAT_WINDOW_OPEN user=%s lang=%s offline=%s", client.user.user_id if client.user else "-", m.language, bool(m.offline_note))
+    log.debug("CHAT_WINDOW_OPEN user=%s lang=%s offline=%s docked=%s", client.user.user_id if client.user else "-", m.language, bool(m.offline_note), host is not None)
     form: dict[str, Any] = {"text": "", "language": m.language, "session": None}
+
+    if host is not None:
+        host.clear()
+        host.set_visibility(True)
+
+        def close() -> None:
+            host.clear()
+            host.set_visibility(False)
+            if on_close is not None:
+                on_close()
+
+        with host:
+            _render_chat(ui, run, state, client, m, form, close)
+        return
+
     # Quasar's q-dialog accepts only standard/top/right/bottom/left; an unknown position ("bottom-right") throws in the
     # browser and the dialog never shows. "right" + an auto top margin on the card anchors it bottom-right.
-    with ui.dialog().props("position=right seamless") as dialog, ui.card().classes("vsm-chat w-96 p-0").style("margin-top:auto; margin-bottom:76px; margin-right:12px"):
-        with ui.row().classes("w-full items-center justify-between px-3 py-2").style("background:#B4532A;color:white"):
-            ui.label(m.title).classes("font-semibold")
-            with ui.row().classes("items-center gap-1"):
-                ui.select({code: label for code, label in m.languages}, value=m.language).bind_value(form, "language").props("dense dark borderless options-dense").classes("text-white")
-                ui.button(icon="close", on_click=dialog.close).props("flat dense color=white")
-        if m.offline_note:
-            ui.label(m.offline_note).classes("text-xs px-3 py-1").style("background:#FFF3E0;color:#7A4A1E")
-        ui.label(m.hint).classes("text-xs text-gray-600 px-3 pt-2")
-        log_box = ui.column().classes("w-full gap-1 px-3 py-2").style("max-height: 50vh; overflow-y: auto")
-        chips = ui.row().classes("px-3 gap-1 flex-wrap")
-
-        def bubble(role: str, text: str) -> None:
-            with log_box, ui.row().classes("w-full " + ("justify-end" if role == "user" else "justify-start")):
-                ui.label(text).classes("px-3 py-2 rounded-lg text-sm").style(("background:#B4532A;color:white" if role == "user" else "background:#F4EDE2") + "; max-width: 85%; white-space: pre-wrap")
-
-        async def ask(text: str) -> None:
-            text = (text or "").strip()
-            if not text:
-                return
-            bubble("user", text)
-            form["text"] = ""
-            # The model can take 10–30 s on a small PC. Running it on a worker thread keeps NiceGUI's event loop
-            # (and the browser's heartbeat) alive — a blocking call here showed "connection lost, trying to reconnect".
-            with log_box, ui.row().classes("w-full justify-start") as typing:
-                ui.spinner("dots", size="sm").style("color:#B4532A")
-                ui.label(m.labels["thinking"]).classes("text-xs text-gray-500")
-            try:
-                reply = await run.io_bound(send, state, client, text, language=str(form["language"]), session_id=form["session"])
-            except Exception as exc:  # noqa: BLE001 - the widget must never die on a provider error
-                log.error("CHAT_WIDGET_FAILED error=%s", exc)
-                typing.delete()
-                bubble("assistant", m.labels["failed"])
-                return
-            typing.delete()
-            form["session"] = reply.session_id
-            bubble("assistant", reply.text)
-            chips.clear()
-            if reply.link:
-                with chips:
-                    ui.button(m.labels["open_report"], icon="open_in_new", on_click=lambda _e, p=reply.link: ui.navigate.to(p)).props("outline dense size=sm")
-            if reply.locked:
-                with chips:
-                    ui.label(m.labels["restricted"]).classes("text-xs text-orange-800")
-
-        with chips:
-            for s in m.suggestions:
-                ui.button(s, on_click=lambda _e, q=s: ask(q)).props("outline dense size=sm")
-        with ui.row().classes("w-full items-center gap-1 px-3 pb-3"):
-            box = ui.input(placeholder=m.labels["placeholder"]).bind_value(form, "text").classes("flex-1").props("dense outlined autofocus")
-            box.on("keydown.enter", lambda: ask(str(form["text"])))
-            ui.button(icon="send", on_click=lambda: ask(str(form["text"]))).props("unelevated color=primary dense")
+    with ui.dialog().props("position=right seamless") as dialog, ui.card().classes("vsm-chat w-96 p-0"):
+        _render_chat(ui, run, state, client, m, form, dialog.close)
     dialog.open()
+
+
+def _render_chat(ui: Any, run: Any, state: Any, client: ClientState, m: WidgetModel, form: dict[str, Any], close: Any) -> None:
+    """Header · hint · bubbles · suggestion chips · input row, inside whatever container is current."""
+    with ui.row().classes("w-full items-center justify-between px-3 py-2").style("background:#B4532A;color:white"):
+        ui.label(m.title).classes("font-semibold")
+        with ui.row().classes("items-center gap-1"):
+            ui.select({code: label for code, label in m.languages}, value=m.language).bind_value(form, "language").props("dense dark borderless options-dense").classes("text-white")
+            ui.button(icon="close", on_click=close).props("flat dense color=white")
+    if m.offline_note:
+        ui.label(m.offline_note).classes("text-xs px-3 py-1").style("background:#FFF3E0;color:#7A4A1E")
+    ui.label(m.hint).classes("text-xs text-gray-600 px-3 pt-2")
+    log_box = ui.column().classes("w-full gap-1 px-3 py-2 vsm-chatlog").style("max-height: 60vh; overflow-y: auto")
+    chips = ui.row().classes("px-3 gap-1 flex-wrap")
+
+    def bubble(role: str, text: str) -> None:
+        with log_box, ui.row().classes("w-full " + ("justify-end" if role == "user" else "justify-start")):
+            ui.label(text).classes("px-3 py-2 rounded-lg text-sm").style(("background:#B4532A;color:white" if role == "user" else "background:#F4EDE2") + "; max-width: 85%; white-space: pre-wrap")
+
+    async def ask(text: str) -> None:
+        text = (text or "").strip()
+        if not text:
+            return
+        bubble("user", text)
+        form["text"] = ""
+        # The model can take 10–30 s on a small PC. Running it on a worker thread keeps NiceGUI's event loop
+        # (and the browser's heartbeat) alive — a blocking call here showed "connection lost, trying to reconnect".
+        with log_box, ui.row().classes("w-full justify-start") as typing:
+            ui.spinner("dots", size="sm").style("color:#B4532A")
+            ui.label(m.labels["thinking"]).classes("text-xs text-gray-500")
+        try:
+            reply = await run.io_bound(send, state, client, text, language=str(form["language"]), session_id=form["session"])
+        except Exception as exc:  # noqa: BLE001 - the widget must never die on a provider error
+            log.error("CHAT_WIDGET_FAILED error=%s", exc)
+            typing.delete()
+            bubble("assistant", m.labels["failed"])
+            return
+        typing.delete()
+        form["session"] = reply.session_id
+        bubble("assistant", reply.text)
+        chips.clear()
+        if reply.link:
+            with chips:
+                ui.button(m.labels["open_report"], icon="open_in_new", on_click=lambda _e, p=reply.link: ui.navigate.to(p)).props("outline dense size=sm")
+        if reply.locked:
+            with chips:
+                ui.label(m.labels["restricted"]).classes("text-xs text-orange-800")
+
+    with chips:
+        for s in m.suggestions:
+            ui.button(s, on_click=lambda _e, q=s: ask(q)).props("outline dense size=sm")
+    with ui.row().classes("w-full items-center gap-1 px-3 pb-3"):
+        box = ui.input(placeholder=m.labels["placeholder"]).bind_value(form, "text").classes("flex-1").props("dense outlined autofocus")
+        box.on("keydown.enter", lambda: ask(str(form["text"])))
+        ui.button(icon="send", on_click=lambda: ask(str(form["text"]))).props("unelevated color=primary dense")
