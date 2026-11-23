@@ -848,10 +848,10 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   complete block is reused silently; `--yes` keeps the default name and WARNs to finish in Settings → Shop & GST).
   `config/settings.toml` ships with empty placeholders; the in-app first-run wizard's *Shop profile* step gained the
   owner field. EN/HI installer messages; `test_bootstrap_shop_profile` (+3).
-- **Sahayak docked to the right** (owner: the floating chat hid the billing keys and could not be moved): the chat now
-  renders inside a 380 px column **beside** the page content (`frame()` creates a hidden `.vsm-chatpanel` host; the
-  bubble opens it and hides itself; the panel's ✕ restores the bubble). `chat_widget.open_window(host=…)`; the old
-  bottom-right dialog remains the fallback when no host is given.
+- **Sahayak bubble no longer covers the billing key legend** (owner): the page body gets 88 px of bottom padding so the
+  last row of any page (the POS shortcut legend) sits above the bubble; the bubble hides while the chat window is
+  open and returns when it is closed (`open_window(on_close=…)`, Quasar ``hide`` event). The window itself stays the
+  floating bottom-right card the owner preferred (a docked side panel was tried and rejected — it pushed the page).
 - Tests: new `test_cashier_records` (recording, staff scoping, summary, 90-day prune, Owner purge + audit, page
   model with subtotals, password-approved purge, 0004 replay); `test_sales_reports` (+1 investment end-to-end:
   service, tool, page); `test_publishing` (+2 letterhead renderer and settings → PDF/CSV/XLSX);
