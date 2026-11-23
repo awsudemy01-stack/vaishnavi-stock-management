@@ -1,3 +1,8 @@
 git rev-parse --short HEAD
 git status --short
 python3 tools/manifest.py --out there.txt
+
+git rev-parse --short HEAD
+f42faf9f
+rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git status --short
+rohit@Rohits-MacBook-Pro vaishnavi-stock-management % 
