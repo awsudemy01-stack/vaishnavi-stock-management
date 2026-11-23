@@ -102,10 +102,6 @@ html, body {{ font-family: {FONT_STACK}; color: var(--ink); background: var(--bg
 .vsm-card {{ background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 12px 40px rgba(31,41,55,.08); }}
 .vsm-chatfab {{ position: fixed; right: 22px; bottom: 56px; display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px 6px 6px; box-shadow: 0 8px 24px rgba(31,41,55,.15); font-size: 13px; cursor: pointer; z-index: 50; }}
 .vsm-chatfab .bub {{ width: 40px; height: 40px; border-radius: 50%; background: var(--saffron); color: #fff; display: grid; place-items: center; font-size: 20px; }}
-/* Sahayak docked panel: sits beside the page content (flex sibling of the body column), never over it */
-.vsm-chatpanel {{ width: 380px; flex: 0 0 380px; align-self: stretch; background: var(--card); border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(31,41,55,.06); display: flex; flex-direction: column; position: sticky; top: 0; max-height: calc(100vh - 96px); overflow: hidden; }}
-.vsm-chatpanel .vsm-chatlog {{ flex: 1 1 auto; overflow-y: auto; }}
-@media (max-width: 900px) {{ .vsm-chatpanel {{ width: 300px; flex-basis: 300px; }} }}
 .vsm-foot {{ height: 40px; border-top: 1px solid var(--line); background: var(--card); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 12px; color: var(--muted); }}
 .vsm-touch {{ min-height: 44px; min-width: 44px; }}
 /* POS (docs/mockups/pos.html) */
