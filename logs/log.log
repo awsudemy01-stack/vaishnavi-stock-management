@@ -30,3 +30,13 @@ rohit@Rohits-MacBook-Pro vaishnavi-stock-management %
 
  .venv/bin/python -c "import vaishnavi; print(vaishnavi.__file__)"
 /Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/__init__.py
+
+# 1. what is actually running, and from where?
+ps aux | grep -iE "main.py|vaishnavi" | grep -v grep
+
+# 2. restart (the watchdog relaunches once, so stop twice)
+cd /Users/rohit/Documents/vaishnavi-stock-management
+python3 main.py --stop
+python3 main.py --stop
+ps aux | grep -iE "main.py|vaishnavi" | grep -v grep     # must print nothing
+python3 main.py
