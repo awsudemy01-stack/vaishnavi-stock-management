@@ -464,11 +464,11 @@ def build_default_pipeline(options: Options) -> list[Stage]:
     """The ordered stages of a normal ``main.py`` run.
 
     Each unit of Phase 1 appends its stage here (docs/13 checklist). Order follows docs/17 §3.3:
-    survey → python → venv/packages → system components → AI provider → locations → database →
-    backup → autostart → doctor → start.
+    survey → python → venv/packages → system components → AI provider → locations → shop profile →
+    database → backup → autostart → doctor → start.
     """
     stages: list[Stage] = []
-    from bootstrap import ai_provider, app_stages, autostart, locations, minilog, offline, pkg_manager, python_env, survey, wizard  # local imports: stage modules import this module
+    from bootstrap import ai_provider, app_stages, autostart, locations, minilog, offline, pkg_manager, python_env, shop_profile, survey, wizard  # local imports: stage modules import this module
 
     stages.append(minilog.register(options))
     stages.append(wizard.register(options))
@@ -478,6 +478,7 @@ def build_default_pipeline(options: Options) -> list[Stage]:
     stages.append(pkg_manager.register(options))
     stages.append(ai_provider.register(options))
     stages.append(locations.register(options))
+    stages.append(shop_profile.register(options))
     stages.append(autostart.register(options))
     stages.extend(app_stages.register(options))  # database → doctor → start (start omitted with --install-only)
     log.debug("pipeline: %d stages registered (install_only=%s)", len(stages), options.install_only)
