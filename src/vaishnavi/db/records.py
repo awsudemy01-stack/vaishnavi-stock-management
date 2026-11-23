@@ -446,6 +446,41 @@ class SaleView:
 
 
 @dataclass(frozen=True)
+class DayRecordItem:
+    """One line inside a cashier day-book entry (decoded from ``items_json``)."""
+
+    name: str
+    qty: str
+    unit: str
+    rate_paise: int
+    amount_paise: int
+    entry_method: str
+    is_open_item: bool = False
+    discount_paise: int = 0
+
+
+@dataclass(frozen=True)
+class CashierDayRecordRow:
+    """A ``cashier_day_record`` row — one bill (or credit note) with its items, as the Owner reads it per day."""
+
+    id: int
+    sale_id: int
+    invoice_no: str
+    business_day: str
+    sold_at: str
+    user_id: int
+    cashier_name: str
+    shift_id: int
+    status: str
+    line_count: int
+    item_qty: Decimal
+    total_paise: int
+    payment_modes: str
+    items: tuple[DayRecordItem, ...]
+    created_at: str
+
+
+@dataclass(frozen=True)
 class CustomerRecord:
     """A ``customer`` row — a phone number (E.164 digits, e.g. ``919876543210``) and an optional name,
     kept so a bill can be sent on WhatsApp and the regular customer is recognised next time."""
@@ -508,6 +543,10 @@ class ShiftRecord:
     note: str | None
     opening_denominations: str | None = None
     """JSON of the notes counted into the drawer at open (same shape as ``denominations``)."""
+    declared_json: str | None = None
+    """JSON ``{"UPI": {"declared": 150000, "system": 150000}}`` — non-cash totals the cashier read off the phone app at close."""
+    approved_by_user_id: int | None = None
+    """Owner who entered the PIN when the drawer or UPI did not match (None when it matched or the Owner closed)."""
 
 
 @dataclass(frozen=True)
