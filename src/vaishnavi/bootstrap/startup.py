@@ -262,6 +262,7 @@ def run_app(*, settings: Settings, paths: AppPaths, config_dir: Path, serve: Ser
                 "hardware_poll": services.hardware.poll,
                 "print_queue_flush": lambda: services.print_queue.print_pending() if services.print_queue.pending_count() else None,
                 "forecast_nightly": services.forecast.snapshot_all,
+                "day_book_prune": services.cashier_records.prune,
                 "ai_health": lambda: _ai_health_job(services, state),
                 "ai_keepalive": lambda: _ai_keepalive_job(services),
                 "help_index": lambda: services.indexer.rebuild() if services.indexer is not None else None,

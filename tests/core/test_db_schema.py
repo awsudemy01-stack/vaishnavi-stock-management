@@ -11,7 +11,7 @@ EXPECTED_TABLES = {
     "role", "user", "app_run", "work_session", "category", "product", "product_barcode", "tag", "product_tag",
     "price_history", "label_print_log", "offer", "stock_movement", "product_stock", "stock_daily_balance",
     "_write_guard", "shift", "cash_event", "customer", "counter", "sale", "sale_item", "payment",
-    "open_item_review", "print_pending", "held_cart", "held_cart_line", "supplier", "purchase", "purchase_item",
+    "open_item_review", "print_pending", "held_cart", "held_cart_line", "cashier_day_record", "supplier", "purchase", "purchase_item",
     "stock_count", "stock_count_line", "audit_log", "notification", "recovery_key", "setup_step", "setting",
     "secure_setting", "db_identity", "backup_log", "integrity_check", "hardware_override", "publish_queue",
     "chat_session", "chat_message", "ai_usage", "chat_security_event", "doc_chunk", "embedding",

@@ -153,7 +153,10 @@ class SalesReportsTest(Base):
             self.assertIn("basket.csv", names)
             self.assertIn("forecast.csv", names)
             self.assertIn("README.txt", names)
-            self.assertTrue(zf.read("sales.csv").decode("utf-8-sig").startswith("day,"))
+            sales_csv = zf.read("sales.csv").decode("utf-8-sig")
+            self.assertTrue(sales_csv.startswith("Vaishnavi Puja Store"), "every export opens with the shop letterhead")
+            self.assertIn("\nday,", sales_csv, "the column header follows the letterhead and a blank row")
+            self.assertTrue(zf.read("README.txt").decode("utf-8").startswith("Vaishnavi Puja Store"))
         self.assertIsNone(reports_page.export_all_zip(self.c, STAFF), "staff cannot take the shop's figures home")
 
     def test_report_pages_registry_gained_sales_reports(self) -> None:
@@ -164,8 +167,14 @@ class SalesReportsTest(Base):
         self.assertIn("low_stock", [r.key for r in reports_page.build_index(self.c, EN, STAFF).reports])
         table = reports_page.build_table(self.c, EN, OWNER, "sales")
         assert table is not None
+        self.assertEqual(table.title, "Sales by month — Nov-2026", "defaults to the current month")
         self.assertEqual(table.rows[0]["day"], DAY)
         self.assertEqual(table.rows[0]["total"], "₹60.00")
+        self.assertEqual((table.rows[-1]["day"], table.rows[-1]["total"], table.rows[-1]["bills"]), ("TOTAL · Nov-2026", "₹60.00", 3), "the month closes with a total row")
+        other = reports_page.build_table(self.c, EN, OWNER, "sales", {"month": "2026-10"})
+        assert other is not None
+        self.assertEqual((other.title, other.rows), ("Sales by month — Oct-2026", []))
+        self.assertEqual(reports_page.month_window({"month": "2026-02"}), ("2026-02-01", "2026-02-28", "Feb-2026"))
         self.assertIsNone(reports_page.build_table(self.c, EN, STAFF, "profit"))
         self.assertTrue(reports_page.export_csv(self.c, OWNER, "top").startswith("\ufeff"))
         # Phase 5 forecast entries resolve through the real services; too little history => NEW/low row, never an error.
@@ -178,6 +187,79 @@ class SalesReportsTest(Base):
         assert demand is not None
         self.assertEqual(next(r for r in demand.rows if r["product"].startswith("#10 "))["class"], "NEW")
         self.assertIsNone(reports_page.build_table(self.c, EN, STAFF, "forecast"))
+
+    def test_sales_by_date_lists_quantity_per_item_in_its_unit_then_the_days_money(self) -> None:
+        """Owner's example: Item · Quantity (Match Box 10 · Ghee 200 g · Oil 100 ml), then Total sale / Cash / UPI — for any calendar day."""
+        from vaishnavi.core.barcode import internal_ean13
+
+        ghee = self.c.catalog.create(OWNER, ProductInput(name="Ghee", price_paise=50000, sale_mode="WEIGHT", base_unit="g", pricing_unit_qty=Decimal("1000"), pricing_unit_label="kg", min_qty=Decimal("10"), qty_step=Decimal("10"), allow_decimal_qty=True))
+        self.c.inventory.opening_stock(OWNER, ghee.id, Decimal("5000"))
+        self._sale(product_code=internal_ean13(ghee.id), qty="200", mode="UPI")  # 200 g at ₹500/kg = ₹100
+        self._sale(qty="3")  # 3 camphor, cash ₹30
+        self._sale(qty="7", mode="UPI")  # 7 camphor, UPI ₹70
+        rep = self.c.reports.day_sales(OWNER, DAY)
+        by_name = {r.name: r for r in rep.items}
+        self.assertEqual((by_name["Ghee"].qty_text, by_name["Ghee"].amount_paise, by_name["Ghee"].bills), ("200 g", 10000, 1))
+        self.assertEqual((by_name["Camphor 50g"].qty_text, by_name["Camphor 50g"].amount_paise, by_name["Camphor 50g"].bills), ("14 pcs", 14000, 4), "2 + 2 fixture bills + 3 + 7")
+        self.assertEqual((rep.summary.total_paise, rep.summary.by_mode), (24000, {"CASH": 7000, "UPI": 17000}))
+        self.assertEqual(self.c.reports.day_sales(OWNER, "2026-11-13").items, [])
+        with self.assertRaises(PermissionDenied):
+            self.c.reports.day_sales(STAFF, DAY)
+        table = reports_page.build_table(self.c, EN, OWNER, "sales_date", {"day": DAY})
+        assert table is not None
+        self.assertEqual(table.title, "Day Sales Report — 14-Nov-2026")
+        self.assertEqual(table.columns, ["item", "qty", "bills", "amount"])
+        self.assertEqual([(r["item"], r["qty"]) for r in table.rows[:2]], [("Camphor 50g", "14 pcs"), ("Ghee", "200 g")], "biggest rupees first")
+        self.assertEqual([(r["item"], r["amount"]) for r in table.rows[2:]], [("TOTAL SALE", "₹240.00"), ("Cash", "₹70.00"), ("UPI", "₹170.00")])
+        self.assertEqual(reports_page.build_table(self.c, EN, OWNER, "sales_date", {"day": "2026-11-13"}).rows[0]["item"], "TOTAL SALE")  # type: ignore[union-attr]
+        self.assertEqual(reports_page.date_window({"day": "not a date"}), DAY, "a bad date falls back to today")
+        self.assertIsNone(reports_page.build_table(self.c, EN, STAFF, "sales_date", {"day": DAY}))
+        self.assertIn("sales_date", [r.key for r in reports_page.build_index(self.c, EN, OWNER).reports])
+
+    def test_investment_counts_every_unit_that_came_in_at_the_cost_of_that_day(self) -> None:
+        """"How much have I put into the shop so far" — opening stock + purchases + corrections × cost, from day one."""
+        ghee = self.c.catalog.create(OWNER, ProductInput(name="Ghee 500g", price_paise=30000, cost_paise=24000, category_id=1))
+        self.c.inventory.opening_stock(OWNER, ghee.id, Decimal("10"))  # 10 × ₹240 = ₹2,400 at today's cost
+        self.assertEqual(self._q_movement_cost(ghee.id), 24000, "the opening movement now snapshots the purchase price")
+        self.c.inventory.record_purchase(OWNER, supplier_name="Sharma Traders", invoice_no="ST/1", lines=[PurchaseLine(ghee.id, Decimal("5"), 25000)])  # ₹1,250; product cost becomes ₹250
+        self.c.inventory.adjust(OWNER, ghee.id, Decimal("2"), reason="found in store room")  # 2 × ₹250 = ₹500 correction
+        self.c.inventory.record_damage(OWNER, ghee.id, Decimal("1"), reason="broken")  # outgoing: not an investment
+        from vaishnavi.core.barcode import internal_ean13
+
+        self._sale(product_code=internal_ean13(ghee.id), qty="4")
+        rep = self.c.reports.investment(OWNER)
+        ghee_row = next(r for r in rep.rows if r.product_id == ghee.id)
+        self.assertEqual((str(ghee_row.qty_in), ghee_row.opening_paise, ghee_row.purchases_paise, ghee_row.corrections_paise, ghee_row.invested_paise), ("17", 240000, 125000, 50000, 415000))
+        self.assertFalse(ghee_row.estimated)
+        self.assertEqual((str(ghee_row.stock_qty), ghee_row.stock_value_paise), ("12", 300000), "10 + 5 + 2 − 1 − 4 on the shelf at the current cost ₹250")
+        camphor = next(r for r in rep.rows if r.product_id == 10)
+        self.assertEqual((str(camphor.qty_in), camphor.opening_paise, camphor.estimated), ("100", 100000, True), "the fixture camphor has no purchase price: 100 × selling price ₹10, flagged")
+        self.assertEqual((rep.items, rep.estimated_items, rep.invested_paise), (2, 1, 515000))
+        self.assertEqual(rep.opening_paise + rep.purchases_paise + rep.corrections_paise, rep.invested_paise)
+        self.assertEqual([(c.category, c.items, c.invested_paise) for c in rep.categories][0][2], 415000, "categories subtotal, biggest first")
+        self.assertEqual(rep.since, "2026-11-14T16:00:00Z", "from the first stock entry — not clamped to 90 days")
+        with self.assertRaises(PermissionDenied):
+            self.c.reports.investment(STAFF)
+        # the assistant's tool and the report page read the same figures
+        tool = self.c.tools.run(OWNER, "investment_summary", {})
+        self.assertEqual((tool["total"], tool["opening_stock"], tool["purchases"], tool["corrections"], tool["items_count"], tool["estimated_items"]), ("₹5,150.00", "₹3,400.00", "₹1,250.00", "₹500.00", 2, 1))
+        self.assertEqual(tool["since"], "14-Nov-2026")
+        table = reports_page.build_table(self.c, EN, OWNER, "investment")
+        assert table is not None
+        self.assertEqual(table.rows[-1]["product"], "TOTAL")
+        self.assertEqual(table.rows[-1]["invested"], "₹5,150.00")
+        self.assertTrue(any(r["product"].startswith("SUBTOTAL") for r in table.rows))
+        self.assertIsNone(reports_page.build_table(self.c, EN, STAFF, "investment"))
+
+    def _q_movement_cost(self, product_id: int) -> int | None:
+        import sqlite3
+
+        conn = sqlite3.connect(self.paths.database)
+        try:
+            row = conn.execute("SELECT unit_cost_paise FROM stock_movement WHERE product_id = ? AND type = 'OPENING'", (product_id,)).fetchone()
+        finally:
+            conn.close()
+        return row[0] if row else None
 
 
 if __name__ == "__main__":

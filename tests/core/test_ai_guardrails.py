@@ -150,6 +150,8 @@ class FakeTools:
             return {"net": "₹18,420.00", "bills": 142, "avg_bill": "₹129.72", "cash_pct": 61, "period": "14-Nov-2026" if period == "today" else period}
         if name == "purchases_summary":
             return {"period": "all time" if args.get("period") == "all_time" else args.get("period"), "items": [{"supplier": "Sharma Traders", "purchases": 3, "total": "₹42,000.00"}, {"supplier": "-", "purchases": 1, "total": "₹3,500.00"}], "count": 2, "total": "₹45,500.00"}
+        if name == "investment_summary":
+            return {"period": "all time" if args.get("period") == "all_time" else args.get("period"), "since": "01-Nov-2026", "total": "₹61,200.00", "opening_stock": "₹15,700.00", "purchases": "₹45,500.00", "corrections": "₹0.00", "stock_value_now": "₹38,900.00", "items_count": 42, "estimated_items": 1, "categories": [{"category": "Puja Samagri", "items": 30, "qty": "900", "amount": "₹50,000.00"}, {"category": "Idols", "items": 12, "qty": "40", "amount": "₹11,200.00"}], "items": [{"name": "Camphor 50g", "category": "Puja Samagri", "qty_in": "300", "amount": "₹2,100.00", "stock_now": "37", "estimated": False}], "count": 42}
         if name == "demand_ranking":
             rows = [{"name": "Camphor 50g", "qty": "40", "amount": "₹400.00", "share_pct": 60}, {"name": "Agarbatti", "qty": "12", "amount": "₹240.00", "share_pct": 40}]
             return {"period": args.get("period"), "order": args.get("order", "top"), "items": rows if args.get("order", "top") == "top" else list(reversed(rows)), "count": 2}
@@ -244,9 +246,12 @@ class FastPathTest(unittest.TestCase):
     def test_owner_business_questions_from_live_run_4_are_routed_to_the_right_tool(self) -> None:
         """The owner's exact phrasings (EN + Hinglish) that previously fell to the model and were refused as ungrounded."""
         cases = {
-            "maine shop mein kitna paisa ab tak kharch kiya hai": ("purchases_summary", {"period": "all_time"}),
-            "How much money I have spent so far on items": ("purchases_summary", {"period": "all_time"}),
-            "is mahine kitna kharch hua": ("purchases_summary", {"period": "this_month"}),
+            "maine shop mein kitna paisa ab tak kharch kiya hai": ("investment_summary", {"period": "all_time"}),
+            "How much money I have spent so far on items": ("investment_summary", {"period": "all_time"}),
+            "What is my investment in the shop so far": ("investment_summary", {"period": "all_time"}),
+            "main dukan mein ab tak kitna kharch kiya hai": ("investment_summary", {"period": "all_time"}),
+            "is mahine kitna kharch hua": ("investment_summary", {"period": "this_month"}),
+            "supplier wise purchase ab tak": ("purchases_summary", {"period": "all_time"}),
             "aaj pura din kitna item bika hai": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
             "pure din bhar ka har ek item ka sale kitna hai": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
             "How much item have been sold on today's entire day": ("demand_ranking", {"period": "today", "order": "top", "limit": 15}),
@@ -279,11 +284,18 @@ class FastPathTest(unittest.TestCase):
         tools = FakeTools()
         spend = fastpath.answer("How much money I have spent so far on items", role=Role.OWNER, language="english", run_tool=tools)
         assert spend is not None
-        self.assertIn("₹45,500.00", spend.text)
-        self.assertIn("Sharma Traders ₹42,000.00", spend.text)
+        self.assertIn("₹61,200.00", spend.text, "the investment total: opening + purchases + corrections")
+        self.assertIn("opening stock ₹15,700.00", spend.text)
+        self.assertIn("Puja Samagri ₹50,000.00", spend.text)
+        self.assertIn("since 01-Nov-2026", spend.text)
+        self.assertIn("1 item(s) have no purchase price", spend.text)
         self.assertIn("all time", spend.text)
-        self.assertEqual((spend.source, spend.link), ("purchases_summary", "/reports/purchases"))
-        self.assertEqual(tools.calls[-1], ("purchases_summary", {"period": "all_time"}))
+        self.assertEqual((spend.source, spend.link), ("investment_summary", "/reports/investment"))
+        self.assertEqual(tools.calls[-1], ("investment_summary", {"period": "all_time", "limit": 6}))
+        supplier = fastpath.answer("supplier wise purchase ab tak", role=Role.OWNER, language="english", run_tool=tools)
+        assert supplier is not None
+        self.assertIn("Sharma Traders ₹42,000.00", supplier.text)
+        self.assertEqual((supplier.source, supplier.link), ("purchases_summary", "/reports/purchases"))
         self.assertIsNone(fastpath.answer("kitna kharch hua", role=Role.STAFF, language="hinglish", run_tool=tools), "staff never see purchase figures")
         items = fastpath.answer("aaj pura din kitna item bika hai", role=Role.OWNER, language="hinglish", run_tool=tools)
         assert items is not None

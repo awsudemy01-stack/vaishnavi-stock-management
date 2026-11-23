@@ -42,6 +42,8 @@ class ShopSettings:
     address_line2: str = ""
     phone: str = ""
     email: str = ""
+    owner_name: str = ""
+    """Proprietor's name — printed in the letterhead of every report/PDF (never on customer receipts)."""
     gstin: str = ""
     state_code: str = ""
     currency: str = "INR"
@@ -98,6 +100,10 @@ class BillingSettings:
     idle_lock_minutes: int = 10
     heartbeat_seconds: int = 15
     """Browser heartbeat for attendance (docs/05 §6a)."""
+    shift_variance_tolerance_paise: int = 0
+    """Cash difference at shift close that still counts as a match (0 = exact). Anything beyond needs a note + Owner PIN."""
+    day_record_retention_days: int = 90
+    """How long the cashier day book (per-bill item records) is kept before the nightly job deletes it; the Owner may delete earlier."""
 
 
 @dataclass
@@ -327,6 +333,8 @@ class Settings:
             raise ConfigError("E-CFG-001", key="ai.cloud.budget_alert_pct")
         if self.billing.heartbeat_seconds < 5:
             raise ConfigError("E-CFG-001", key="billing.heartbeat_seconds", detail="minimum 5")
+        if not 1 <= self.billing.day_record_retention_days <= 3650:
+            raise ConfigError("E-CFG-001", key="billing.day_record_retention_days", detail="1 to 3650 days")
         hh, _, mm = self.backup.nightly_time.partition(":")
         if not (hh.isdigit() and mm.isdigit() and 0 <= int(hh) < 24 and 0 <= int(mm) < 60):
             raise ConfigError("E-CFG-001", key="backup.nightly_time", detail=self.backup.nightly_time)

@@ -333,6 +333,24 @@ class LiveRun4Test(Base):
         self.assertLess(preview.index("TOTAL"), preview.index("You saved"), "saved line sits right under the total, as on screen")
         self.assertLess(preview.index("Happy shopping"), preview.index("Paid:"))
 
+    def test_f2_opens_the_bill_discount_and_f4_the_line_discount(self) -> None:
+        """Live run 5b: the bill discount was only reachable via F4 with no line selected — now it has its own key."""
+        calls: list[str] = []
+
+        class Ev:
+            def __init__(self, key: str) -> None:
+                self.key = key
+                self.action = type("A", (), {"keydown": True})()
+
+        handlers = dict(find=lambda: calls.append("find"), discount=lambda: calls.append("line"), hold=lambda: None, held=lambda: None, pay=lambda: None, clear=lambda: None, customer=lambda: None, bill_discount=lambda: calls.append("bill"))
+        pos._keys(Ev("F2"), **handlers)
+        pos._keys(Ev("F4"), **handlers)
+        pos._keys(Ev("F5"), **handlers)
+        self.assertEqual(calls, ["bill", "line"])
+        m = pos.build_pos(self.c, self.texts, STAFF, self.carts.get(self.c.billing, STAFF))
+        self.assertEqual(m.labels["bill_discount_hint"], "whole bill · customer type")
+        self.assertIn("F2 bill discount", m.labels["keys"])
+
     def test_item_and_bill_discounts_together_tell_a_two_line_savings_story(self) -> None:
         self.c.offers.create(OWNER, OfferInput(name="Diwali Offer", type="PCT", value=Decimal("1"), scope="PRODUCT", scope_id=10))
         cart = self.carts.get(self.c.billing, STAFF)

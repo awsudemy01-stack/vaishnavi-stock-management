@@ -22,7 +22,7 @@ from vaishnavi.ui.pages.onboarding import StepResult, submit_shop_profile, submi
 
 log = logging.getLogger("vaishnavi.ui.pages.settings_shop")
 
-SHOP_FIELDS: Final = ("name", "address_line1", "address_line2", "phone", "email", "state_code")
+SHOP_FIELDS: Final = ("name", "owner_name", "address_line1", "address_line2", "phone", "email", "state_code")
 GST_PRESETS: Final = ("0", "3", "5", "12", "18", "28")
 
 
@@ -55,7 +55,7 @@ def build_shop_model(state: AppState, texts: UiTexts) -> ShopModel:
         preview.append(f"Ph: {s.shop.phone.strip()}")
     if s.tax.registered and s.shop.gstin.strip():
         preview.append(f"GSTIN: {s.shop.gstin.strip()}")
-    keys = ("title", "intro", "shop_section", "gst_section", "name", "address_line1", "address_line2", "phone", "email", "state_code", "state_hint", "gstin", "gstin_hint",
+    keys = ("title", "intro", "shop_section", "gst_section", "name", "owner_name", "address_line1", "address_line2", "phone", "email", "state_code", "state_hint", "gstin", "gstin_hint",
             "registered", "registered_hint", "default_rate", "default_rate_hint", "prices_include_tax", "inclusive_hint", "per_item_hint", "save", "saved", "preview",
             "receipt_section", "whatsapp_share", "whatsapp_share_hint")
     labels = {k: texts.t(f"shop_settings.{k}") for k in keys}
@@ -109,6 +109,7 @@ def render_tab(state: AppState, client: Any, texts: UiTexts) -> None:
                 with ui.column().classes("vsm-card p-4 gap-2").style("flex: 1 1 0"):
                     ui.label(m.labels["shop_section"]).classes("font-semibold text-sm")
                     errors["name"] = ui.input(m.labels["name"]).bind_value(form, "name").props("outlined dense").classes("w-full")
+                    ui.input(m.labels["owner_name"]).bind_value(form, "owner_name").props("outlined dense").classes("w-full")
                     errors["address_line1"] = ui.input(m.labels["address_line1"]).bind_value(form, "address_line1").props("outlined dense").classes("w-full")
                     ui.input(m.labels["address_line2"]).bind_value(form, "address_line2").props("outlined dense").classes("w-full")
                     with ui.row().classes("w-full gap-2 no-wrap"):

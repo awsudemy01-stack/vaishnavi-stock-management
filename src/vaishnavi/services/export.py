@@ -64,10 +64,13 @@ def _cell(ref: str, value: Any) -> str:
     return f'<c r="{ref}" t="inlineStr"><is><t xml:space="preserve">{escape(text)}</t></is></c>'
 
 
-def to_xlsx(sheet_name: str, headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> bytes:
-    """One-sheet workbook with a header row."""
+def to_xlsx(sheet_name: str, headers: Sequence[str], rows: Sequence[Sequence[Any]], *, title_rows: Sequence[str] = ()) -> bytes:
+    """One-sheet workbook with a header row; ``title_rows`` (the shop letterhead) sit above it, then one blank row."""
     lines = ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>']
-    all_rows = [list(headers), *[list(r) for r in rows]]
+    all_rows: list[list[Any]] = [[t] for t in title_rows]
+    if title_rows:
+        all_rows.append([])
+    all_rows += [list(headers), *[list(r) for r in rows]]
     for r_idx, row in enumerate(all_rows, start=1):
         cells = "".join(_cell(f"{_col(c_idx)}{r_idx}", v) for c_idx, v in enumerate(row))
         lines.append(f'<row r="{r_idx}">{cells}</row>')

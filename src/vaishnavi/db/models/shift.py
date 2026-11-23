@@ -30,6 +30,8 @@ class Shift(Base):
     closed_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"), nullable=True)
     status: Mapped[str] = mapped_column(Text)
     note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    declared_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    approved_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("user.id"), nullable=True)
 
 
 class CashEvent(Base):

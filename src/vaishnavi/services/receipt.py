@@ -2,8 +2,10 @@
 
 The model is built from the committed ``SaleView`` (never from the cart, so a reprint is byte-identical
 to the original apart from the ``DUPLICATE`` label). Every line shows **shelf price → discount → final
-amount**, the offer name is printed beneath, "You saved" totals the discounts, ``†`` marks a lookup
-line and ``*`` an open item. The invoice is also encoded as an EAN-13 (``core/barcode.receipt_ean13``)
+amount**, the offer name is printed beneath and "You saved" totals the discounts. Lookup (``†``) and
+open-item (``*``) markers are **not** printed on the customer's receipt (owner, live run 5b: "label damaged –
+looked up" is back-office information) — they stay on the billing screen, in the review queue and in the
+per-cashier report. The invoice is also encoded as an EAN-13 (``core/barcode.receipt_ean13``)
 so a return starts by scanning the customer's receipt. Rendering is delegated to an injected renderer
 module (``hardware/receipts.py``) because services never import the hardware layer.
 """
@@ -30,10 +32,8 @@ from vaishnavi.services.measure import QuantitySpec, format_qty
 
 log = logging.getLogger("vaishnavi.services.receipt")
 
-MARK_LOOKUP: Final = "\u2020"  # †
+MARK_LOOKUP: Final = "\u2020"  # † — used on the billing screen, not printed
 MARK_OPEN: Final = "*"
-LEGEND_LOOKUP: Final = f"{MARK_LOOKUP} label damaged \u2013 looked up"
-LEGEND_OPEN: Final = f"{MARK_OPEN} open item"
 _BIG: Final = {"g": "kg", "ml": "L"}
 
 
@@ -168,7 +168,7 @@ class ReceiptService:
                         hindi[it.product_id] = self._store.name_hi(session, it.product_id)
         for it in sale.items:
             lines.append(self._line(it, name_hi=hindi.get(it.product_id or -1)))
-        markers = {ln.marker for ln in lines if ln.marker}
+        flagged = sum(1 for it in sale.items if it.is_open_item or it.entry_method == "LOOKUP")
 
         rows = [TotalRow("Subtotal (shelf price)", _amt(sale.subtotal_paise))]
         if sale.item_discount_paise:
@@ -200,7 +200,7 @@ class ReceiptService:
                 text += f" ({p.reference})"
             payments.append(text)
 
-        legend = "   ".join(x for x, present in ((LEGEND_LOOKUP, MARK_LOOKUP in markers), (LEGEND_OPEN, MARK_OPEN in markers)) if present)
+        legend = ""  # lookup / open-item flags are back-office information (review queue, cashier report), never printed
         upi = self._upi_id() if rc.show_qr_upi else None
         payload = None
         if upi:
@@ -226,7 +226,7 @@ class ReceiptService:
             payment_lines=payments, legend=legend, footer_lines=footer, barcode=receipt_ean13(sale.fin_year, sale.seq_no), upi_id=upi, upi_payload=payload,
             copy_label=label, paper_mm=rc.paper_width_mm, show_hindi=rc.show_hindi_name, extras={"sold_at": sale.sold_at}, saved_lines=saved_lines,
         )
-        log.debug("RECEIPT_MODEL sale=%s invoice=%s lines=%d markers=%s copy=%s", sale.id, sale.invoice_no, len(lines), "".join(sorted(markers)), label)
+        log.debug("RECEIPT_MODEL sale=%s invoice=%s lines=%d flagged_lines=%d copy=%s", sale.id, sale.invoice_no, len(lines), flagged, label)
         return model
 
     # -- renderers --------------------------------------------------------------------------------
@@ -274,7 +274,6 @@ class ReceiptService:
                 per = per[1:]
             price = f"{price}/{per}"
         name = it.open_item_name or it.name_snapshot
-        marker = MARK_OPEN if it.is_open_item else (MARK_LOOKUP if it.entry_method == "LOOKUP" else "")
         if name_hi and not it.is_open_item:
             name = f"{name} ({name_hi})"
         discount = "\u2014"
@@ -291,7 +290,7 @@ class ReceiptService:
             # Item row shows what the shelf said; the row beneath shows the discount and what was actually charged.
             amount = _amt(it.line_total_paise + it.discount_paise)
             discount_row = (label, f"-{_amt(it.discount_paise)}", _amt(it.line_total_paise))
-        return ReceiptLine(name=name, qty_text=qty_text, price_text=price, discount_text=discount, amount_text=amount, marker=marker, note=note, discount_row=discount_row)
+        return ReceiptLine(name=name, qty_text=qty_text, price_text=price, discount_text=discount, amount_text=amount, note=note, discount_row=discount_row)
 
 
 # ----------------------------------------------------------------------------- helpers

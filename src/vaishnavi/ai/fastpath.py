@@ -67,7 +67,9 @@ _OVERVIEW = re.compile(
 _SALES = re.compile(r"\b(today.?s? (sale|sales|total|collection)|aaj (ka|ki) (total|sale|bikri|kamai|collection)|current sale|आज की (बिक्री|कुल)|आज का (टोटल|कुल))\b", re.IGNORECASE)
 # ---- Owner business intents (live run 4): spend, item-wise sales, demand, forecast. Matched before the stock intents
 #      because "which item is of no demand" otherwise looks like a stock list, and "kitna item bika" like a stock query.
-_SPEND = re.compile(r"\b(kharch|kharcha|spent|spend|spending|expense|expenses|invest(ed|ment)?|paisa laga|paise lage|lagaya|purchase total|purchases?|khareed|khareeda|kharida|maal (aaya|mangaya))\b|खर्च|खरीद", re.IGNORECASE)
+_SPEND = re.compile(r"\b(kharch|kharcha|spent|spend|spending|expense|expenses|invest(ed|ment|ments)?|paisa laga|paise lage|paisa lagaya|lagaya|lagaye|lagai|purchase total|purchases?|khareed|khareeda|kharida|maal (aaya|mangaya)|capital)\b|खर्च|खरीद|निवेश|पैसा लगा|लगाया", re.IGNORECASE)
+_SUPPLIER = re.compile(r"\b(supplier|suppliers|vendor|vendors|distributor|wholesaler|purchase bills?|supplier ?wise|kis ?se (liya|aaya|mangaya))\b|सप्लायर|आपूर्तिकर्ता", re.IGNORECASE)
+"""Spend questions that name the supplier side stay on the purchases report; everything else is the investment total."""
 _FORECAST = re.compile(r"\b(forecast|predict(ion)?|future|upcoming|expected|anuman|agle|agla|aane ?wal[ae]|next (day|days|week|weeks|month|few)|growth|kitna bikega|bikegi|kya bikega)\b|पूर्वानुमान|अगले|आने वाल", re.IGNORECASE)
 _DEMAND_HIGH = re.compile(r"\b(high demand|most demand|zyada demand|jyada demand|high in demand|in demand|best ?sell(er|ers|ing)|top ?sell(er|ers|ing)|most (sold|selling|popular)|sabse (zyada|jyada|adhik) (bikta|bikti|bikne|bika|sale)|fast ?moving|hot items?|popular items?|top items?)\b|ज़्यादा (माँग|मांग|बिकता|बिकने)|सबसे ज़्यादा|सबसे ज्यादा", re.IGNORECASE)
 _DEMAND_NONE = re.compile(r"\b(no demand|low demand|less demand|kam demand|not (selling|sold|moving)|nahi bik(ta|ti|te|a|e|i)|bikta (hi )?nahi|unsold|dead stock|slow ?moving|worst ?sell(er|ers|ing)|least (sold|selling)|zero sale|no sale items?|koi demand nahi)\b|कम (माँग|मांग)|नहीं बिक|माँग नहीं|मांग नहीं", re.IGNORECASE)
@@ -154,7 +156,9 @@ def match(text: str) -> FastIntent | None:
     simple = words <= 6  # longer questions carry comparisons/conditions → the LLM
     business = words <= 16 and not _COMPLEX.search(t)  # the Owner's business questions are naturally longer ("maine shop mein kitna paisa ab tak kharch kiya hai")
     if business and _SPEND.search(t) and not _PRICE.search(t):
-        return FastIntent("spend", "purchases_summary", owner_only=True, args={"period": period_of(t, "all_time")})
+        if _SUPPLIER.search(t):
+            return FastIntent("spend_supplier", "purchases_summary", owner_only=True, args={"period": period_of(t, "all_time")})
+        return FastIntent("spend", "investment_summary", owner_only=True, args={"period": period_of(t, "all_time")})
     if business and _FORECAST.search(t) and not _LOW.search(t):
         return FastIntent("forecast", "forecast_sales", owner_only=True, args={"horizon_days": horizon_of(t)})
     if business and _DEMAND_NONE.search(t):
@@ -210,8 +214,12 @@ _T: Final[dict[str, dict[str, str]]] = {
         "out": "Out of stock ({count}): {items}.",
         "sales": "Today {net} · {bills} bills · average {avg_bill} · cash {cash_pct}%. Source: sales_summary, {period}.",
         "sales_period": "Sales {period}: {net} net · {bills} bills · average {avg_bill} · cash {cash_pct}%.",
-        "spend": "Spent on stock ({period}): {total} across {purchases} purchase bill(s). By supplier: {items}. Only supplier bills booked under Stock → Purchase are counted.",
+        "spend": "Supplier purchases ({period}): {total} across {purchases} purchase bill(s). By supplier: {items}. Only supplier bills booked under Stock → Purchase are counted; for the full investment ask \"how much have I invested so far\".",
         "spend_none": "No purchases are booked for {period}. Book supplier bills under Stock → Purchase and I can total them.",
+        "invest": "Investment in stock ({period}{since}): {total} — opening stock {opening} + purchases {purchases} + corrections {corrections}, across {items_count} item(s). Stock on the shelf today is worth {stock_value_now} at cost. By category: {categories}.{estimated}",
+        "invest_estimated": " {estimated_items} item(s) have no purchase price yet and are valued at selling price — set it under Products → Purchase price.",
+        "invest_since": ", since {since}",
+        "invest_none": "No stock has been entered for {period} — add opening stock or book a purchase under Stock, then I can total your investment.",
         "item_sales": "Item-wise sales {period} ({count} items): {items}.",
         "item_sales_none": "Nothing sold {period}.",
         "high_demand": "Most in demand {period}: {items}.",
@@ -240,8 +248,12 @@ _T: Final[dict[str, dict[str, str]]] = {
         "out": "ख़त्म ({count}): {items}।",
         "sales": "आज {net} · {bills} बिल · औसत {avg_bill} · नकद {cash_pct}%। स्रोत: sales_summary, {period}।",
         "sales_period": "बिक्री {period}: {net} शुद्ध · {bills} बिल · औसत {avg_bill} · नकद {cash_pct}%।",
-        "spend": "स्टॉक पर खर्च ({period}): {total}, {purchases} खरीद बिल। सप्लायर अनुसार: {items}। सिर्फ़ स्टॉक → खरीद में दर्ज सप्लायर बिल गिने जाते हैं।",
+        "spend": "सप्लायर खरीद ({period}): {total}, {purchases} खरीद बिल। सप्लायर अनुसार: {items}। सिर्फ़ स्टॉक → खरीद में दर्ज सप्लायर बिल गिने जाते हैं; पूरे निवेश के लिए पूछें \"अब तक कितना निवेश किया\"।",
         "spend_none": "{period} की कोई खरीद दर्ज नहीं है। सप्लायर बिल स्टॉक → खरीद में दर्ज करें, फिर मैं जोड़ दूँगा।",
+        "invest": "स्टॉक में निवेश ({period}{since}): {total} — शुरुआती स्टॉक {opening} + खरीद {purchases} + सुधार {corrections}, {items_count} वस्तुओं में। आज शेल्फ़ पर रखे स्टॉक का लागत मूल्य {stock_value_now} है। श्रेणी अनुसार: {categories}।{estimated}",
+        "invest_estimated": " {estimated_items} वस्तु(ओं) की खरीद कीमत दर्ज नहीं है, इसलिए बिक्री कीमत पर गिनी गई — आइटम → खरीद कीमत में भरें।",
+        "invest_since": ", {since} से",
+        "invest_none": "{period} में कोई स्टॉक दर्ज नहीं हुआ — स्टॉक में शुरुआती स्टॉक या खरीद दर्ज करें, फिर मैं आपका निवेश जोड़ दूँगा।",
         "item_sales": "आइटम-वार बिक्री {period} ({count} वस्तुएँ): {items}।",
         "item_sales_none": "{period} कुछ नहीं बिका।",
         "high_demand": "सबसे ज़्यादा माँग {period}: {items}।",
@@ -270,8 +282,12 @@ _T: Final[dict[str, dict[str, str]]] = {
         "out": "Khatam ({count}): {items}.",
         "sales": "Aaj {net} · {bills} bills · average {avg_bill} · cash {cash_pct}%. Source: sales_summary, {period}.",
         "sales_period": "Sale {period}: {net} net · {bills} bills · average {avg_bill} · cash {cash_pct}%.",
-        "spend": "Stock par kharch ({period}): {total}, {purchases} purchase bill. Supplier-wise: {items}. Sirf Stock → Purchase mein darj supplier bills gine jaate hain.",
+        "spend": "Supplier purchase ({period}): {total}, {purchases} purchase bill. Supplier-wise: {items}. Sirf Stock → Purchase mein darj supplier bills gine jaate hain; poore investment ke liye poochhein \"ab tak kitna invest kiya\".",
         "spend_none": "{period} ki koi purchase darj nahi hai. Supplier bills Stock → Purchase mein darj karein, phir main total bata dunga.",
+        "invest": "Stock mein investment ({period}{since}): {total} — opening stock {opening} + purchases {purchases} + corrections {corrections}, {items_count} items mein. Aaj shelf par rakhe stock ki cost value {stock_value_now} hai. Category-wise: {categories}.{estimated}",
+        "invest_estimated": " {estimated_items} item ki purchase price darj nahi hai, isliye selling price par gini gayi — Products → Purchase price mein bharein.",
+        "invest_since": ", {since} se",
+        "invest_none": "{period} mein koi stock darj nahi hua — Stock mein opening stock ya purchase darj karein, phir main aapka investment jod dunga.",
         "item_sales": "Item-wise sale {period} ({count} items): {items}.",
         "item_sales_none": "{period} kuch nahi bika.",
         "high_demand": "Sabse zyada demand {period}: {items}.",
@@ -359,6 +375,16 @@ def answer(text: str, *, role: Role, language: str, run_tool: ToolRunner) -> Fas
                 out = FastAnswer(tpl("spend").format(period=period, total=r.get("total"), purchases=sum(int(x.get("purchases") or 0) for x in rows), items=items), "purchases_summary", "/reports/purchases", intent.name)
             else:
                 out = FastAnswer(tpl("spend_none").format(period=period), "purchases_summary", "/stock/purchase", intent.name)
+        elif intent.tool == "investment_summary":
+            r = run_tool("investment_summary", period=intent.args.get("period", "all_time"), limit=6)
+            period = r.get("period", "")
+            if int(r.get("items_count") or 0) > 0:
+                cats = ", ".join(f"{x.get('category') or '-'} {x.get('amount')}" for x in (r.get("categories") or [])[:6]) or "-"
+                since = tpl("invest_since").format(since=r["since"]) if r.get("since") else ""
+                estimated = tpl("invest_estimated").format(estimated_items=r.get("estimated_items")) if int(r.get("estimated_items") or 0) else ""
+                out = FastAnswer(tpl("invest").format(period=period, since=since, total=r.get("total"), opening=r.get("opening_stock"), purchases=r.get("purchases"), corrections=r.get("corrections"), items_count=r.get("items_count"), stock_value_now=r.get("stock_value_now"), categories=cats, estimated=estimated), "investment_summary", "/reports/investment", intent.name)
+            else:
+                out = FastAnswer(tpl("invest_none").format(period=period), "investment_summary", "/stock", intent.name)
         elif intent.tool == "demand_ranking":
             r = run_tool("demand_ranking", period=intent.args.get("period", "today"), order=intent.args.get("order", "top"), limit=intent.args.get("limit", 10))
             rows = list(r.get("items") or [])

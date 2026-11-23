@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 import tempfile
 import unittest
@@ -143,11 +144,22 @@ class OpenCloseTest(Base):
         actions = [r[0] for r in self._q("SELECT action FROM audit_log WHERE action LIKE 'SHIFT_%' OR action LIKE 'CASH_%' ORDER BY id")]
         self.assertEqual(actions, ["CASH_IN", "SHIFT_CLOSED"])
 
-    def test_negative_variance_needs_a_note_and_owner_can_close_staff_shift(self) -> None:
-        with self.assertRaises(ValueError):
+    def test_any_difference_needs_a_note_and_the_owner_pin(self) -> None:
+        """Live run 5b: cash short/over or UPI ≠ system → note + Owner PIN (staff); the Owner closes with a note alone."""
+        with self.assertRaises(ShiftError) as cm:
             self.shifts.close(STAFF, 1, counted_cash_paise=3800, note="")
+        self.assertEqual(cm.exception.code, "E-SHIFT-005")
+        with self.assertRaises(ShiftError):
+            self.shifts.close(STAFF, 1, counted_cash_paise=4200, note="")  # over is a difference too
+        with self.assertRaises(PinRequired):
+            self.shifts.close(STAFF, 1, counted_cash_paise=3800, note="₹2 short, probably change error")
+        self.assertEqual(self.shifts.current(2).status, "OPEN", "nothing was written")  # type: ignore[union-attr]
+        rec = self.shifts.reconcile(1, counted_cash_paise=3800, declared_by_mode={"UPI": 0})
+        self.assertEqual((rec.opening_float_paise, rec.cash_sales_paise, rec.expected_cash_paise, rec.cash_variance_paise, rec.matches), (0, 4000, 4000, -200, False))
+        self.assertEqual(rec.mismatch_text(), "cash -₹2.00")
+        self.assertTrue(self.shifts.reconcile(1, counted_cash_paise=3800, tolerance_paise=200).matches, "a tolerance set by the Owner absorbs small change errors")
         z = self.shifts.close(OWNER, 1, counted_cash_paise=3800, note="₹2 short, probably change error")
-        self.assertEqual((z.variance_paise, z.closed_by_user_id, z.note), (-200, 1, "₹2 short, probably change error"))
+        self.assertEqual((z.variance_paise, z.closed_by_user_id, z.approved_by_user_id, z.note), (-200, 1, 1, "₹2 short, probably change error"))
         hist = self.shifts.variance_history(limit=10)
         self.assertEqual([(h.user_id, h.variance_paise) for h in hist], [(2, -200)])
         self.assertEqual(self.shifts.variance_history(user_id=1), [])
@@ -155,6 +167,25 @@ class OpenCloseTest(Base):
         self.assertEqual(summary[2].shifts, 1)
         self.assertEqual(summary[2].negative_shifts, 1)
         self.assertEqual(summary[2].total_variance_paise, -200)
+
+    def test_declared_upi_is_reconciled_like_cash(self) -> None:
+        self._sale(STAFF, [PaymentInput("UPI", 2000)])
+        rec = self.shifts.reconcile(1, counted_cash_paise=4000, declared_by_mode={"upi": 1500})
+        self.assertEqual((rec.by_mode, rec.declared_by_mode, rec.mode_variance_paise, rec.matches), ({"CASH": 4000, "UPI": 2000}, {"UPI": 1500}, {"UPI": -500}, False))
+        self.assertEqual(rec.mismatch_text(), "UPI -₹5.00")
+        with self.assertRaises(PinRequired):
+            self.shifts.close(STAFF, 1, counted_cash_paise=4000, note="one UPI payment still pending in app", declared_by_mode={"UPI": 1500})
+        z = self.shifts.close(STAFF_PIN, 1, counted_cash_paise=4000, note="one UPI payment still pending in app", declared_by_mode={"UPI": 1500}, approver_id=1)
+        self.assertEqual((z.variance_paise, z.approved_by_user_id), (0, 1))
+        self.assertEqual(json.loads(z.declared_json), {"UPI": {"declared": 1500, "system": 2000}})
+        report = self.shifts.z_report(1)
+        self.assertEqual(report.declared_by_mode, {"UPI": 1500})
+        lines = self.shifts.report_lines(report)
+        self.assertTrue(any("UPI as per app" in ln and "15.00" in ln for ln in lines), lines)
+        self.assertTrue(any("UPI difference" in ln and "-₹5.00" in ln for ln in lines), lines)
+        self.assertTrue(any("approved by" in ln for ln in lines), lines)
+        after = json.loads(self._q("SELECT after FROM audit_log WHERE action = 'SHIFT_CLOSED'")[0][0])
+        self.assertEqual((after["matched"], after["mode_variance_paise"]), (False, {"UPI": -500}))
 
     def ledger_head(self) -> str:
         with self.txn(label="t") as session:

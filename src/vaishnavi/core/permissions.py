@@ -41,6 +41,7 @@ class Permission(str, Enum):
     HOLD_RESUME_REPRINT = "HOLD_RESUME_REPRINT"
     VOID_REFUND = "VOID_REFUND"
     SHIFT_OWN = "SHIFT_OWN"  # open/close own shift, cash-in
+    SHIFT_CLOSE_VARIANCE = "SHIFT_CLOSE_VARIANCE"  # close when counted cash / declared UPI does not match the system
     CASH_OUT = "CASH_OUT"
     VIEW_STOCK_LEVEL = "VIEW_STOCK_LEVEL"
     # Money & pricing
@@ -79,6 +80,7 @@ MATRIX: Final[dict[Permission, dict[Role, Grant]]] = {
     Permission.HOLD_RESUME_REPRINT: {Role.OWNER: _A, Role.STAFF: _A},
     Permission.VOID_REFUND: {Role.OWNER: _A, Role.STAFF: _P},
     Permission.SHIFT_OWN: {Role.OWNER: _A, Role.STAFF: _A},
+    Permission.SHIFT_CLOSE_VARIANCE: {Role.OWNER: _A, Role.STAFF: _P},
     Permission.CASH_OUT: {Role.OWNER: _A, Role.STAFF: _P},
     Permission.VIEW_STOCK_LEVEL: {Role.OWNER: _A, Role.STAFF: _A},
     Permission.EDIT_PRICES: {Role.OWNER: _A, Role.STAFF: _D},

@@ -12,6 +12,7 @@ success, rollback on any exception, connection closed explicitly (Windows file l
 
 from __future__ import annotations
 
+import json
 import logging
 import sqlite3
 from collections.abc import Iterable, Iterator
@@ -24,7 +25,7 @@ from typing import Any
 from vaishnavi.core.barcode import parse_receipt_ean13
 from vaishnavi.core.logging import current_cid
 from vaishnavi.core.permissions import Role
-from vaishnavi.db.records import GENESIS_HASH, AuditEntry, BarcodeRecord, CashEventRecord, CategoryRecord, ChatMessageRecord, ChatSecurityEventRecord, CustomerRecord, ForecastSnapshotRecord, HeldCartRecord, MovementRecord, OfferRecord, OverrideRecord, PaymentView, PriceHistoryRecord, ProductRecord, PromptVersionRecord, PublishQueueRecord as QueueItem, PurchaseRecord, SaleItemView, SaleView, ShiftRecord, StockCountLineRecord, StockCountRecord, SupplierRecord, UserRecord, WorkSessionRecord
+from vaishnavi.db.records import GENESIS_HASH, AuditEntry, BarcodeRecord, CashEventRecord, CashierDayRecordRow, CategoryRecord, ChatMessageRecord, ChatSecurityEventRecord, CustomerRecord, DayRecordItem, ForecastSnapshotRecord, HeldCartRecord, MovementRecord, OfferRecord, OverrideRecord, PaymentView, PriceHistoryRecord, ProductRecord, PromptVersionRecord, PublishQueueRecord as QueueItem, PurchaseRecord, SaleItemView, SaleView, ShiftRecord, StockCountLineRecord, StockCountRecord, SupplierRecord, UserRecord, WorkSessionRecord
 
 log = logging.getLogger("vaishnavi.db.sqlite_stores")
 
@@ -998,12 +999,12 @@ class SqliteHardwareStore:
 
 
 # ----------------------------------------------------------------------------- shifts & cash
-_SHIFT_COLS = "id, user_id, opened_at, closed_at, opening_float_paise, expected_cash_paise, counted_cash_paise, denominations, variance_paise, closed_by_user_id, status, note, opening_denominations"
-_SHIFT_CLOSE_COLS = frozenset({"closed_at", "expected_cash_paise", "counted_cash_paise", "denominations", "variance_paise", "closed_by_user_id", "status", "note"})
+_SHIFT_COLS = "id, user_id, opened_at, closed_at, opening_float_paise, expected_cash_paise, counted_cash_paise, denominations, variance_paise, closed_by_user_id, status, note, opening_denominations, declared_json, approved_by_user_id"
+_SHIFT_CLOSE_COLS = frozenset({"closed_at", "expected_cash_paise", "counted_cash_paise", "denominations", "variance_paise", "closed_by_user_id", "status", "note", "declared_json", "approved_by_user_id"})
 
 
 def _shift(row: tuple[Any, ...]) -> ShiftRecord:
-    return ShiftRecord(int(row[0]), int(row[1]), str(row[2]), row[3], int(row[4]), row[5], row[6], row[7], row[8], row[9], str(row[10]), row[11], row[12])
+    return ShiftRecord(int(row[0]), int(row[1]), str(row[2]), row[3], int(row[4]), row[5], row[6], row[7], row[8], row[9], str(row[10]), row[11], row[12], row[13], row[14])
 
 
 def _cash_event(row: tuple[Any, ...]) -> CashEventRecord:
@@ -1170,6 +1171,26 @@ class SqliteReportStore:
         """Quantity and rupees per catalogue product over completed bills (open items excluded)."""
         return _row_dicts(conn, "SELECT si.product_id, p.name, COALESCE(SUM(si.qty), 0) AS qty, COALESCE(SUM(si.line_total_paise), 0) AS amount_paise FROM sale_item si JOIN sale s ON s.id = si.sale_id JOIN product p ON p.id = si.product_id WHERE s.status = 'COMPLETED' AND si.is_open_item = 0 AND s.sold_at >= ? AND s.sold_at < ? GROUP BY si.product_id, p.name", (since, until))
 
+    def item_totals(self, conn: sqlite3.Connection, *, since: str, until: str) -> list[dict[str, Any]]:
+        """Every line sold in the window grouped per item — catalogue products by id, open (typed) items by name — with the unit columns needed to print "200 g" / "2 pcs"."""
+        return _row_dicts(conn, """
+            SELECT CASE WHEN si.is_open_item = 1 THEN NULL ELSE si.product_id END AS product_id,
+                   CASE WHEN si.is_open_item = 1 THEN COALESCE(si.open_item_name, si.name_snapshot) ELSE p.name END AS name,
+                   si.is_open_item,
+                   COALESCE(p.sale_mode, 'PIECE') AS sale_mode,
+                   COALESCE(p.base_unit, si.unit) AS base_unit,
+                   si.unit,
+                   COALESCE(SUM(si.qty), 0) AS qty,
+                   COALESCE(SUM(si.line_total_paise), 0) AS amount_paise,
+                   COUNT(DISTINCT s.id) AS bills
+            FROM sale_item si
+            JOIN sale s ON s.id = si.sale_id
+            LEFT JOIN product p ON p.id = si.product_id AND si.is_open_item = 0
+            WHERE s.status = 'COMPLETED' AND s.sold_at >= ? AND s.sold_at < ?
+            GROUP BY si.is_open_item, CASE WHEN si.is_open_item = 1 THEN COALESCE(si.open_item_name, si.name_snapshot) ELSE si.product_id END
+            ORDER BY amount_paise DESC, name
+            """, (since, until))
+
     def basket_pairs(self, conn: sqlite3.Connection, *, since: str, until: str, limit: int) -> list[dict[str, Any]]:
         """Product pairs that appear together on one bill, counted once per bill (a < b avoids mirror rows)."""
         sql = (
@@ -1206,6 +1227,33 @@ class SqliteReportStore:
     def profit_lines(self, conn: sqlite3.Connection, *, since: str, until: str) -> list[dict[str, Any]]:
         """Catalogue lines with their cost snapshot (completed bills and credit notes)."""
         return _row_dicts(conn, "SELECT si.product_id, si.name_snapshot, si.qty, si.pricing_unit_qty_snapshot, si.line_total_paise, si.cost_paise_snapshot, s.status FROM sale_item si JOIN sale s ON s.id = si.sale_id WHERE si.is_open_item = 0 AND s.sold_at >= ? AND s.sold_at < ?", (since, until))
+
+    def investment_lines(self, conn: sqlite3.Connection, *, since: str, until: str) -> list[dict[str, Any]]:
+        """Stock that came *in* (opening · purchase · positive corrections) per product and movement type, valued.
+
+        Value = Σ qty × unit cost, where the unit cost is the movement's own snapshot, else the product's
+        current purchase price, else its selling price (``estimated_lines`` counts those last-resort rows).
+        Also returns the product's current stock so the caller can show "invested vs. still on the shelf".
+        """
+        return _row_dicts(conn, """
+            SELECT p.id AS product_id, p.name, COALESCE(c.name, '') AS category, m.type,
+                   COALESCE(SUM(m.qty_delta), 0) AS qty,
+                   CAST(COALESCE(SUM(m.qty_delta * COALESCE(m.unit_cost_paise, p.cost_paise, p.price_paise)), 0) AS INTEGER) AS amount_paise,
+                   SUM(CASE WHEN m.unit_cost_paise IS NULL AND p.cost_paise IS NULL THEN 1 ELSE 0 END) AS estimated_lines,
+                   COUNT(*) AS movements,
+                   MIN(m.created_at) AS first_at,
+                   MAX(m.created_at) AS last_at,
+                   COALESCE(ps.qty, 0) AS stock_qty,
+                   CAST(COALESCE(ps.qty, 0) * COALESCE(p.cost_paise, p.price_paise) AS INTEGER) AS stock_value_paise
+            FROM stock_movement m
+            JOIN product p ON p.id = m.product_id
+            LEFT JOIN category c ON c.id = p.category_id
+            LEFT JOIN product_stock ps ON ps.product_id = p.id
+            WHERE m.qty_delta > 0 AND m.type IN ('OPENING', 'PURCHASE', 'ADJUSTMENT', 'STOCK_TAKE')
+              AND m.created_at >= ? AND m.created_at < ?
+            GROUP BY p.id, m.type
+            ORDER BY p.name, m.type
+            """, (since, until))
 
     def sale_times(self, conn: sqlite3.Connection, *, since: str, until: str) -> list[str]:
         """``sold_at`` of completed bills."""
@@ -1390,3 +1438,43 @@ class SqlitePublishStore:
         """Creation time of the newest SENT row (attempts are not timestamped separately)."""
         r = conn.execute("SELECT created_at FROM publish_queue WHERE status = 'SENT' ORDER BY id DESC LIMIT 1").fetchone()
         return str(r[0]) if r else None
+
+
+# ----------------------------------------------------------------------------- cashier day book
+class SqliteCashierRecordStore:
+    """``services.cashier_records.CashierRecordStore`` on ``cashier_day_record``."""
+
+    _COLS = "id, sale_id, invoice_no, business_day, sold_at, user_id, cashier_name, shift_id, status, line_count, item_qty, total_paise, payment_modes, items_json, created_at"
+
+    @staticmethod
+    def _row(r: tuple[Any, ...]) -> CashierDayRecordRow:
+        items = tuple(DayRecordItem(str(i.get("name", "")), str(i.get("qty", "")), str(i.get("unit", "")), int(i.get("rate_paise", 0)), int(i.get("amount_paise", 0)), str(i.get("entry_method", "")), bool(i.get("is_open_item", False)), int(i.get("discount_paise", 0))) for i in json.loads(r[13] or "[]"))
+        return CashierDayRecordRow(int(r[0]), int(r[1]), str(r[2]), str(r[3]), str(r[4]), int(r[5]), str(r[6]), int(r[7]), str(r[8]), int(r[9]), _dec(r[10]), int(r[11]), str(r[12] or ""), items, str(r[14]))
+
+    def insert(self, conn: sqlite3.Connection, *, sale_id: int, invoice_no: str, business_day: str, sold_at: str, user_id: int, cashier_name: str, shift_id: int, status: str, line_count: int, item_qty: Decimal, total_paise: int, payment_modes: str, items_json: str, created_at: str) -> int | None:
+        """One row per sale; a repeat for the same sale is ignored (returns None)."""
+        cur = conn.execute(
+            "INSERT OR IGNORE INTO cashier_day_record(sale_id, invoice_no, business_day, sold_at, user_id, cashier_name, shift_id, status, line_count, item_qty, total_paise, payment_modes, items_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (sale_id, invoice_no, business_day, sold_at, user_id, cashier_name, shift_id, status, line_count, str(item_qty), total_paise, payment_modes, items_json, created_at),
+        )
+        return int(cur.lastrowid) if cur.rowcount else None
+
+    def list(self, conn: sqlite3.Connection, *, since_day: str, until_day: str, user_id: int | None, limit: int) -> list[CashierDayRecordRow]:
+        """Rows whose shop day is within ``[since_day, until_day]``, newest first."""
+        where = "business_day >= ? AND business_day <= ?"
+        params: list[Any] = [since_day, until_day]
+        if user_id is not None:
+            where += " AND user_id = ?"
+            params.append(user_id)
+        params.append(limit)
+        rows = conn.execute(f"SELECT {self._COLS} FROM cashier_day_record WHERE {where} ORDER BY sold_at DESC, id DESC LIMIT ?", params).fetchall()  # noqa: S608
+        return [self._row(r) for r in rows]
+
+    def delete_before(self, conn: sqlite3.Connection, *, day: str) -> int:
+        """Delete rows whose shop day is strictly before ``day``; returns the count."""
+        return int(conn.execute("DELETE FROM cashier_day_record WHERE business_day < ?", (day,)).rowcount)
+
+    def stats(self, conn: sqlite3.Connection) -> tuple[int, str | None, str | None]:
+        """``(rows, oldest day, newest day)``."""
+        r = conn.execute("SELECT COUNT(*), MIN(business_day), MAX(business_day) FROM cashier_day_record").fetchone()
+        return (int(r[0]), r[1], r[2]) if r else (0, None, None)

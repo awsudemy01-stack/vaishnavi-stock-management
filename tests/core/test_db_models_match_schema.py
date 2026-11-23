@@ -187,6 +187,31 @@ class MigrateStdlibPartsTest(unittest.TestCase):
             finally:
                 conn.close()
 
+    def test_0003_steps_replayed_with_sqlite3_add_the_reconciliation_columns(self) -> None:
+        """0003 only adds nullable columns; replay its ALTERs on a 0002-shaped database and read old rows back as NULL."""
+        text = (Path(__file__).resolve().parents[2] / "src" / "vaishnavi" / "db" / "alembic" / "versions" / "0003_shift_reconcile.py").read_text(encoding="utf-8")
+        self.assertIn('down_revision = "0002_staff_receive"', text)
+        tree = ast.parse(text)
+        columns = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign) and isinstance(n.targets[0], ast.Name) and n.targets[0].id == "COLUMNS")
+        self.assertEqual([c[0] for c in columns], ["declared_json", "approved_by_user_id"])
+        with tempfile.TemporaryDirectory() as tmp:
+            conn = sqlite3.connect(Path(tmp) / "v2.db")
+            try:
+                apply_schema(conn)
+                conn.execute("PRAGMA foreign_keys = OFF")  # the table swap below would otherwise break cash_event's FK
+                conn.executescript("CREATE TABLE shift_old AS SELECT id, user_id, opened_at, closed_at, opening_float_paise, opening_denominations, expected_cash_paise, counted_cash_paise, denominations, variance_paise, closed_by_user_id, status, note FROM shift; DROP TABLE shift; ALTER TABLE shift_old RENAME TO shift;")
+                conn.executescript("INSERT INTO role(id, name) VALUES (1, 'OWNER'), (2, 'STAFF'); INSERT INTO user(id, username, display_name, role_id, password_hash) VALUES (1, 'o', 'O', 1, 'x'), (2, 's', 'S', 2, 'x');")
+                conn.execute("INSERT INTO shift(user_id, opened_at, opening_float_paise, status) VALUES (2, 'now', 0, 'CLOSED')")
+                existing = {row[1] for row in conn.execute("PRAGMA table_info(shift)").fetchall()}
+                for name, ddl in columns:
+                    self.assertNotIn(name, existing)
+                    conn.execute(f"ALTER TABLE shift ADD COLUMN {name} {ddl}")
+                self.assertEqual(conn.execute("SELECT declared_json, approved_by_user_id FROM shift").fetchone(), (None, None), "old rows read back as NULL")
+                conn.execute("UPDATE shift SET declared_json = ?, approved_by_user_id = 1 WHERE user_id = 2", ('{"UPI": {"declared": 100, "system": 100}}',))
+                self.assertEqual(conn.execute("SELECT approved_by_user_id FROM shift").fetchone()[0], 1)
+            finally:
+                conn.close()
+
 
 if __name__ == "__main__":
     unittest.main()

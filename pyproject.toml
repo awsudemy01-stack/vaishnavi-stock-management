@@ -286,6 +286,7 @@ source_modules = [
   "vaishnavi.services.shift",
   "vaishnavi.services.open_item_review",
   "vaishnavi.services.report",
+  "vaishnavi.services.cashier_records",
   "vaishnavi.services.forecast",
   "vaishnavi.services.insights",
   "vaishnavi.forecast.series",

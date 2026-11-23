@@ -25,6 +25,7 @@ from vaishnavi.db.records import AuditEntry
 from vaishnavi.services.audit import AuditService
 from vaishnavi.services.common import Session, TxnFactory
 from vaishnavi.services.ledger import LedgerService
+from vaishnavi.services.measure import format_qty, spec_for
 
 log = logging.getLogger("vaishnavi.services.report")
 
@@ -211,6 +212,30 @@ class TopSellerRow:
 
 
 @dataclass(frozen=True)
+class ItemTotalRow:
+    """One item's quantity and rupees over a window (Sales by date)."""
+
+    product_id: int | None
+    """None for open (typed) items, which are grouped by their typed name."""
+    name: str
+    qty: Decimal
+    qty_text: str
+    """``"10 pcs"``, ``"200 g"``, ``"1.5 L"`` — the product's own unit."""
+    bills: int
+    amount_paise: int
+    is_open_item: bool = False
+
+
+@dataclass(frozen=True)
+class DaySalesReport:
+    """Sales by date: what sold on one shop day, item by item, and how the money came in."""
+
+    day: str
+    items: list[ItemTotalRow]
+    summary: SalesSummary
+
+
+@dataclass(frozen=True)
 class BasketPairRow:
     """Two products that sell together."""
 
@@ -288,6 +313,57 @@ class StockAsOfRow:
     value_cost_paise: int
 
 
+@dataclass(frozen=True)
+class InvestmentRow:
+    """Money put into one item since the app started: every unit that came in × what it cost."""
+
+    product_id: int
+    name: str
+    category: str
+    qty_in: Decimal
+    """Opening + purchases + positive corrections, base units."""
+    opening_paise: int
+    purchases_paise: int
+    corrections_paise: int
+    """Positive adjustments and stock-take gains, valued at cost."""
+    invested_paise: int
+    stock_qty: Decimal
+    stock_value_paise: int
+    """What is still on the shelf today, at cost."""
+    first_at: str
+    """When the first unit of this item came in (ISO UTC)."""
+    estimated: bool
+    """True when no purchase price was ever recorded — valued at the selling price."""
+
+
+@dataclass(frozen=True)
+class CategoryInvestmentRow:
+    """Per category subtotal."""
+
+    category: str
+    items: int
+    qty_in: Decimal
+    invested_paise: int
+    stock_value_paise: int
+
+
+@dataclass(frozen=True)
+class InvestmentReport:
+    """"How much have I put into the shop so far" — the answer the Owner asks the assistant for."""
+
+    rows: list[InvestmentRow]
+    categories: list[CategoryInvestmentRow]
+    opening_paise: int
+    purchases_paise: int
+    corrections_paise: int
+    invested_paise: int
+    stock_value_paise: int
+    items: int
+    estimated_items: int
+    since: str | None
+    """ISO UTC of the very first stock that came in (None when nothing has)."""
+
+
 # ----------------------------------------------------------------------------- store
 class ReportStore(Protocol):
     """SQL behind the reports."""
@@ -303,6 +379,7 @@ class ReportStore(Protocol):
     def sales_by_day(self, session: Session, *, since: str, until: str, offset_minutes: int) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
     def item_sales(self, session: Session, *, product_id: int, since: str, until: str, offset_minutes: int) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
     def product_totals(self, session: Session, *, since: str, until: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
+    def item_totals(self, session: Session, *, since: str, until: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
     def basket_pairs(self, session: Session, *, since: str, until: str, limit: int) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
     def completed_bills(self, session: Session, *, since: str, until: str) -> int: ...  # pragma: no cover - protocol
     def dead_stock(self, session: Session, *, since: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
@@ -310,6 +387,7 @@ class ReportStore(Protocol):
     def purchases_by_supplier(self, session: Session, *, since: str, until: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
     def purchases_by_day(self, session: Session, *, since: str, until: str) -> list[tuple[str, int, int]]: ...  # pragma: no cover - protocol
     def profit_lines(self, session: Session, *, since: str, until: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
+    def investment_lines(self, session: Session, *, since: str, until: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
     def sale_times(self, session: Session, *, since: str, until: str) -> list[str]: ...  # pragma: no cover - protocol
     def stock_as_of(self, session: Session, *, day: str) -> list[dict[str, Any]]: ...  # pragma: no cover - protocol
 
@@ -436,6 +514,28 @@ class ReportService:
         key = (lambda r: (-_dec(r["qty"]), -int(r["amount_paise"]))) if by == "qty" else (lambda r: (-int(r["amount_paise"]), -_dec(r["qty"])))
         return [TopSellerRow(int(r["product_id"]), str(r["name"]), _dec(r["qty"]), int(r["amount_paise"]), int(round(int(r["amount_paise"]) * 100 / revenue))) for r in sorted(rows, key=key)[:limit]]
 
+    def item_totals(self, actor: Actor, *, since: str | None = None, until: str | None = None) -> list[ItemTotalRow]:
+        """Quantity (in the item's own unit) and rupees per item over the window; open items grouped by typed name."""
+        require(actor, Permission.REPORT_SALES)
+        a, b = _window(since, until)
+        with self._txn(label="report.item_totals") as session:
+            rows = self._store.item_totals(session, since=a, until=b)
+        out = []
+        for r in rows:
+            qty = _dec(r["qty"])
+            open_item = bool(r["is_open_item"])
+            text = f"{_q(qty)} {r['unit']}".strip() if open_item else format_qty(spec_for(_UnitSpec(str(r["sale_mode"]), str(r["base_unit"]))), qty)
+            out.append(ItemTotalRow(None if open_item else int(r["product_id"]), str(r["name"]), qty, text, int(r["bills"]), int(r["amount_paise"]), open_item))
+        return out
+
+    def day_sales(self, actor: Actor, day: str) -> DaySalesReport:
+        """Sales by date: one shop day's items with quantities, plus the totals by payment mode."""
+        require(actor, Permission.REPORT_SALES)
+        items = self.item_totals(actor, since=day, until=day)
+        summary = self.sales_summary(actor, since=day, until=day)
+        log.debug("DAY_SALES day=%s items=%d net=%d", day, len(items), summary.net_paise)
+        return DaySalesReport(day, items, summary)
+
     def basket_pairs(self, actor: Actor, *, since: str | None = None, until: str | None = None, limit: int = 30) -> list[BasketPairRow]:
         """Products bought together — what to shelve side by side or bundle for a festival offer."""
         require(actor, Permission.REPORT_SALES)
@@ -504,6 +604,40 @@ class ReportService:
         cost = sum(r.cost_paise for r in rows)
         return ProfitReport(rows, revenue, cost, revenue - cost, unknown)
 
+    def investment(self, actor: Actor, *, since: str | None = None, until: str | None = None) -> InvestmentReport:
+        """Total money put into stock: every unit that came in (opening · purchases · positive corrections) × its cost.
+
+        Default window is *everything since the app started* (not the usual 90 days) because the question is
+        "what is my investment so far". Each movement carries the cost on the day it came in; items that never
+        had a purchase price are valued at their selling price and flagged ``estimated``.
+        """
+        require(actor, Permission.REPORT_PURCHASES)
+        a, b = _window(since or "2000-01-01", until)
+        with self._txn(label="report.investment") as session:
+            lines = self._store.investment_lines(session, since=a, until=b)
+        acc: dict[int, dict[str, Any]] = {}
+        for ln in lines:
+            cur = acc.setdefault(int(ln["product_id"]), {"name": str(ln["name"]), "category": str(ln["category"] or ""), "qty": Decimal(0), "OPENING": 0, "PURCHASE": 0, "CORRECTION": 0, "stock_qty": _dec(ln["stock_qty"]), "stock_value": int(ln["stock_value_paise"]), "first": str(ln["first_at"]), "estimated": False})
+            kind = str(ln["type"]) if ln["type"] in ("OPENING", "PURCHASE") else "CORRECTION"
+            cur[kind] += int(ln["amount_paise"])
+            cur["qty"] += _dec(ln["qty"])
+            cur["first"] = min(cur["first"], str(ln["first_at"]))
+            cur["estimated"] = cur["estimated"] or int(ln["estimated_lines"] or 0) > 0
+        rows = [InvestmentRow(pid, v["name"], v["category"], v["qty"], v["OPENING"], v["PURCHASE"], v["CORRECTION"], v["OPENING"] + v["PURCHASE"] + v["CORRECTION"], v["stock_qty"], v["stock_value"], v["first"], v["estimated"]) for pid, v in acc.items()]
+        rows.sort(key=lambda r: (-r.invested_paise, r.name))
+        cats: dict[str, list[Any]] = {}
+        for r in rows:
+            c = cats.setdefault(r.category or "—", [0, Decimal(0), 0, 0])
+            c[0] += 1
+            c[1] += r.qty_in
+            c[2] += r.invested_paise
+            c[3] += r.stock_value_paise
+        categories = sorted((CategoryInvestmentRow(k, v[0], v[1], v[2], v[3]) for k, v in cats.items()), key=lambda c: -c.invested_paise)
+        opening, purchases, corrections = (sum(getattr(r, f) for r in rows) for f in ("opening_paise", "purchases_paise", "corrections_paise"))
+        report = InvestmentReport(rows, categories, opening, purchases, corrections, opening + purchases + corrections, sum(r.stock_value_paise for r in rows), len(rows), sum(1 for r in rows if r.estimated), min((r.first_at for r in rows), default=None))
+        log.info("INVESTMENT_REPORT items=%d invested=%d stock_value=%d estimated=%d", report.items, report.invested_paise, report.stock_value_paise, report.estimated_items)
+        return report
+
     def hourly_heatmap(self, actor: Actor, *, since: str | None = None, until: str | None = None) -> dict[tuple[int, int], int]:
         """``{(weekday 0=Mon, hour): bills}`` in shop time — when the counter is busy."""
         require(actor, Permission.REPORT_SALES)
@@ -541,15 +675,23 @@ class ReportService:
 
     # -- export -------------------------------------------------------------------------------
     @staticmethod
-    def to_csv(rows: Sequence[Any]) -> str:
-        """Dataclass rows → CSV text with a UTF-8 BOM (Excel opens Hindi correctly)."""
+    def to_csv(rows: Sequence[Any], *, letterhead: Sequence[str] = ()) -> str:
+        """Dataclass rows → CSV text with a UTF-8 BOM (Excel opens Hindi correctly).
+
+        ``letterhead`` lines (shop name, address, owner, date …) are written one per row above the column
+        header, followed by a blank row, so the export reads like a printed statement when opened in Excel.
+        """
         buf = io.StringIO()
         buf.write("\ufeff")
+        writer = csv.writer(buf, lineterminator="\n")
+        for line in letterhead:
+            writer.writerow([line])
+        if letterhead:
+            writer.writerow([])
         if not rows:
             return buf.getvalue()
         first = rows[0]
         names = [f.name for f in fields(first)] if is_dataclass(first) else list(first.keys())
-        writer = csv.writer(buf, lineterminator="\n")
         writer.writerow(names)
         for row in rows:
             values = [getattr(row, n) for n in names] if is_dataclass(row) else [row[n] for n in names]
@@ -574,6 +716,19 @@ def _window(since: str | None, until: str | None) -> tuple[str, str]:
 
 def _dec(value: Any) -> Decimal:
     return Decimal(str(value)) if value is not None else Decimal(0)
+
+
+def _q(value: Decimal) -> str:
+    text = format(value.normalize(), "f")
+    return text.rstrip("0").rstrip(".") if "." in text else text
+
+
+@dataclass(frozen=True)
+class _UnitSpec:
+    """Just enough product shape for ``measure.spec_for`` to format a quantity in the item's unit."""
+
+    sale_mode: str
+    base_unit: str
 
 
 def _cell(value: Any) -> Any:

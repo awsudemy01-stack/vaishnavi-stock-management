@@ -347,7 +347,7 @@ def build_pos(c: Any, texts: UiTexts, actor: Actor, cart: Cart) -> PosModel:
     scan_hint = texts.t("pos.scan_paused") if paused else (texts.t("pos.scan_strict") if scan_mode == "SCANNER" else texts.t("pos.scan_free"))
     whole = format_inr(totals.total_paise).split(".")[0] if totals.total_paise % 100 == 0 else format_inr(totals.total_paise)
     labels = {k: texts.t(f"pos.{k}") for k in ("title", "next_bill", "lines", "col_item", "col_qty", "col_shelf", "col_discount", "col_amount", "find", "find_hint", "hold", "hold_hint", "resume", "held", "discount", "discount_hint", "clear", "clear_confirm", "clear_hint", "offer_locked", "pay_modes", "keys", "saved",
-                                                "bill_discount_title", "bill_discount_tier", "bill_discount_none", "bill_discount_pct", "bill_discount_amount", "bill_discount_apply", "bill_discount_remove", "discount_reason",
+                                                "bill_discount_title", "bill_discount_tier", "bill_discount_none", "bill_discount_pct", "bill_discount_amount", "bill_discount_apply", "bill_discount_remove", "bill_discount_hint", "discount_reason",
                                                 "customer", "customer_hint", "customer_hint_plain", "customer_phone", "customer_name", "customer_clear", "whatsapp_send", "whatsapp_sent", "whatsapp_opened", "whatsapp_hint")}
     bill_reason = cart.bill_discount_reason or ""
     saved_rows: list[tuple[str, str]] = []
@@ -982,7 +982,7 @@ def register(state: Any) -> None:
                             ui.html(f"<div class='lbl{cls}'>{html_escape(tr.label)}</div><div class='val{cls}'>{html_escape(tr.amount_text)}</div>", sanitize=False)
                         for lbl, val in m.saved_rows:
                             ui.html(f"<div class='lbl save'>{html_escape(lbl)}</div><div class='val save'>{html_escape(val)}</div>", sanitize=False)
-                    with ui.grid(columns=5).classes("w-full gap-2 p-3"):
+                    with ui.grid(columns=6).classes("w-full gap-2 p-3"):
                         pay_ok = m.line_count > 0 and not m.billing_paused
                         with ui.element("div").classes("vsm-act pay" + ("" if pay_ok else " disabled")).style("grid-column: span 2") as pay:
                             ui.label(m.pay_label)
@@ -993,6 +993,12 @@ def register(state: Any) -> None:
                             ui.label(f"F4 {m.labels['discount']}")
                             ui.html(f"<small>{html_escape(m.labels['discount_hint'])}</small>", sanitize=False)
                         disc.on("click", lambda _e: open_discount(selected["line_id"]))
+                        # Live run 5b: the whole-bill discount (customer type + ₹ / %) gets its own button — F4 only
+                        # reached it when no line was selected, which never happens once the cart has a line.
+                        with ui.element("div").classes("vsm-act" + (" active" if m.bill_discount_text else "")) as bdisc:
+                            ui.label(f"F2 {m.labels['bill_discount_title']}")
+                            ui.html(f"<small>{html_escape(m.bill_discount_reason + ' ' + m.bill_discount_text if m.bill_discount_text else m.labels['bill_discount_hint'])}</small>", sanitize=False)
+                        bdisc.on("click", lambda _e: open_bill_discount())
                         with ui.element("div").classes("vsm-act") as cust:
                             ui.label(f"F8 {m.labels['customer']}")
                             ui.html(f"<small>{html_escape(m.labels['customer_hint' if m.whatsapp_enabled else 'customer_hint_plain'])}</small>", sanitize=False)
@@ -1001,7 +1007,7 @@ def register(state: Any) -> None:
                             ui.label(f"Esc {m.labels['clear']}")
                             ui.html(f"<small>{html_escape(m.labels['clear_hint'])}</small>", sanitize=False)
                         clr.on("click", lambda _e: clear())
-                    bd = ui.row().classes("items-center gap-2 px-3 text-xs")
+                    bd = ui.row().classes("items-center gap-2 px-3 text-xs cursor-pointer")
                     with bd:
                         if m.bill_discount_text:
                             ui.label(f"{m.labels['bill_discount_title']}: {m.bill_discount_text}").classes("billdisc").style("color:#E65100;font-weight:600")
@@ -1009,6 +1015,7 @@ def register(state: Any) -> None:
                                 ui.label(f"({m.bill_discount_reason})").classes("text-gray-500")
                         else:
                             ui.label(m.labels["bill_discount_none"]).classes("text-gray-400")
+                    bd.on("click", lambda _e: open_bill_discount())
                     ui.html(keys_html(m.labels["keys"]), sanitize=False).classes("vsm-keys px-3 pb-2")
 
         # -- handlers -------------------------------------------------------------------------------
@@ -1441,14 +1448,14 @@ def register(state: Any) -> None:
                         ui.button(texts.t("common.save"), on_click=lambda: save()).props("unelevated color=primary")
             dlg.open()
 
-        ui.keyboard(on_key=lambda e: _keys(e, open_find, lambda: open_discount(selected["line_id"]), hold, open_held, open_pay, clear, open_customer))
+        ui.keyboard(on_key=lambda e: _keys(e, open_find, lambda: open_discount(selected["line_id"]), hold, open_held, open_pay, clear, open_customer, open_bill_discount))
         render()
 
 
-def _keys(e: Any, find: Any, discount: Any, hold: Any, held: Any, pay: Any, clear: Any, customer: Any = lambda: None) -> None:
+def _keys(e: Any, find: Any, discount: Any, hold: Any, held: Any, pay: Any, clear: Any, customer: Any = lambda: None, bill_discount: Any = lambda: None) -> None:
     if not getattr(e.action, "keydown", False):
         return
-    {"F3": find, "F4": discount, "F6": hold, "F7": held, "F8": customer, "F9": pay, "Escape": clear}.get(str(e.key), lambda: None)()
+    {"F2": bill_discount, "F3": find, "F4": discount, "F6": hold, "F7": held, "F8": customer, "F9": pay, "Escape": clear}.get(str(e.key), lambda: None)()
 
 
 def _pin_actor(services: Any, client: Any, pin: str, permission: Permission) -> tuple[Actor | None, int | None, str]:

@@ -801,6 +801,89 @@ Each entry names the Phase-1 unit from `docs/13-roadmap.md` it belongs to.
   parameter `open` (a builtin name; the page's only peculiarity) was renamed `then_pos` — `/login?next=` also
   shadows a builtin and works, so this is hygiene, not the proven cause.
 
+### Fixed / Added — live run 6 (21-Nov; the owner's three requests)
+
+- **Cashier day book** (owner: "record each cashier's sales per day — every item per invoice with the timestamp;
+  keep 90 days; deletable earlier with the admin's approval"): new table `cashier_day_record` (migration
+  **0004_cashier_day_record**, `HEAD_REVISION`/`SCHEMA_VERSION` → 0004) — one row per bill / credit note with the
+  items as JSON, shop day, time, cashier, status, quantity, total and payment modes, written by the new
+  `CashierRecordService` on `SaleCommitted` (idempotent, never blocks the sale). **Reports → Cashier day book**:
+  filter by day / range / cashier (staff see their own only, `REPORT_OWN_SHIFT`), items as "Camphor 50g ×2 pcs @
+  ₹10.00 = ₹20.00", per-cashier subtotals and the day total, CSV/XLSX/PDF/Send like every report. Retention
+  `billing.day_record_retention_days` (90; 1–3650) enforced by the nightly `day_book_prune` job (audited
+  `CASHIER_RECORDS_PRUNED`); the Owner's *Delete older records…* asks for a cut-off day, a reason and the Owner
+  password (`users.reauthenticate`) and is audited `CASHIER_RECORDS_PURGED`. The permanent `sale` ledger is untouched.
+- **Letterhead on every document** (owner: "the sales report was a plain record — no shop name, date, time,
+  address, owner, contact"): `publishing.renderer.Letterhead` (shop name · address · phone · email · GSTIN when
+  registered · owner · system date & time IST · prepared by) rendered as a branded header with a saffron rule and
+  a footer on `render_table` (every Export PDF / Send, purchase orders, channel tests), the daily digest and the
+  weekly report; the same lines are written as title rows above the column header in **CSV**, **XLSX** and the
+  *Export everything* ZIP (`ReportService.to_csv(letterhead=…)`, `export.to_xlsx(title_rows=…)`).
+  `ReportPublisher.letterhead()` builds it from the effective settings. New setting **`shop.owner_name`** (Settings →
+  Shop & GST → "Owner name (printed on reports)"); `config/settings.toml` now carries the shop's address
+  ("Khandve Nagar, Wagholi" / "Pune"), phone (+911234567890) and owner ("Radhe").
+- **"How much have I spent / invested in the shop so far"** (owner: the assistant could not answer, in English or
+  Hinglish): inbound stock movements (`OPENING`, `PURCHASE`, positive `ADJUSTMENT`/`STOCK_TAKE`) now **snapshot the
+  item's cost** in `stock_movement.unit_cost_paise` on the day they happen, so the history is kept from day one.
+  New `ReportService.investment()` → per item (qty received, opening ₹, purchases ₹, corrections ₹, invested ₹,
+  stock today and its value at cost, since when, "estimated" when no purchase price exists → selling price) with
+  per-category subtotals and the grand total; **Reports → Investment in stock**; AI tool **`investment_summary`**
+  (Owner); the fast path routes "kharch / spent / invest / paisa lagaya / निवेश" to it in EN · HI · Hinglish —
+  "Stock mein investment (all time, 14-Nov-2026 se): ₹1,000.00 — opening stock ₹1,000.00 + purchases ₹0.00 +
+  corrections ₹0.00, 1 items mein. Aaj shelf par rakhe stock ki cost value ₹960.00 hai. Category-wise: …" —
+  while supplier-worded questions ("supplier wise purchase") keep going to `purchases_summary`. Prompt core,
+  grounding nudge and guardrail topic lists updated.
+- **Sales by month / Day Sales Report** (owner, after seeing the letterhead): *Sales by day* is now **Sales by month** —
+  a month picker (`?month=YYYY-MM`, default this month) lists every shop day of that month and closes with a
+  **TOTAL** row. New **Day Sales Report**: a calendar date picker (`?day=YYYY-MM-DD`, any day of any year) shows
+  the quantity sold of each item **in its own unit** ("10 pcs", "200 g", "100 ml"; open items grouped by typed
+  name), bills and rupees per item, then **TOTAL SALE · Cash · UPI · Card** (and Refunds / NET when any).
+  `ReportService.item_totals()` / `day_sales()` over the new `SqliteReportStore.item_totals` query; both reports
+  carry the chosen window in the document title and export like every other report. Document subtitles no longer
+  repeat the generation time (the letterhead's *Date & time* is the single source) — they carry the row count only.
+- **Installer asks for the shop identity** (owner: "keep placeholders; the installation should ask for shop name,
+  address, owner, contact"): new stage **7a Shop details** (`bootstrap/shop_profile.py`, between *Data locations*
+  and *Autostart*) asks shop name · owner · address lines · phone (validated 10–13 digits) · email and writes the
+  `[shop]` block of `config/settings.toml` (other sections and unasked keys such as `name_hi`/`language` kept; a
+  complete block is reused silently; `--yes` keeps the default name and WARNs to finish in Settings → Shop & GST).
+  `config/settings.toml` ships with empty placeholders; the in-app first-run wizard's *Shop profile* step gained the
+  owner field. EN/HI installer messages; `test_bootstrap_shop_profile` (+3).
+- Tests: new `test_cashier_records` (recording, staff scoping, summary, 90-day prune, Owner purge + audit, page
+  model with subtotals, password-approved purge, 0004 replay); `test_sales_reports` (+1 investment end-to-end:
+  service, tool, page); `test_publishing` (+2 letterhead renderer and settings → PDF/CSV/XLSX);
+  `test_ai_guardrails` / `test_ai_chat` / `test_reports_security` / `test_db_schema` updated.
+
+### Fixed / Added — live run 5b (20-Nov, Mac on 0.2.0; the owner's three observations)
+
+- **Whole-bill discount was practically unreachable** (owner: "I don't see the final-bill discount"): the tier
+  dialog existed but opened only via F4 *with no line selected*, and the cart always has a selected line. New
+  **F2 Bill discount** action button (highlighted with the tier + amount once given), the *No bill discount*
+  line is clickable, F4's hint now says "selected line", key legend updated (`pos._keys` F2, `.vsm-act.active`).
+  The receipt already printed "Extra discount — <tier>" and the two bold "You saved" lines.
+- **"^ label damaged – looked up" removed from the customer's receipt** (owner: back-office information). The
+  `†`/`*` markers and the legend are no longer put into the `ReceiptModel`; they stay on the billing screen, in the
+  review queue and in the per-cashier / manual-lines reports. Receipt goldens regenerated; docs/05 §8 sample.
+- **Shift close reconciliation** (owner: "opening float + today's sales must match what the cashier enters;
+  otherwise no close without the Owner PIN and a comment"):
+  - `ShiftService.reconcile()` → `Reconciliation` (opening float, cash sales, cash in, cash out, expected,
+    counted, cash variance, system totals by mode, **declared UPI / card** from the phone app, per-mode variance,
+    `matches`). `close()` takes `declared_by_mode`, `approver_id`, `tolerance_paise`; **any** difference (cash
+    beyond `billing.shift_variance_tolerance_paise`, default 0; or a declared mode ≠ system) needs a note ≥ 3
+    chars (`E-SHIFT-005`) **and** the new permission `SHIFT_CLOSE_VARIANCE` (PIN for staff, plain for the Owner).
+  - Migration **0003_shift_reconcile**: `shift.declared_json`, `shift.approved_by_user_id`
+    (`HEAD_REVISION=0003_shift_reconcile`, `SCHEMA_VERSION=0003`); Z report prints "UPI as per app", "UPI
+    difference", "Difference approved by"; audit `SHIFT_CLOSED` carries `declared`, `mode_variance_paise`,
+    `matched`.
+  - `/shifts` close section: denomination grid + "UPI as per app ₹" / "CARD as per app ₹" boxes; the **working**
+    appears once the count is typed (blind count kept for staff; the Owner sees it at once): opening float →
+    + cash sales → + cash in → − cash out → = should be in the drawer → counted now → difference, then each
+    non-cash mode system · declared · difference, and a green "Everything matches" or red "Does not match: cash
+    −₹20.00, UPI −₹100.00". With a difference staff see "write the note, then the Owner enters the PIN"; Close
+    opens the PIN dialog (`ask_pin(SHIFT_CLOSE_VARIANCE)`). Hindi strings added.
+- Tests: `test_shifts` (+2: any difference → note + PIN, tolerance; declared UPI reconciled like cash),
+  `test_phase4_security.ShiftsPageTest` (+1 UPI declaration; close flow updated), `test_db_models_match_schema`
+  (+1 replay of 0003), `test_pos_page` (+1 F2/F4 keys), `test_receipts` updated. 809 tests.
+
 ### Fixed / Added — live run 5 (18-Nov, after the owner's second round)
 - **Version 0.2.0** — shown in the page footer so the owner can tell at a glance whether the shop PC runs the
   code just pulled (several reports this round — shift-open denominations, final-bill discount — were features

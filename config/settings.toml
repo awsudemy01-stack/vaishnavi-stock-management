@@ -5,12 +5,16 @@
 # NEVER put an API key, token or password in this file — the app refuses to start (E-SEC-006).
 # Keys are pasted in Settings → Assistant → Provider and stored encrypted.
 
+# [shop] — who the shop is. Printed on every bill and in the letterhead of every report / PDF.
+# PLACEHOLDERS: the installer (main.py) asks for these on first start and fills them in; the Owner can
+# change them any time under Settings → Shop & GST. Nothing about the shop is hard-coded in the app.
 [shop]
-name = "Vaishnavi Puja Store"
+name = "Vaishnavi Puja Store"   # e.g. "Vaishnavi Puja Store"
 name_hi = "वैष्णवी पूजा स्टोर"
-address_line1 = ""
-address_line2 = ""
-phone = ""
+owner_name = ""                 # proprietor, e.g. "Radhe" — letterhead only, never on the customer's bill
+address_line1 = ""              # e.g. "Khandve Nagar, Wagholi"
+address_line2 = ""              # e.g. "Pune"
+phone = ""                      # e.g. "+911234567890"
 email = ""
 gstin = ""              # leave empty if not GST-registered
 state_code = ""         # two-digit GST state code, e.g. "27"
@@ -33,15 +37,17 @@ copies = 1
 invoice_prefix = "VPS"        # bill numbers look like VPS/25-26/000123
 
 [billing]
-require_scan = true                 # staff must scan; F3 Find lookups are marked on the bill
+require_scan = true                 # staff must scan; F3 Find lookups are flagged in the review queue (not on the customer's bill)
 require_printer = false             # true → no sale without a working printer
-manual_add_policy = "ALLOW"         # items without barcode: ALLOW (capped, marked on bill, reported) | PIN (owner PIN) | BLOCK
+manual_add_policy = "ALLOW"         # items without barcode: ALLOW (capped, flagged in reports) | PIN (owner PIN) | BLOCK
 open_item_cap_per_bill = 3
 adhoc_discount_cap_percent = 10     # above this staff need the Owner PIN
 negative_stock_policy = "BLOCK"     # BLOCK | WARN | ALLOW
 reprint_limit = 2
 idle_lock_minutes = 10
 heartbeat_seconds = 15
+shift_variance_tolerance_paise = 0  # cash difference at shift close still treated as a match (0 = exact); beyond it: note + Owner PIN
+day_record_retention_days = 90      # cashier day book (every bill with its items, per cashier) is kept this long; Owner can delete earlier
 
 [server]
 host = "127.0.0.1"

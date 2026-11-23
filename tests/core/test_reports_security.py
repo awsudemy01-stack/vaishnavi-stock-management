@@ -100,7 +100,7 @@ class ReportsTest(Base):
         self.assertEqual([(s.product_id, str(s.damage_qty), str(s.adjustment_qty), s.value_paise) for s in shrink], [(10, "3", "2", 5000)], "5 units gone at ₹10 shelf price")
         self._sale(STAFF, discount_pct="5")
         self._sale(OWNER)
-        self.c.shifts.close(STAFF, 1, counted_cash_paise=self.c.shifts.expected_cash(1) - 100, note="short")
+        self.c.shifts.close(Actor(user_id=2, role=Role.STAFF, pin_verified=True), 1, counted_cash_paise=self.c.shifts.expected_cash(1) - 100, note="short", approver_id=1)
         perf = self.c.reports.cashier_performance(OWNER)
         by_user = {p.user_id: p for p in perf}
         self.assertEqual((by_user[2].bills, by_user[2].sales_paise, by_user[2].discount_paise, by_user[2].variance_paise), (3, 5900, 100, -100))
@@ -152,7 +152,7 @@ class BannerAndPagesTest(Base):
         for k in ("discounts", "manual_lines", "voids", "overrides", "shrinkage", "cashiers", "tax", "variance", "attendance", "integrity", "audit"):
             self.assertIn(k, keys)
         staff_index = reports_page.build_index(self.c, EN, STAFF)
-        self.assertEqual([r.key for r in staff_index.reports], ["low_stock", "attendance"], "staff see low stock (shelf duty) and their own work history only")
+        self.assertEqual([r.key for r in staff_index.reports], ["day_book", "low_stock", "attendance"], "staff see their own day book, low stock (shelf duty) and their own work history only")
         self.assertNotIn("forecast", [r.key for r in staff_index.reports], "reorder plan / demand classes are owner-only")
         self.assertIn("forecast", keys)
         self.assertIn("demand", keys)

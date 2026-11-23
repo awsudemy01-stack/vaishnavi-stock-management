@@ -34,7 +34,7 @@ from tests.core.test_db_guardian_backup import T0, make_live_db
 from tests.core.test_services_foundation import ReversibleBox
 
 EN = UiTexts.load("en")
-STAFF_ONLY_FORBIDDEN = {"sales_summary", "sales_compare", "demand_ranking", "dead_stock", "forecast_sales", "forecast_item", "reorder_plan", "festival_outlook", "cashier_summary", "shrinkage_summary", "purchases_summary", "profit_summary", "price_history", "backup_status", "doctor_summary", "log_explain", "settings_help"}
+STAFF_ONLY_FORBIDDEN = {"sales_summary", "sales_compare", "demand_ranking", "dead_stock", "forecast_sales", "forecast_item", "reorder_plan", "festival_outlook", "cashier_summary", "shrinkage_summary", "purchases_summary", "investment_summary", "profit_summary", "price_history", "backup_status", "doctor_summary", "log_explain", "settings_help"}
 
 
 def _client(role: Role) -> ClientState:
@@ -293,7 +293,7 @@ class ChatServiceTest(Base):
         self.assertIn("offline", r.text.lower())
         self.assertEqual(self.c.chat.ask(STAFF, None, "stock of camphor").source, "fastpath", "fast path works without a provider")
         # live run 4: the owner's business questions are answered from real tools even with no model at all
-        for q, must in (("maine shop mein kitna paisa ab tak kharch kiya hai", "Stock → Purchase"), ("aaj pura din kitna item bika hai", "Camphor 50g"), ("which item is of no demand", "30 days"), ("forecast me for the next few days or week of item sale", "forecast"), ("kal ki sale kitni thi", "bills")):
+        for q, must in (("maine shop mein kitna paisa ab tak kharch kiya hai", "investment"), ("What is my investment in the shop so far", "opening stock"), ("aaj pura din kitna item bika hai", "Camphor 50g"), ("which item is of no demand", "30 days"), ("forecast me for the next few days or week of item sale", "forecast"), ("kal ki sale kitni thi", "bills")):
             r = self.c.chat.ask(OWNER, None, q, language="hinglish" if " hai" in q or " thi" in q else "english")
             self.assertEqual(r.source, "fastpath", q)
             self.assertIn(must.lower(), r.text.lower(), q)

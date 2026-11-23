@@ -91,6 +91,18 @@ class RendererTest(unittest.TestCase):
             self.assertEqual(path.suffix, ".pdf")
             self.assertTrue(path.read_bytes().startswith(b"%PDF"))
 
+    def test_letterhead_puts_shop_owner_date_and_title_on_every_document(self) -> None:
+        lh = renderer.Letterhead(shop_name="Vaishnavi Puja Store", address="Khandve Nagar, Wagholi, Pune", phone="+911234567890", owner="Radhe", generated_at="21-Nov-2026 18:45 IST", prepared_by="Owner")
+        html = renderer.render_table("Sales by day", "21-Nov-2026 18:45 · 2 rows", ["day", "total"], [["2026-11-20", "₹1,000.00"], ["2026-11-21", "₹1,500.00"]], letterhead=lh)
+        for needle in ('class="lh"', "Vaishnavi Puja Store", "Khandve Nagar, Wagholi, Pune", "Ph: +911234567890", "Owner: <b>Radhe</b>", "Date &amp; time: <b>21-Nov-2026 18:45 IST</b>", "Prepared by: <b>Owner</b>", "<h1>Sales by day</h1>", "2 rows", "Computer-generated report"):
+            self.assertIn(needle, html)
+        self.assertIn("<title>Vaishnavi Puja Store — Sales by day</title>", html)
+        plain = renderer.render_table("Sales by day", "sub", ["day"], [["x"]])
+        self.assertNotIn('class="lh"', plain, "without a letterhead the old plain card header is kept")
+        self.assertEqual(lh.lines(), ["Vaishnavi Puja Store", "Khandve Nagar, Wagholi, Pune", "Ph: +911234567890", "Owner: Radhe · Generated: 21-Nov-2026 18:45 IST · Prepared by: Owner"], "CSV/XLSX title rows")
+        digest = renderer.DigestData(shop_name="Vaishnavi Puja Store", day="14-Nov-2026", net="₹1.00", bills=1, avg_bill="₹1.00", items="1", by_mode={}, tax="₹0", discounts="₹0", voids=0, overrides=0, variance_lines=[], low_stock=[], out_of_stock=[], insights=[], chain_head="ab", sparkline=[1], generated_at="21:35", letterhead=lh)
+        self.assertIn("Owner: <b>Radhe</b>", renderer.render_digest(digest))
+
 
 class OutboxTest(Base):
     def test_enqueue_due_backoff_and_failed_after_max(self) -> None:
@@ -256,6 +268,36 @@ class PublisherTest(Base):
         self.assertEqual((off.queued, off.sent), ([], []), "disabled → rendered to the reports folder only, nothing queued")
         self.assertTrue(off.path.exists())
         self.assertEqual(self.c.publisher.chip()[0], "grey")
+
+    def test_every_document_carries_the_shop_letterhead_from_settings(self) -> None:
+        """Owner's complaint: the sales report had no shop name, date, address, owner or phone — now every document does."""
+        from vaishnavi.ui.pages import reports as reports_page
+
+        self.c.settings_service.set_many(OWNER, {"shop.address_line1": "Khandve Nagar, Wagholi", "shop.address_line2": "Pune", "shop.phone": "+911234567890", "shop.owner_name": "Radhe"})
+        lh = self.c.publisher.letterhead("Sales by day", "x", prepared_by="Owner")
+        self.assertEqual((lh.shop_name, lh.address, lh.phone, lh.owner, lh.generated_at), ("Vaishnavi Puja Store", "Khandve Nagar, Wagholi, Pune", "+911234567890", "Radhe", "14-Nov-2026 21:30 IST"))
+        self._sale()
+        path = reports_page.export_document(self.c, EN, OWNER, "sales")
+        assert path is not None
+        html = path.read_text(encoding="utf-8")
+        for needle in ("Vaishnavi Puja Store", "Khandve Nagar, Wagholi, Pune", "Ph: +911234567890", "Owner: <b>Radhe</b>", "14-Nov-2026 21:30 IST", "Prepared by: <b>Owner</b>", "<h1>Sales by month — Nov-2026</h1>"):
+            self.assertIn(needle, html)
+        digest = self.c.publisher.daily_digest().path.read_text(encoding="utf-8")
+        self.assertIn("Owner: <b>Radhe</b>", digest)
+        self.assertIn("Khandve Nagar, Wagholi, Pune", digest)
+        csv = reports_page.export_csv(self.c, OWNER, "sales", texts=EN)
+        self.assertEqual(csv.splitlines()[:3], ["\ufeffVaishnavi Puja Store", '"Khandve Nagar, Wagholi, Pune"', "Ph: +911234567890"])
+        self.assertIn("Owner: Radhe · Generated: 14-Nov-2026 21:30 IST · Prepared by: Owner", csv)
+        self.assertIn("\nday,bills,", csv)
+        import io
+        import zipfile
+
+        xlsx = reports_page.export_xlsx(self.c, EN, OWNER, "sales")
+        assert xlsx is not None
+        with zipfile.ZipFile(io.BytesIO(xlsx)) as zf:
+            sheet = zf.read("xl/worksheets/sheet1.xml").decode("utf-8")
+        self.assertLess(sheet.index("Vaishnavi Puja Store"), sheet.index("Owner: Radhe"))
+        self.assertLess(sheet.index("Owner: Radhe"), sheet.index(">Day<"), "letterhead rows come before the column header")
 
     def test_settings_tab_model_and_save(self) -> None:
         m = settings_publishing.build_publishing_model(self.state, EN)

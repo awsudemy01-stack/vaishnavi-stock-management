@@ -83,7 +83,7 @@ class ReportExportsTest(Base):
         path = reports_page.export_document(self.c, EN, OWNER, "sales")
         assert path is not None
         self.assertTrue(path.exists())
-        self.assertIn("Sales by day", path.read_text(encoding="utf-8"))
+        self.assertIn("Sales by month", path.read_text(encoding="utf-8"))
         self.c.settings_service.set_many(OWNER, {"publishing.enabled": True, "publishing.channels": ["folder"], "publishing.folder": str(self.root / "sync")})
         result = reports_page.send_document(self.c, EN, OWNER, "sales")
         assert result is not None

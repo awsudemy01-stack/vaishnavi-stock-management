@@ -19,12 +19,13 @@ from vaishnavi.core.security import NullBox, SecretBox
 from vaishnavi.core.settings import Settings
 from vaishnavi.db.guardian import DbGuardian
 from vaishnavi.db.ledger_store import SqliteLedgerStore
-from vaishnavi.db.sqlite_stores import SqliteAuditStore, SqliteBillingStore, SqliteCatalogStore, SqliteChatStore, SqliteForecastStore, SqliteHardwareStore, SqliteIndexStore, SqliteInventoryStore, SqliteLabelStore, SqliteNotificationStore, SqlitePrintQueueStore, SqlitePromptStore, SqlitePublishStore, SqliteRecoveryStore, SqliteReportStore, SqliteSettingStore, SqliteShiftStore, SqliteSystemStore, SqliteTxn, SqliteUserStore, SqliteWorkSessionStore
+from vaishnavi.db.sqlite_stores import SqliteAuditStore, SqliteBillingStore, SqliteCashierRecordStore, SqliteCatalogStore, SqliteChatStore, SqliteForecastStore, SqliteHardwareStore, SqliteIndexStore, SqliteInventoryStore, SqliteLabelStore, SqliteNotificationStore, SqlitePrintQueueStore, SqlitePromptStore, SqlitePublishStore, SqliteRecoveryStore, SqliteReportStore, SqliteSettingStore, SqliteShiftStore, SqliteSystemStore, SqliteTxn, SqliteUserStore, SqliteWorkSessionStore
 from vaishnavi.forecast.festivals import load_festivals
 from vaishnavi.platform.paths import AppPaths
 from vaishnavi.services.audit import AuditService
 from vaishnavi.services.backup import BackupService
 from vaishnavi.services.billing import BillingService
+from vaishnavi.services.cashier_records import CashierRecordService
 from vaishnavi.services.catalog import CatalogService
 from vaishnavi.services.forecast import ForecastService
 from vaishnavi.services.hardware_guard import HardwareGuard, discover_printer_names, scanner_probe
@@ -103,6 +104,7 @@ class AppServices:
     forecast: ForecastService
     insights: InsightsService
     system_store: SqliteSystemStore
+    cashier_records: CashierRecordService
     prompts: Any = None
     tools: Any = None
     indexer: Any = None
@@ -168,6 +170,7 @@ class AppServices:
         shifts = ShiftService(txn, SqliteShiftStore(), audit, ledger, event_bus=event_bus)
         reports = ReportService(txn, SqliteReportStore(), ledger, audit)
         forecast = ForecastService(txn, SqliteForecastStore(), catalog_store, settings=settings_service.effective, festivals_loader=lambda: load_festivals(config_dir / settings_service.effective().forecast.festivals_file))
+        cashier_records = CashierRecordService(txn, SqliteCashierRecordStore(), billing, audit, settings=settings_service.effective, cashier_name=cashier_name, event_bus=event_bus)
 
         services = cls(
             settings=settings,
@@ -202,9 +205,11 @@ class AppServices:
             forecast=forecast,
             insights=InsightsService(reports, forecast, shifts, print_queue),
             system_store=system_store,
+            cashier_records=cashier_records,
         )
         services.notifications.subscribe(event_bus)
         print_queue.subscribe(event_bus)
+        cashier_records.subscribe(event_bus)
         _wire_setup_probes(services)
         _wire_assistant(services, ai_provider, settings_service, event_bus)
         _wire_publishing(services, settings_service)

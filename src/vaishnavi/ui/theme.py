@@ -162,4 +162,6 @@ html, body {{ font-family: {FONT_STACK}; color: var(--ink); background: var(--bg
 .vsm-act.pay {{ background: var(--saffron); color: #fff; border-color: var(--saffron); box-shadow: 0 6px 16px rgba(245,124,0,.35); font-size: 16px; }}
 .vsm-act.pay small {{ color: #fff3e0; }}
 .vsm-act.disabled {{ opacity: .45; cursor: not-allowed; box-shadow: none; }}
+.vsm-act.active {{ border-color: var(--saffron); background: #FFF3E0; color: #E65100; }}
+.vsm-act.active small {{ color: #E65100; }}
 """

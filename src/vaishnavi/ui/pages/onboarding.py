@@ -102,6 +102,8 @@ def submit_shop_profile(services: AppServices, actor: Actor, form: dict[str, Any
     if problems:
         return StepResult(False, problems=problems)
     changes = {f"shop.{k}": str(form.get(k) or "").strip() for k in ("name", "name_hi", "address_line1", "address_line2", "phone", "email", "state_code")}
+    if "owner_name" in form:  # the wizard step has no owner field; only Settings → Shop sends it
+        changes["shop.owner_name"] = str(form.get("owner_name") or "").strip()
     changes["shop.gstin"] = gstin
     return _guard(services.settings_service.set_many, actor, changes)
 
@@ -281,9 +283,11 @@ def render_wizard(state: Any, client: Any, texts: UiTexts, *, current: str | Non
 
 def _render_shop_profile(ui: Any, services: AppServices, actor: Actor, texts: UiTexts, key: str) -> Any:
     shop = services.settings_service.effective().shop
-    form = {k: getattr(shop, k, "") or "" for k in ("name", "name_hi", "address_line1", "address_line2", "phone", "email", "gstin", "state_code")}
-    for k in ("name", "name_hi", "address_line1", "address_line2", "phone", "email", "gstin", "state_code"):
-        ui.input(texts.t(f"settings.shop.{k}") if texts.has(f"settings.shop.{k}") else k.replace("_", " ")).bind_value(form, k).classes("w-full")
+    fields = ("name", "name_hi", "owner_name", "address_line1", "address_line2", "phone", "email", "gstin", "state_code")
+    form = {k: getattr(shop, k, "") or "" for k in fields}
+    for k in fields:
+        label = texts.t(f"shop_settings.{k}") if texts.has(f"shop_settings.{k}") else k.replace("_", " ")
+        ui.input(label).bind_value(form, k).classes("w-full")
     return lambda: submit_shop_profile(services, actor, form)
 
 

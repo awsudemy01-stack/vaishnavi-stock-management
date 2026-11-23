@@ -230,7 +230,9 @@ CREATE TABLE shift (
     variance_paise      INTEGER,
     closed_by_user_id   INTEGER REFERENCES user(id),
     status              TEXT NOT NULL DEFAULT 'OPEN' CHECK (status IN ('OPEN', 'CLOSED')),
-    note                TEXT
+    note                TEXT,
+    declared_json       TEXT,
+    approved_by_user_id INTEGER REFERENCES user(id)
 );
 CREATE UNIQUE INDEX ux_shift_one_open_per_user ON shift(user_id) WHERE status = 'OPEN';
 
@@ -371,6 +373,29 @@ CREATE TABLE held_cart_line (
     discount_paise INTEGER NOT NULL DEFAULT 0,
     payload        TEXT
 );
+
+-- Cashier day book: one row per bill / credit note with its items as JSON, written right after the sale
+-- commits. Unlike `sale` (permanent, append-only) this is a retention-bound working copy the Owner reads
+-- per day and per cashier; the nightly job deletes rows older than billing.day_record_retention_days
+-- (90 by default) and the Owner may delete earlier (audited CASHIER_RECORDS_PURGED).
+CREATE TABLE cashier_day_record (
+    id            INTEGER PRIMARY KEY,
+    sale_id       INTEGER NOT NULL UNIQUE REFERENCES sale(id),
+    invoice_no    TEXT NOT NULL,
+    business_day  TEXT NOT NULL,
+    sold_at       TEXT NOT NULL,
+    user_id       INTEGER NOT NULL REFERENCES user(id),
+    cashier_name  TEXT NOT NULL,
+    shift_id      INTEGER NOT NULL REFERENCES shift(id),
+    status        TEXT NOT NULL CHECK (status IN ('COMPLETED', 'VOIDED', 'REFUND')),
+    line_count    INTEGER NOT NULL DEFAULT 0,
+    item_qty      NUMERIC NOT NULL DEFAULT 0,
+    total_paise   INTEGER NOT NULL,
+    payment_modes TEXT NOT NULL DEFAULT '',
+    items_json    TEXT NOT NULL,
+    created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+CREATE INDEX ix_cashier_day_record_day ON cashier_day_record(business_day, user_id);
 
 -- ============================================================================ purchases & stock-take
 CREATE TABLE supplier (
