@@ -73,37 +73,22 @@ def history(state: Any, client: ClientState, session_id: int) -> list[HistoryRow
 
 
 # ----------------------------------------------------------------------------- NiceGUI (thin, untested here)
-def open_window(state: Any, client: ClientState, texts: UiTexts, *, host: Any = None, on_close: Any = None) -> None:
-    """Open the chat.
+def open_window(state: Any, client: ClientState, texts: UiTexts, *, on_close: Any = None) -> None:
+    """Open the chat as a floating bottom-right window (seamless: the page stays usable behind it).
 
-    With ``host`` (the frame's right-side panel) the chat is rendered **inside** that column, so it sits beside
-    the page content instead of floating over the billing keys — the owner's complaint. Without a host it falls
-    back to the old bottom-right dialog.
+    ``on_close`` runs when the window is closed — the frame uses it to bring the collapsed bubble back.
     """
     from nicegui import run, ui  # noqa: PLC0415
 
     m = build_widget_model(state, client, texts)
-    log.debug("CHAT_WINDOW_OPEN user=%s lang=%s offline=%s docked=%s", client.user.user_id if client.user else "-", m.language, bool(m.offline_note), host is not None)
+    log.debug("CHAT_WINDOW_OPEN user=%s lang=%s offline=%s", client.user.user_id if client.user else "-", m.language, bool(m.offline_note))
     form: dict[str, Any] = {"text": "", "language": m.language, "session": None}
-
-    if host is not None:
-        host.clear()
-        host.set_visibility(True)
-
-        def close() -> None:
-            host.clear()
-            host.set_visibility(False)
-            if on_close is not None:
-                on_close()
-
-        with host:
-            _render_chat(ui, run, state, client, m, form, close)
-        return
-
     # Quasar's q-dialog accepts only standard/top/right/bottom/left; an unknown position ("bottom-right") throws in the
     # browser and the dialog never shows. "right" + an auto top margin on the card anchors it bottom-right.
-    with ui.dialog().props("position=right seamless") as dialog, ui.card().classes("vsm-chat w-96 p-0"):
+    with ui.dialog().props("position=right seamless") as dialog, ui.card().classes("vsm-chat w-96 p-0").style("margin-top:auto; margin-bottom:52px; margin-right:12px"):
         _render_chat(ui, run, state, client, m, form, dialog.close)
+    if on_close is not None:
+        dialog.on("hide", lambda _e: on_close())
     dialog.open()
 
 
@@ -117,7 +102,7 @@ def _render_chat(ui: Any, run: Any, state: Any, client: ClientState, m: WidgetMo
     if m.offline_note:
         ui.label(m.offline_note).classes("text-xs px-3 py-1").style("background:#FFF3E0;color:#7A4A1E")
     ui.label(m.hint).classes("text-xs text-gray-600 px-3 pt-2")
-    log_box = ui.column().classes("w-full gap-1 px-3 py-2 vsm-chatlog").style("max-height: 60vh; overflow-y: auto")
+    log_box = ui.column().classes("w-full gap-1 px-3 py-2").style("max-height: 50vh; overflow-y: auto")
     chips = ui.row().classes("px-3 gap-1 flex-wrap")
 
     def bubble(role: str, text: str) -> None:
