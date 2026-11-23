@@ -198,12 +198,20 @@ def frame(state: AppState, *, current_path: str, denied: str | None = None) -> C
         if model.nav:
             layout.render_rail(model)
         content = ui.column().classes("flex-1 p-4")
+        # Sahayak lives in a docked column to the right of the page (hidden until opened) — beside the content, not over it.
+        chat_host = ui.column().classes("vsm-chatpanel gap-0 p-0")
+        chat_host.set_visibility(False)
+
+    fab_ref: dict[str, Any] = {}
+
     def open_chat() -> None:
         from vaishnavi.ui.components.chat_widget import open_window  # noqa: PLC0415
 
-        open_window(state, client, UiTexts.load(client.lang))
+        if fab_ref.get("fab") is not None:
+            fab_ref["fab"].set_visibility(False)
+        open_window(state, client, UiTexts.load(client.lang), host=chat_host, on_close=lambda: fab_ref["fab"].set_visibility(True) if fab_ref.get("fab") is not None else None)
 
-    layout.render_chat_bubble(model, on_click=open_chat if (client.user is not None and services is not None) else None)
+    fab_ref["fab"] = layout.render_chat_bubble(model, on_click=open_chat if (client.user is not None and services is not None) else None)
     layout.render_footer(model)
     return content
 
