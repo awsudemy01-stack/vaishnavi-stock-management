@@ -9,3 +9,10 @@ rohit@Rohits-MacBook-Pro vaishnavi-stock-management %
 
 cd src/vaishnavi/db/alembic/versions
 git mv 004_cashier_day_record.py 0004_cashier_day_record.py
+
+
+git rev-parse --short HEAD
+git status --short
+032a941c
+R  src/vaishnavi/db/alembic/versions/004_cashier_day_record.py -> src/vaishnavi/db/alembic/versions/0004_cashier_day_record.py
+rohit@Rohits-MacBook-Pro vaishnavi-stock-management % 
