@@ -276,18 +276,19 @@ def render_rail(model: ShellModel) -> None:
                 ui.label(item.label)
 
 
-def render_chat_bubble(model: ShellModel, on_click: Any = None) -> None:
-    """Collapsed Sahayak bubble."""
+def render_chat_bubble(model: ShellModel, on_click: Any = None) -> Any:
+    """Collapsed Sahayak bubble; returns the element (None when hidden) so the frame can hide it while the panel is open."""
     from nicegui import ui  # noqa: PLC0415
 
     if not model.chat_bubble.visible:
-        return
+        return None
     with ui.element("div").classes("vsm-chatfab") as fab:
         ui.element("div").classes("bub").props('innerHTML="💬"')
         with ui.element("div"):
             ui.html(f"<b>{model.chat_bubble.title}</b><br><small>{model.chat_bubble.hint}</small>", sanitize=False)
     if on_click is not None:
         fab.on("click", on_click)
+    return fab
 
 
 def render_footer(model: ShellModel) -> None:
