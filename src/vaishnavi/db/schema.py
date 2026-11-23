@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Final
 
 SCHEMA_FILE: Final = Path(__file__).resolve().parent / "schema.sql"
-SCHEMA_VERSION: Final = "0002"
-HEAD_REVISION: Final = "0002_staff_receive"
+SCHEMA_VERSION: Final = "0004"
+HEAD_REVISION: Final = "0004_cashier_day_record"
 """Newest Alembic revision shipped (kept equal to ``alembic/versions`` by ``tests/core/test_db_schema.py``);
 lets the stdlib doctor compare ``alembic_version`` without importing Alembic."""
 
