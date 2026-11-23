@@ -40,3 +40,7 @@ python3 main.py --stop
 python3 main.py --stop
 ps aux | grep -iE "main.py|vaishnavi" | grep -v grep     # must print nothing
 python3 main.py
+
+.venv/bin/python -c "import sys; sys.path.insert(0,'src'); from vaishnavi.ai import fastpath; print(fastpath.match('main shop mein ab tak kitna kharcha kiya hai'))"
+
+
