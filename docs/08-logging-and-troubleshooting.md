@@ -74,7 +74,7 @@ renders them for text, `JsonFormatter` for JSONL.
 | `E-CAT` | catalogue | `E-CAT-004` duplicate barcode; `E-CAT-010` stale edit rejected (`row_version` mismatch — reload and retry) |
 | `E-INV` | inventory | `E-INV-003` insufficient stock (policy BLOCK) |
 | `E-BILL` | billing | `E-BILL-042` no open shift; `E-BILL-050` payment < total; `E-BILL-060` discount above cap without override; `E-BILL-061` offer not removable by role; `E-BILL-070` manual entry blocked by policy; `E-BILL-071` open-item cap reached; `E-BILL-072` open-item price below sanity threshold (warning); `E-BILL-080` duplicate checkout ignored (idempotent — existing invoice returned) |
-| `E-SHIFT` | shifts | `E-SHIFT-002` shift already open for user |
+| `E-SHIFT` | shifts | `E-SHIFT-001` no open shift / not your shift; `E-SHIFT-002` shift already open for user; `E-SHIFT-003` already closed; `E-SHIFT-004` cash-out larger than the drawer; `E-SHIFT-005` close refused — count / declared UPI does not match the system and no note was written (with a note, staff still need the Owner PIN: `E-AUTH-011` for `SHIFT_CLOSE_VARIANCE`) |
 | `E-LEDGER` | integrity | `E-LEDGER-001` hash mismatch; `E-LEDGER-002` invoice gap; `E-LEDGER-003` stock reconciliation mismatch (Σ movements ≠ cached qty, or sale lines ≠ SALE movements) |
 | `E-PRN` | printing | `E-PRN-001` printer not configured / unreachable → receipt archived as PDF and queued (selling continues); `E-PRN-002` *Require printed receipt* is on and printer not ready: checkout blocked |
 | `E-SCN` | scanner | `E-SCN-001` paired scanner not present; `E-SCN-002` unknown barcode |
