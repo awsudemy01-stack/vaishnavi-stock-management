@@ -63,6 +63,7 @@ ROUTE_PERMISSIONS: Final[tuple[tuple[str, Permission | None], ...]] = (
     ("/reports/purchases", Permission.REPORT_PURCHASES),
     ("/reports/forecast", Permission.REPORT_FORECAST),
     ("/reports/audit", Permission.REPORT_AUDIT),
+    ("/reports/sales_date", Permission.REPORT_SALES),
     ("/reports/sales", Permission.REPORT_SALES),
     ("/reports", Permission.REPORT_OWN_SHIFT),
     ("/settings", Permission.MANAGE_SYSTEM),
