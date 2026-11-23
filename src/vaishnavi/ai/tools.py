@@ -166,7 +166,8 @@ class ToolRegistry:
         self._add("festival_outlook", "Next festival window and the categories it lifts.", {"festival": {"type": "string"}}, OWNER, self._festival_outlook, link="/reports/forecast")
         self._add("cashier_summary", "Per-cashier bills, sales, discounts, voids, manual lines, variance.", {**_PERIOD_PARAMS, "user": {"type": "string"}}, OWNER, self._cashier_summary, link="/reports/cashiers")
         self._add("shrinkage_summary", "Damage, adjustments and stock-take losses, valued.", _PERIOD_PARAMS, OWNER, self._shrinkage, link="/reports/shrinkage")
-        self._add("purchases_summary", "Money spent buying stock (purchases) per supplier for a period — 'kitna kharch kiya', 'how much have I spent on items', 'maal kitne ka aaya'. Use period=all_time for 'so far / ab tak'.", _PERIOD_PARAMS, OWNER, self._purchases, link="/reports/purchases")
+        self._add("purchases_summary", "Supplier bills booked for a period, per supplier — 'kis supplier se kitna maal aaya', 'purchases this month'. For the total money put into the shop use investment_summary instead.", _PERIOD_PARAMS, OWNER, self._purchases, link="/reports/purchases")
+        self._add("investment_summary", "Total money invested in stock since the shop started: every item that came in (opening stock + purchases + corrections) × its cost, with per-category and per-item breakdown and today's stock value. Use for 'how much have I spent / invested so far', 'main dukan mein ab tak kitna kharch kiya', 'meri investment kitni hai', 'kitna paisa lagaya'. period=all_time by default.", {**_PERIOD_PARAMS, "limit": {"type": "integer", "default": 10}}, OWNER, self._investment, link="/reports/investment")
         self._add("profit_summary", "Gross profit and margin for a period.", _PERIOD_PARAMS, OWNER, self._profit, link="/reports/profit")
         self._add("price_history", "Price changes of one item.", {**q, "range": {"type": "string", "enum": ["1m", "6m", "1y"], "default": "6m"}}, OWNER, self._price_history, required=["query"], link="/products")
         self._add("backup_status", "Last backup age, queued copies, secondary drive.", {}, OWNER, self._backup_status, link="/settings/backups")
@@ -355,6 +356,30 @@ class ToolRegistry:
         since, until, label = period_bounds(a.get("period") or "this_month", a.get("from"), a.get("to"))
         rows = self._reports.purchases(actor, since=since, until=until)
         return {"period": label, "items": [{"supplier": r.supplier, "purchases": r.purchases, "total": format_inr(r.total_paise)} for r in rows], "count": len(rows), "total": format_inr(sum(r.total_paise for r in rows))}
+
+    def _investment(self, actor: Actor, a: dict[str, Any]) -> dict[str, Any]:
+        period = a.get("period") or "all_time"
+        if period == "all_time" and not (a.get("from") or a.get("to")):
+            rep = self._reports.investment(actor)  # from the very first stock entry, not the 2-year clamp
+            label = "all time"
+        else:
+            since, until, label = period_bounds(period, a.get("from"), a.get("to"))
+            rep = self._reports.investment(actor, since=since, until=until)
+        limit = int(a.get("limit") or 10)
+        return {
+            "period": label,
+            "since": format_ist(parse_iso_utc(rep.since), "%d-%b-%Y") if rep.since else "",
+            "total": format_inr(rep.invested_paise),
+            "opening_stock": format_inr(rep.opening_paise),
+            "purchases": format_inr(rep.purchases_paise),
+            "corrections": format_inr(rep.corrections_paise),
+            "stock_value_now": format_inr(rep.stock_value_paise),
+            "items_count": rep.items,
+            "estimated_items": rep.estimated_items,
+            "categories": [{"category": c.category, "items": c.items, "qty": _q(c.qty_in), "amount": format_inr(c.invested_paise)} for c in rep.categories[:limit]],
+            "items": [{"name": r.name, "category": r.category, "qty_in": _q(r.qty_in), "amount": format_inr(r.invested_paise), "stock_now": _q(r.stock_qty), "estimated": r.estimated} for r in rep.rows[:limit]],
+            "count": rep.items,
+        }
 
     def _profit(self, actor: Actor, a: dict[str, Any]) -> dict[str, Any]:
         since, until, label = period_bounds(a.get("period"), a.get("from"), a.get("to"))
