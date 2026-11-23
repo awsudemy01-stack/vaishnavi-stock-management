@@ -197,19 +197,21 @@ def frame(state: AppState, *, current_path: str, denied: str | None = None) -> C
     with body:
         if model.nav:
             layout.render_rail(model)
-        content = ui.column().classes("flex-1 p-4")
-        # Sahayak lives in a docked column to the right of the page (hidden until opened) — beside the content, not over it.
-        chat_host = ui.column().classes("vsm-chatpanel gap-0 p-0")
-        chat_host.set_visibility(False)
+        # Extra bottom padding keeps the Sahayak bubble clear of the last row of a page (the billing key legend).
+        content = ui.column().classes("flex-1 p-4").style("padding-bottom: 88px")
 
     fab_ref: dict[str, Any] = {}
+
+    def show_fab() -> None:
+        if fab_ref.get("fab") is not None:
+            fab_ref["fab"].set_visibility(True)
 
     def open_chat() -> None:
         from vaishnavi.ui.components.chat_widget import open_window  # noqa: PLC0415
 
         if fab_ref.get("fab") is not None:
-            fab_ref["fab"].set_visibility(False)
-        open_window(state, client, UiTexts.load(client.lang), host=chat_host, on_close=lambda: fab_ref["fab"].set_visibility(True) if fab_ref.get("fab") is not None else None)
+            fab_ref["fab"].set_visibility(False)  # the window takes the bubble's corner; it comes back on close
+        open_window(state, client, UiTexts.load(client.lang), on_close=show_fab)
 
     fab_ref["fab"] = layout.render_chat_bubble(model, on_click=open_chat if (client.user is not None and services is not None) else None)
     layout.render_footer(model)
