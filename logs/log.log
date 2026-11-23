@@ -26,3 +26,7 @@ R  src/vaishnavi/db/alembic/versions/004_cashier_day_record.py -> src/vaishnavi/
 
 .venv/bin/python -c "import vaishnavi; print(vaishnavi.__file__)"
 rohit@Rohits-MacBook-Pro vaishnavi-stock-management % 
+
+
+ .venv/bin/python -c "import vaishnavi; print(vaishnavi.__file__)"
+/Users/rohit/Documents/vaishnavi-stock-management/src/vaishnavi/__init__.py
