@@ -140,11 +140,11 @@ _BLOCKED: Final[list[tuple[str, list[re.Pattern[str]]]]] = [
 _OWNER_ONLY: Final = _rx(
     r"\b(sale|sales|sold|total|turnover|revenue|bikri|bikree|bik[aei]|bikay[ie]|becha|bech[ae]|kamai|collection)\b",
     r"\b(profit|margin|munafa|faida|loss|nuksan)\b",
-    r"\b(purchase|purchases|khareed|khareeda|kharida|bought|supplier|kharch|kharcha|spent|spend|expense)\b",
+    r"\b(purchase|purchases|khareed|khareeda|kharida|bought|supplier|kharch|kharcha|spent|spend|expense|invest|invested|investment|lagaya|lagaye|capital)\b",
     r"\b(forecast|predict|prediction|future|demand|trend|bhavishya|aage|agle|bikega|bikegi)\b",
     r"\b(cashier|staff|ramesh|variance|shift report|performance|attendance|who sold|kisne becha)\b",
     r"\b(report|reports|audit|discount audit|void|refund|shrinkage|backup|doctor|logs?)\b",
-    r"बिक्री|बिका|बिकी|बिके|कुल|मुनाफ़ा|मुनाफा|लाभ|खरीद|खर्च|पूर्वानुमान|माँग|मांग|रिपोर्ट|कैशियर",
+    r"बिक्री|बिका|बिकी|बिके|कुल|मुनाफ़ा|मुनाफा|लाभ|खरीद|खर्च|निवेश|पूर्वानुमान|माँग|मांग|रिपोर्ट|कैशियर",
 )
 
 _OFF_TOPIC_HINTS: Final = _rx(
@@ -159,7 +159,7 @@ _ALLOWED: Final = _rx(
     r"\b(low|kam|out of stock|khatam|khatm|khali|finish|finished|empty|minimum|reorder)\b",
     r"\b(how (do|can|to)|kaise|kaisa|steps?|help|madad|where is|kahan hai)\b",
     r"\b(bill|billing|hold|resume|scan|scanner|print|printer|receipt|reprint|shift|open|close|login|logout|lock|f3|find|weigh|weight|discount|offer|payment|upi|cash|card)\b",
-    r"\b(sale|sales|sell|sold|selling|becha|bechi|bikri|total|turnover|profit|purchase|forecast|demand|dead stock|top|best|worst|slow|fast|report|cashier|variance|backup|status|health|integrity|setting|settings|error|e-[a-z]+-\d+)\b",
+    r"\b(sale|sales|sell|sold|selling|becha|bechi|bikri|total|turnover|profit|purchase|invest|invested|investment|kharch|spent|forecast|demand|dead stock|top|best|worst|slow|fast|report|cashier|variance|backup|status|health|integrity|setting|settings|error|e-[a-z]+-\d+)\b",
     r"\b(compare|comparison|trend|today|yesterday|week|month|year|aaj|kal|hafta|hafte|mahina|mahine|diwali|holi|navratri|festival|tyohar)\b",
     r"\b(hi|hello|hey|namaste|namaskar|hello ji|good (morning|evening|afternoon)|thanks|thank you|dhanyavad|shukriya)\b",
     r"[\u0900-\u097F]{2,}",  # any Devanagari question that passed the block lists is taken as on-topic
