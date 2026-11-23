@@ -276,6 +276,7 @@ pass these caveats on to the owner. Forecasts are also visible without AI on *Re
 | `cashier_summary` | `user?, from, to` | OWNER |
 | `shrinkage_summary` | `from, to` | OWNER |
 | `purchases_summary` | `from, to, group_by: day|supplier` | OWNER |
+| `investment_summary` | `period (default all_time), from, to, limit` → total money put into stock (opening + purchases + corrections × cost on the day), per category / item, today's stock value | OWNER |
 | `profit_summary` | `from, to, group_by: day|category|item` | OWNER |
 | `price_history` | `sku or query, range: 1m|6m|1y|custom` | OWNER |
 | `backup_status` | — | OWNER |
@@ -327,7 +328,8 @@ deterministic intents **before** the LLM is involved and answers from the same t
 | stock kya hai · stock list · sab stock · kaun sa item … · स्टॉक लिस्ट | `stock_overview` | "12 items · 10 in stock · 2 low · 1 out. Most stock: Camphor (96 pc), …" |
 | today's sale · aaj ka total (Owner only) | `sales_summary(today)` | "₹18,420 · 142 bills · cash 61 %" |
 | kal ki sale · is hafte ka total · how much did we sell this month (Owner) | `sales_summary(period)` | period from the question: today · yesterday · this/last week · this/last month · this year · **all_time** ("so far / ab tak") |
-| kitna kharch kiya · how much have I spent · purchases (Owner) | `purchases_summary(period)` | "Spent on stock (all time): ₹45,500 across 4 bills. By supplier: …" — only booked supplier bills count |
+| kitna kharch kiya · how much have I spent / invested so far · meri investment · kitna paisa lagaya (Owner) | `investment_summary(period)` | "Investment in stock (all time, since 01-Nov-2026): ₹61,200 — opening stock ₹15,700 + purchases ₹45,500 + corrections ₹0, across 42 items. Stock on the shelf today is worth ₹38,900 at cost. By category: …" — every unit that came in since day one × its cost on that day (`stock_movement.unit_cost_paise`, snapshotted on OPENING/PURCHASE/ADJUSTMENT/STOCK_TAKE) |
+| supplier wise purchase · kis supplier se kitna aaya (Owner) | `purchases_summary(period)` | "Supplier purchases (all time): ₹45,500 across 4 bills. By supplier: …" — only booked supplier bills count |
 | har item ka sale · kitna item bika · which items sold today · item wise (Owner) | `demand_ranking(period, top, 15)` | "Item-wise sales 17-Nov-2026 (6 items): Camphor × 40 = ₹400, …" |
 | high demand · best sellers · sabse zyada bikta (Owner) | `demand_ranking(last_30_days, top)` | top 10 by quantity |
 | no demand · nahi bikta · not selling · unsold (Owner) | `dead_stock(30 d)` | "No demand — 3 items worth ₹1,200: Brass Bell (6), …" |
