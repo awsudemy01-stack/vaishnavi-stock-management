@@ -1,4 +1,4 @@
-"""Sales (append-only, hash-chained), items, payments, counters, held carts, open-item review, print queue.
+"""Sales (append-only, hash-chained), items, payments, counters, held carts, open-item review, print queue, cashier day book.
 
 Generated from ``db/schema.sql`` (unit 19) and kept in step by ``tests/core/test_db_models_match_schema.py``.
 Column defaults and CHECK constraints live in the SQL; the ORM only maps names and types.
