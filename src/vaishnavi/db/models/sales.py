@@ -166,3 +166,25 @@ class HeldCartLine(Base):
     qty: Mapped[Decimal] = mapped_column(Numeric)
     discount_paise: Mapped[int] = mapped_column()
     payload: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class CashierDayRecord(Base):
+    """``cashier_day_record`` table — retention-bound copy of each bill with its items (the cashier day book)."""
+
+    __tablename__ = "cashier_day_record"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    sale_id: Mapped[int] = mapped_column(ForeignKey("sale.id"), unique=True)
+    invoice_no: Mapped[str] = mapped_column(Text)
+    business_day: Mapped[str] = mapped_column(Text)
+    sold_at: Mapped[str] = mapped_column(Text)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    cashier_name: Mapped[str] = mapped_column(Text)
+    shift_id: Mapped[int] = mapped_column(ForeignKey("shift.id"))
+    status: Mapped[str] = mapped_column(Text)
+    line_count: Mapped[int] = mapped_column()
+    item_qty: Mapped[Decimal] = mapped_column(Numeric)
+    total_paise: Mapped[int] = mapped_column()
+    payment_modes: Mapped[str] = mapped_column(Text)
+    items_json: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[str] = mapped_column(Text)
