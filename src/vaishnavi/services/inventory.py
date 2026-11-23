@@ -26,6 +26,8 @@ from vaishnavi.services.common import Session, TxnFactory
 log = logging.getLogger("vaishnavi.services.inventory")
 
 OWNER_MOVEMENTS: Final = ("OPENING", "PURCHASE", "ADJUSTMENT", "DAMAGE", "STOCK_TAKE")
+INBOUND_MOVEMENTS: Final = ("OPENING", "PURCHASE", "ADJUSTMENT", "STOCK_TAKE")
+"""Movement types that bring stock *into* the shop — money the Owner put in (the investment report)."""
 
 
 @dataclass(frozen=True)
@@ -351,6 +353,10 @@ class InventoryService:
             log.warning("negative_stock policy=BLOCK product=%s have=%s want=%s → E-INV-003", product.sku, before, -qty_delta)
             raise InventoryError("E-INV-003", name=product.name, available=str(before), requested=str(-qty_delta))
         now = iso_utc()
+        if unit_cost is None and qty_delta > 0 and type_ in INBOUND_MOVEMENTS:
+            # Remember what the stock cost on the day it came in — the investment report values history
+            # from these snapshots, so a later purchase-price change does not rewrite what was already spent.
+            unit_cost = product.cost_paise
         mid = self._store.insert_movement(session, product_id=product_id, type=type_, qty_delta=qty_delta, qty_after=after, unit_cost_paise=unit_cost, ref_type=ref[0], ref_id=ref[1], reason=reason, user_id=actor.user_id, created_at=now)
         if audit_action:
             self._audit.record(session, audit_action, user_id=actor.user_id, entity="product", entity_id=product_id, before={"qty": str(before)}, after={"qty": str(after), "delta": str(qty_delta), "reason": reason})
