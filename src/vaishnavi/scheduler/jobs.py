@@ -43,6 +43,7 @@ def build_jobs(settings: Settings) -> list[JobSpec]:
         JobSpec("db_maintenance", "db_maintenance", daily_at=_plus_minutes(settings.backup.nightly_time, 10), note="full integrity_check; monthly VACUUM"),
         JobSpec("stock_daily_balance", "stock_daily_balance", daily_at=_plus_minutes(settings.backup.nightly_time, 5), note="end-of-day qty per product"),
         JobSpec("forecast_nightly", "forecast_nightly", daily_at=_plus_minutes(settings.backup.nightly_time, 15), note="forecast snapshot per active product (after the stock balance)"),
+        JobSpec("day_book_prune", "day_book_prune", daily_at=_plus_minutes(settings.backup.nightly_time, 20), note=f"delete cashier day-book rows older than {settings.billing.day_record_retention_days} days (after the nightly backup has them)"),
         JobSpec("log_prune", "log_prune", daily_at="23:30", note="retention per logging.toml"),
         JobSpec("restore_drill", "restore_drill_weekly", daily_at="20:30", note=f"weekly on weekday {settings.backup.restore_drill_weekday}"),
     ]
