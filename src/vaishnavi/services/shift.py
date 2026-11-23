@@ -3,7 +3,10 @@
 A cashier **opens** a shift with the float in the drawer, sells, records cash in / out (cash-out needs
 the Owner PIN), and **closes** by counting the drawer by denomination. The system knows what *should*
 be there — float + cash sales (tendered minus change) − cash refunds + cash-in − cash-out — and records
-the **variance**; a shortfall needs a note. The **Z report** carries the day's totals by payment mode,
+the **variance**. The cashier also declares the UPI / card totals shown by the phone app; ``reconcile``
+puts the whole working side by side. **Any difference** (cash beyond the tolerance, or a declared mode
+≠ system) needs a note and the Owner PIN (``SHIFT_CLOSE_VARIANCE``) before the shift can close. The
+**Z report** carries the day's totals by payment mode,
 discounts, manual lines, voids, the invoice range and the **sales-chain head** so a photo of the paper
 is an off-system anchor against tampering. Repeated negative variance per cashier is the clearest theft
 signal and is a report of its own.
@@ -74,6 +77,45 @@ class ShiftReport:
     chain_head: str
     note: str | None = None
     events: list[CashEventRecord] = field(default_factory=list)
+    declared_by_mode: dict[str, int] = field(default_factory=dict)
+    """Non-cash totals the cashier read off the phone app at close (``{"UPI": paise}``)."""
+    approved_by_user_id: int | None = None
+
+
+@dataclass(frozen=True)
+class Reconciliation:
+    """The working a cashier sees at close: how the expected drawer is built, and whether it (and UPI) match."""
+
+    opening_float_paise: int
+    cash_sales_paise: int
+    cash_in_paise: int
+    cash_out_paise: int
+    expected_cash_paise: int
+    counted_cash_paise: int
+    cash_variance_paise: int
+    by_mode: dict[str, int]
+    """System totals per payment mode for the shift (CASH, UPI, CARD …)."""
+    declared_by_mode: dict[str, int]
+    mode_variance_paise: dict[str, int]
+    """``declared − system`` per declared mode."""
+    tolerance_paise: int
+
+    @property
+    def matches(self) -> bool:
+        """True when cash is within tolerance and every declared mode equals the system."""
+        return abs(self.cash_variance_paise) <= self.tolerance_paise and all(v == 0 for v in self.mode_variance_paise.values())
+
+    def mismatch_text(self) -> str:
+        """``cash −₹20.00, UPI +₹100.00`` for messages and audit."""
+        parts = []
+        if abs(self.cash_variance_paise) > self.tolerance_paise:
+            parts.append(f"cash {_signed(self.cash_variance_paise)}")
+        parts.extend(f"{mode} {_signed(v)}" for mode, v in self.mode_variance_paise.items() if v != 0)
+        return ", ".join(parts)
+
+
+def _signed(paise: int) -> str:
+    return f"-{format_inr(-paise)}" if paise < 0 else f"+{format_inr(paise)}"
 
 
 @dataclass(frozen=True)
@@ -132,6 +174,11 @@ class ShiftService:
         with self._txn(label="shift.expected") as session:
             return self._expected(session, shift_id)
 
+    def reconcile(self, shift_id: int, *, counted_cash_paise: int, declared_by_mode: dict[str, int] | None = None, tolerance_paise: int = 0) -> Reconciliation:
+        """The close-time working (no writes): opening float + cash sales + in − out = expected, against the count; UPI/card declared against system."""
+        with self._txn(label="shift.reconcile") as session:
+            return self._reconcile(session, shift_id, counted_cash_paise=counted_cash_paise, declared_by_mode=declared_by_mode or {}, tolerance_paise=tolerance_paise)
+
     # -- lifecycle --------------------------------------------------------------------------------
     def open(self, actor: Actor, *, opening_float_paise: int | None = None, denominations: dict[int, int] | None = None) -> ShiftRecord:
         """Start a shift with the float counted into the drawer (one open shift per user, ``E-SHIFT-002``).
@@ -168,14 +215,23 @@ class ShiftService:
         approver = actor.user_id if actor.role is Role.OWNER else approver_id
         return self._cash_event(actor, "CASH_OUT", amount_paise, reason, shift_id, approved_by=approver)
 
-    def close(self, actor: Actor, shift_id: int, *, denominations: dict[int, int] | None = None, counted_cash_paise: int | None = None, note: str = "") -> ShiftRecord:
-        """Count the drawer; variance = counted − expected; a shortfall needs a note; Owner may close any shift."""
+    def close(self, actor: Actor, shift_id: int, *, denominations: dict[int, int] | None = None, counted_cash_paise: int | None = None, note: str = "", declared_by_mode: dict[str, int] | None = None, approver_id: int | None = None, tolerance_paise: int = 0) -> ShiftRecord:
+        """Count the drawer (and declare UPI/card totals from the phone app); close when everything matches.
+
+        Rule (owner, live run 5b): opening float + cash sales + cash in − cash out must equal the counted cash, and
+        each declared mode must equal the system's total. Any difference beyond ``tolerance_paise`` needs a
+        **note** (≥ 3 characters) *and* ``SHIFT_CLOSE_VARIANCE`` — the Owner PIN for staff (``PinRequired``),
+        nothing extra for the Owner. The Owner may close any shift; staff only their own.
+        """
         require(actor, Permission.SHIFT_OWN)
         if denominations is None and counted_cash_paise is None:
             raise ValueError("count the drawer (denominations or a total)")
         counted = count_denominations(denominations) if denominations is not None else int(counted_cash_paise or 0)
         if counted < 0:
             raise ValueError("counted cash cannot be negative")
+        declared = {str(k).upper(): int(v) for k, v in (declared_by_mode or {}).items()}
+        if any(v < 0 for v in declared.values()):
+            raise ValueError("declared totals cannot be negative")
         with self._txn(label="shift.close") as session:
             shift = self._store.shift(session, shift_id)
             if shift is None:
@@ -184,18 +240,23 @@ class ShiftService:
                 raise ShiftError("E-SHIFT-003", detail=f"shift {shift_id} is {shift.status}")
             if shift.user_id != actor.user_id and actor.role is not Role.OWNER:
                 raise ShiftError("E-SHIFT-001", detail="not your shift")
-            expected = self._expected(session, shift_id)
-            variance = counted - expected
-            if variance < 0 and not note.strip():
-                raise ValueError("a note is required when the drawer is short")
+            rec = self._reconcile(session, shift_id, counted_cash_paise=counted, declared_by_mode=declared, tolerance_paise=tolerance_paise)
+            expected, variance = rec.expected_cash_paise, rec.cash_variance_paise
+            approver: int | None = None
+            if not rec.matches:
+                if len(note.strip()) < 3:
+                    raise ShiftError("E-SHIFT-005", detail=rec.mismatch_text())
+                require(actor, Permission.SHIFT_CLOSE_VARIANCE)  # PinRequired for staff without the PIN
+                approver = actor.user_id if actor.role is Role.OWNER else approver_id
             now = iso_utc()
-            self._store.close_shift(session, shift_id, closed_at=now, expected_cash_paise=expected, counted_cash_paise=counted, denominations=json.dumps({str(k): int(v) for k, v in (denominations or {}).items()}), variance_paise=variance, closed_by_user_id=actor.user_id, status="CLOSED", note=note.strip() or None)
-            self._audit.record(session, "SHIFT_CLOSED", user_id=shift.user_id, actor_user_id=actor.user_id, entity="shift", entity_id=shift_id, after={"expected_paise": expected, "counted_paise": counted, "variance_paise": variance, "note": note.strip() or None})
+            declared_json = json.dumps({m: {"declared": d, "system": rec.by_mode.get(m, 0)} for m, d in sorted(declared.items())}) if declared else None
+            self._store.close_shift(session, shift_id, closed_at=now, expected_cash_paise=expected, counted_cash_paise=counted, denominations=json.dumps({str(k): int(v) for k, v in (denominations or {}).items()}), variance_paise=variance, closed_by_user_id=actor.user_id, status="CLOSED", note=note.strip() or None, declared_json=declared_json, approved_by_user_id=approver)
+            self._audit.record(session, "SHIFT_CLOSED", user_id=shift.user_id, actor_user_id=approver or actor.user_id, entity="shift", entity_id=shift_id, after={"expected_paise": expected, "counted_paise": counted, "variance_paise": variance, "declared": declared, "mode_variance_paise": rec.mode_variance_paise, "matched": rec.matches, "note": note.strip() or None})
             record = self._store.shift(session, shift_id)
         assert record is not None
         self._bus.publish(ShiftClosed(shift_id=shift_id, user_id=shift.user_id, variance_paise=variance))
-        level = log.warning if variance < 0 else log.info
-        level("SHIFT_CLOSED id=%s cashier=%s by=%s expected=%d counted=%d variance=%d", shift_id, shift.user_id, actor.user_id, expected, counted, variance)
+        level = log.info if rec.matches else log.warning
+        level("SHIFT_CLOSED id=%s cashier=%s by=%s expected=%d counted=%d variance=%d declared=%s mode_variance=%s approver=%s", shift_id, shift.user_id, actor.user_id, expected, counted, variance, declared, rec.mode_variance_paise, approver)
         return record
 
     # -- reports ----------------------------------------------------------------------------------
@@ -254,6 +315,12 @@ class ShiftService:
             lines.append(row("VARIANCE", f"{sign}{format_inr(abs(r.variance_paise or 0))}"))
             for value, n in sorted(r.denominations.items(), reverse=True):
                 lines.append(row(f"  {value} x {n}", format_inr(value * n * 100)))
+        for mode, declared in sorted(r.declared_by_mode.items()):
+            system = r.by_mode.get(mode, 0)
+            lines.append(row(f"{mode} as per app", format_inr(declared)))
+            lines.append(row(f"{mode} difference", _signed(declared - system)))
+        if r.approved_by_user_id is not None:
+            lines.append(row("Difference approved by", f"user #{r.approved_by_user_id}"))
         if r.note:
             lines.append(f"Note: {r.note}"[:width])
         lines.append("-" * width)
@@ -291,6 +358,26 @@ class ShiftService:
         cash_out = sum(e.amount_paise for e in events if e.type == "CASH_OUT")
         return shift.opening_float_paise + int(fig["cash_net_paise"]) + cash_in - cash_out
 
+    def _reconcile(self, session: Session, shift_id: int, *, counted_cash_paise: int, declared_by_mode: dict[str, int], tolerance_paise: int) -> Reconciliation:
+        shift = self._store.shift(session, shift_id)
+        if shift is None:
+            raise ShiftError("E-SHIFT-001", detail=f"shift {shift_id} missing")
+        fig = self._store.sales_figures(session, shift_id)
+        events = self._store.cash_events(session, shift_id)
+        cash_in = sum(e.amount_paise for e in events if e.type == "CASH_IN")
+        cash_out = sum(e.amount_paise for e in events if e.type == "CASH_OUT")
+        cash_sales = int(fig["cash_net_paise"])
+        expected = shift.opening_float_paise + cash_sales + cash_in - cash_out
+        by_mode = {str(k): int(v) for k, v in dict(fig["by_mode"]).items()}
+        declared = {str(k).upper(): int(v) for k, v in declared_by_mode.items()}
+        rec = Reconciliation(
+            opening_float_paise=shift.opening_float_paise, cash_sales_paise=cash_sales, cash_in_paise=cash_in, cash_out_paise=cash_out, expected_cash_paise=expected,
+            counted_cash_paise=counted_cash_paise, cash_variance_paise=counted_cash_paise - expected, by_mode=by_mode, declared_by_mode=declared,
+            mode_variance_paise={m: d - by_mode.get(m, 0) for m, d in declared.items()}, tolerance_paise=max(0, int(tolerance_paise)),
+        )
+        log.debug("SHIFT_RECONCILE shift=%s expected=%d counted=%d variance=%d declared=%s mode_variance=%s matches=%s", shift_id, expected, counted_cash_paise, rec.cash_variance_paise, declared, rec.mode_variance_paise, rec.matches)
+        return rec
+
     def _report(self, shift_id: int, kind: str) -> ShiftReport:
         with self._txn(label="shift.report") as session:
             shift = self._store.shift(session, shift_id)
@@ -301,6 +388,8 @@ class ShiftService:
             head = self._ledger.chain_head(session)
             expected = shift.expected_cash_paise if shift.status == "CLOSED" and shift.expected_cash_paise is not None else self._expected(session, shift_id)
         denominations = {int(k): int(v) for k, v in json.loads(shift.denominations or "{}").items()}
+        declared_raw = json.loads(shift.declared_json or "{}")
+        declared = {str(m): int(d["declared"]) if isinstance(d, dict) else int(d) for m, d in declared_raw.items()}
         return ShiftReport(
             shift_id=shift.id, cashier_id=shift.user_id, kind=kind, opened_at=shift.opened_at, closed_at=shift.closed_at, opening_float_paise=shift.opening_float_paise,
             bills=int(fig["bills"]), items_sold=Decimal(str(fig["items"])), sales_total_paise=int(fig["total_paise"]), by_mode=dict(fig["by_mode"]),
@@ -308,4 +397,5 @@ class ShiftService:
             voids=int(fig["voids"]), refunds_paise=int(fig["refunds_paise"]), cash_in_paise=sum(e.amount_paise for e in events if e.type == "CASH_IN"), cash_out_paise=sum(e.amount_paise for e in events if e.type == "CASH_OUT"),
             expected_cash_paise=expected, counted_cash_paise=shift.counted_cash_paise, variance_paise=shift.variance_paise, denominations=denominations,
             invoice_range=(str(fig["first_invoice"]), str(fig["last_invoice"])) if fig.get("first_invoice") else None, chain_head=head, note=shift.note, events=events,
+            declared_by_mode=declared, approved_by_user_id=shift.approved_by_user_id,
         )
