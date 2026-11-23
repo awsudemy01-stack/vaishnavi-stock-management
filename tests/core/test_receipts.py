@@ -116,7 +116,7 @@ class ModelTest(Base):
         self.assertEqual(model.invoice_no, "VPS/26-27/000003")
         self.assertEqual(model.cashier, "Ramesh")
         self.assertEqual(model.shift_label, "#1")
-        self.assertEqual([ln.marker for ln in model.lines], ["", "†", "*"])
+        self.assertEqual([ln.marker for ln in model.lines], ["", "", ""], "lookup / open-item flags are never printed for the customer (live run 5b)")
         camphor = model.lines[0]
         self.assertEqual((camphor.name, camphor.qty_text, camphor.price_text, camphor.discount_text, camphor.amount_text), ("Camphor 50g (कपूर)", "2 pcs", "10.00", "-1%", "20.00"), "item row shows the shelf amount …")
         self.assertEqual(camphor.discount_row, ("discount 1% (Diwali Offer)", "-0.20", "19.80"), "… the row beneath shows the discount and what was charged")
@@ -137,13 +137,15 @@ class ModelTest(Base):
         self.assertEqual(model.total_text, "₹65.00", "64.70 rounds to 65")
         self.assertEqual(model.saved_text, "₹0.30")
         self.assertEqual(model.payment_lines, ["Paid: CASH ₹100.00  Change ₹35.00"])
-        self.assertEqual(model.legend, "† label damaged – looked up   * open item")
+        self.assertEqual(model.legend, "", "no '† label damaged – looked up' footnote on the customer's bill")
+        self.assertNotIn("looked up", joined)
+        self.assertNotIn("open item", joined)
         self.assertEqual(model.upi_payload, "upi://pay?pa=shop%40upi&pn=Vaishnavi+Puja+Store&am=65.00&cu=INR")
         self.assertEqual(model.barcode, receipt_ean13("26-27", 3))
         self.assertEqual(model.tax_rows, [], "unregistered shop → no tax lines")
         self.assertIsNone(model.copy_label)
 
-    def test_tax_rows_when_registered_and_legend_absent_without_markers(self) -> None:
+    def test_tax_rows_when_registered_and_no_legend(self) -> None:
         self.settings.tax.registered = True
         self.settings.shop.gstin = "09ABCDE1234F1Z5"
         self.catalog.update(OWNER, 10, row_version=self.catalog.get(10).row_version, changes={"tax_rate_bp": 500})  # type: ignore[union-attr]
@@ -171,7 +173,7 @@ class RenderTest(Base):
             self.assertIn(b"VPS/26-27/000003", data)
             self.assertIn(b"\x1dk\x02" + model.barcode.encode() + b"\x00", data, "native EAN-13 of the receipt code")
             self.assertIn(b"\x1d(k" + bytes([len(model.upi_payload or "") + 3, 0]) + b"\x31\x50\x30" + (model.upi_payload or "").encode(), data, "QR store command with the UPI payload")
-            self.assertIn(b"^ label damaged", data, "the dagger is transliterated for code-page printers")
+            self.assertNotIn(b"label damaged", data, "lookup flag is back-office information — never on the customer's paper")
             self.assertNotIn("†".encode("utf-8"), data)
             self.assertNotIn("\u20b9".encode("utf-8"), data, "rupee sign becomes Rs on thermal paper")
             self.assertEqual(data, self.receipts.escpos(model, paper_mm=paper), "deterministic")
@@ -195,8 +197,10 @@ class RenderTest(Base):
     def test_html_contains_everything_and_archive_writes_year_month_folder(self) -> None:
         model = self._model()
         html = self.receipts.html(model)
-        for needle in ("Vaishnavi Puja Store", "VPS/26-27/000003", "Camphor 50g", "Marigold garland", "You saved", "<svg", "upi://pay?pa=shop%40upi", "†", "*", "@page"):
+        for needle in ("Vaishnavi Puja Store", "VPS/26-27/000003", "Camphor 50g", "Marigold garland", "You saved", "<svg", "upi://pay?pa=shop%40upi", "@page"):
             self.assertIn(needle, html, needle)
+        self.assertNotIn("†", html)
+        self.assertNotIn("open item", html)
         path = self.receipts.archive(model)
         self.assertEqual(path, self.paths.receipts / "2026" / "11" / "VPS-26-27-000003.html")
         self.assertTrue(path.exists())
