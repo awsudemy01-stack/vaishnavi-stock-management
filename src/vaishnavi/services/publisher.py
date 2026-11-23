@@ -36,11 +36,12 @@ class Renderer(Protocol):
 
     DigestData: Any
     WeeklyData: Any
+    Letterhead: Any
 
     def render_digest(self, data: Any) -> str: ...  # pragma: no cover - protocol
     def digest_summary(self, data: Any) -> list[str]: ...  # pragma: no cover - protocol
     def render_weekly(self, data: Any) -> str: ...  # pragma: no cover - protocol
-    def render_table(self, title: str, subtitle: str, headers: Any, rows: Any) -> str: ...  # pragma: no cover - protocol
+    def render_table(self, title: str, subtitle: str, headers: Any, rows: Any, *, letterhead: Any = None) -> str: ...  # pragma: no cover - protocol
     def write_document(self, html: str, stem: Path, *, pdf_engine: Any) -> Path: ...  # pragma: no cover - protocol
 
 
@@ -88,6 +89,15 @@ class ReportPublisher:
     def _names(self) -> dict[int, str]:
         return self._users.display_names()
 
+    def letterhead(self, title: str = "", subtitle: str = "", *, prepared_by: str = "") -> Any:
+        """The shop's letterhead for a document: name, address, phone, owner, system date & time, preparer.
+
+        Every PDF/HTML/CSV/XLSX the app produces goes through this so they all carry the same header.
+        """
+        shop = self._settings().shop
+        address = ", ".join(p.strip() for p in (shop.address_line1, shop.address_line2) if p and p.strip())
+        return self._renderer.Letterhead(shop_name=shop.name, address=address, phone=shop.phone.strip(), email=shop.email.strip(), gstin=shop.gstin.strip() if self._settings().tax.registered else "", owner=shop.owner_name.strip(), title=title, subtitle=subtitle, generated_at=format_ist(now_utc(), "%d-%b-%Y %H:%M") + " IST", prepared_by=prepared_by)
+
     def digest_data(self, day: date | None = None, actor: Actor = OWNER_ACTOR) -> Any:
         """Collect the day's figures (strings, ready to render)."""
         day = day or today_ist()
@@ -105,7 +115,7 @@ class ReportPublisher:
         insights = [self._insight_text(i) for i in self._insights.for_owner(actor)]
         with self._txn(label="publish.chain_head") as session:
             head = self._ledger.chain_head(session)
-        return self._renderer.DigestData(shop_name=self._settings().shop.name, day=day.strftime("%d-%b-%Y"), net=format_inr(s.net_paise), bills=s.bills, avg_bill=format_inr(s.avg_bill_paise), items=_q(s.items), by_mode={k: format_inr(v) for k, v in s.by_mode.items()}, tax=format_inr(s.tax_paise), discounts=format_inr(s.discount_paise), voids=voids, overrides=overrides, variance_lines=variance, low_stock=[(r.name, _q(r.stock_qty), _q(r.min_stock)) for r in low[:15]], out_of_stock=[r.name for r in low if r.stock_qty <= 0][:15], insights=insights, chain_head=head, sparkline=spark, generated_at=format_ist(now_utc(), "%d-%b %H:%M"), top=top)
+        return self._renderer.DigestData(shop_name=self._settings().shop.name, day=day.strftime("%d-%b-%Y"), net=format_inr(s.net_paise), bills=s.bills, avg_bill=format_inr(s.avg_bill_paise), items=_q(s.items), by_mode={k: format_inr(v) for k, v in s.by_mode.items()}, tax=format_inr(s.tax_paise), discounts=format_inr(s.discount_paise), voids=voids, overrides=overrides, variance_lines=variance, low_stock=[(r.name, _q(r.stock_qty), _q(r.min_stock)) for r in low[:15]], out_of_stock=[r.name for r in low if r.stock_qty <= 0][:15], insights=insights, chain_head=head, sparkline=spark, generated_at=format_ist(now_utc(), "%d-%b %H:%M"), top=top, letterhead=self.letterhead("Daily digest", day.strftime("%d-%b-%Y")))
 
     def weekly_data(self, end: date | None = None, actor: Actor = OWNER_ACTOR) -> Any:
         """Last 7 days ending ``end`` (default today)."""
@@ -115,7 +125,7 @@ class ReportPublisher:
         s = self._reports.sales_summary(actor, since=a, until=b)
         names = self._names()
         plan = [r for r in self._forecast.plan(actor) if r.reorder_qty > 0][:20]
-        return self._renderer.WeeklyData(shop_name=self._settings().shop.name, period=f"{start.strftime('%d-%b')} – {end.strftime('%d-%b-%Y')}", net=format_inr(s.net_paise), bills=s.bills, top=[(t.name, _q(t.qty), format_inr(t.amount_paise)) for t in self._reports.top_sellers(actor, since=a, until=b, limit=10, by="amount")], dead=[(r.name, _q(r.stock_qty), format_inr(r.value_paise)) for r in self._reports.dead_stock(actor)[:15]], reorder=[(r.name, _q(r.stock), _q(r.days_of_cover), _q(r.reorder_qty)) for r in plan], cashiers=[(names.get(c.user_id, f"#{c.user_id}"), str(c.bills), format_inr(c.sales_paise), format_inr(c.variance_paise)) for c in self._reports.cashier_performance(actor, since=a, until=b)], shrinkage=[(r.name, format_inr(r.value_paise)) for r in self._reports.shrinkage(actor, since=a, until=b)[:15]], by_day=[(r.day, format_inr(r.total_paise - r.refunds_paise)) for r in self._reports.sales_by_day(actor, since=a, until=b)], generated_at=format_ist(now_utc(), "%d-%b %H:%M"))
+        return self._renderer.WeeklyData(shop_name=self._settings().shop.name, period=f"{start.strftime('%d-%b')} – {end.strftime('%d-%b-%Y')}", net=format_inr(s.net_paise), bills=s.bills, top=[(t.name, _q(t.qty), format_inr(t.amount_paise)) for t in self._reports.top_sellers(actor, since=a, until=b, limit=10, by="amount")], dead=[(r.name, _q(r.stock_qty), format_inr(r.value_paise)) for r in self._reports.dead_stock(actor)[:15]], reorder=[(r.name, _q(r.stock), _q(r.days_of_cover), _q(r.reorder_qty)) for r in plan], cashiers=[(names.get(c.user_id, f"#{c.user_id}"), str(c.bills), format_inr(c.sales_paise), format_inr(c.variance_paise)) for c in self._reports.cashier_performance(actor, since=a, until=b)], shrinkage=[(r.name, format_inr(r.value_paise)) for r in self._reports.shrinkage(actor, since=a, until=b)[:15]], by_day=[(r.day, format_inr(r.total_paise - r.refunds_paise)) for r in self._reports.sales_by_day(actor, since=a, until=b)], generated_at=format_ist(now_utc(), "%d-%b %H:%M"), letterhead=self.letterhead("Weekly report", f"{start.strftime('%d-%b')} – {end.strftime('%d-%b-%Y')}"))
 
     @staticmethod
     def _insight_text(i: Any) -> str:
@@ -151,14 +161,14 @@ class ReportPublisher:
         summary = [f"Week {data.period}: {data.net} · {data.bills} bills", f"Top: {', '.join(t[0] for t in data.top[:3]) or '—'}", f"Reorder: {len(data.reorder)} item(s)"]
         return self._deliver("weekly", path, summary, f"Weekly report {data.period}")
 
-    def publish_table(self, title: str, subtitle: str, headers: list[str], rows: list[list[Any]], *, stem: str) -> PublishResult:
+    def publish_table(self, title: str, subtitle: str, headers: list[str], rows: list[list[Any]], *, stem: str, prepared_by: str = "") -> PublishResult:
         """Any report screen → document → channels (Export PDF → Send)."""
-        path = self.render_document(title, subtitle, headers, rows, stem=stem)
+        path = self.render_document(title, subtitle, headers, rows, stem=stem, prepared_by=prepared_by)
         return self._deliver("report", path, [title, subtitle, f"{len(rows)} rows"], title)
 
-    def render_document(self, title: str, subtitle: str, headers: list[str], rows: list[list[Any]], *, stem: str) -> Path:
-        """Any table as a PDF (HTML without an engine) under the reports folder — no delivery."""
-        html = self._renderer.render_table(title, subtitle, headers, rows)
+    def render_document(self, title: str, subtitle: str, headers: list[str], rows: list[list[Any]], *, stem: str, prepared_by: str = "") -> Path:
+        """Any table as a PDF (HTML without an engine) under the reports folder, on the shop letterhead — no delivery."""
+        html = self._renderer.render_table(title, subtitle, headers, rows, letterhead=self.letterhead(title, subtitle, prepared_by=prepared_by))
         return self._renderer.write_document(html, self._reports_dir(today_ist()) / stem, pdf_engine=self._pdf_engine)
 
     def _deliver(self, document: str, path: Path, summary: list[str], subject: str) -> PublishResult:
@@ -227,7 +237,7 @@ class ReportPublisher:
 
     def test_channel(self, channel_name: str) -> PublishResult:
         """Send a tiny test document through one channel (Settings → Publishing → Test)."""
-        html = self._renderer.render_table("Test message", f"{self._settings().shop.name} · {format_ist(now_utc())}", ["Check", "Result"], [["Channel", channel_name], ["Status", "working"]])
+        html = self._renderer.render_table("Test message", f"{self._settings().shop.name} · {format_ist(now_utc())}", ["Check", "Result"], [["Channel", channel_name], ["Status", "working"]], letterhead=self.letterhead("Test message", channel_name))
         path = self._renderer.write_document(html, self._reports_dir(today_ist()) / f"test-{channel_name}-{now_utc().strftime('%H%M%S')}", pdf_engine=self._pdf_engine)
         try:
             channel = self._channel_factory(channel_name, self._settings(), self)
