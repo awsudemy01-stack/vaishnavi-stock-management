@@ -23,4 +23,6 @@ git rev-parse --short HEAD
 git status --short
 c5d3cc78
 R  src/vaishnavi/db/alembic/versions/004_cashier_day_record.py -> src/vaishnavi/db/alembic/versions/0004_cashier_day_record.py
+
+.venv/bin/python -c "import vaishnavi; print(vaishnavi.__file__)"
 rohit@Rohits-MacBook-Pro vaishnavi-stock-management % 
