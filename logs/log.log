@@ -17,6 +17,8 @@ git status --short
 R  src/vaishnavi/db/alembic/versions/004_cashier_day_record.py -> src/vaishnavi/db/alembic/versions/0004_cashier_day_record.py
 rohit@Rohits-MacBook-Pro vaishnavi-stock-management % 
 
+python3 tools/manifest.py | grep -E "models/sales.py|0004_cashier_day_record"
+
 git rev-parse --short HEAD
 git status --short
 c5d3cc78
