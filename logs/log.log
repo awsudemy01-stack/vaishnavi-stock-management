@@ -6,3 +6,6 @@ git rev-parse --short HEAD
 f42faf9f
 rohit@Rohits-MacBook-Pro vaishnavi-stock-management % git status --short
 rohit@Rohits-MacBook-Pro vaishnavi-stock-management % 
+
+cd src/vaishnavi/db/alembic/versions
+git mv 004_cashier_day_record.py 0004_cashier_day_record.py
