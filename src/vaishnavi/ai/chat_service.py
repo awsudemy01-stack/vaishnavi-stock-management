@@ -41,8 +41,8 @@ HISTORY_TURNS = 8
 
 _DATA_WORDS = re.compile(
     r"\b(stock|inventory|qty|quantity|price|rate|mrp|sale|sales|sold|sell|bikri|bika|bike|kamai|collection|total|bill|bills|invoice|item|items|product|products|"
-    r"demand|forecast|predict|growth|reorder|profit|margin|purchase|purchases|spent|spend|kharch|supplier|cashier|variance|shrinkage|kitna|kitne|kitni|kaun|konsa|khatam|bacha)\b"
-    r"|स्टॉक|कीमत|दाम|बिक्री|बिका|खर्च|कुल|बिल|वस्तु|माँग|पूर्वानुमान|कितना|कितनी|कितने",  # no \b: matras are not \w characters
+    r"demand|forecast|predict|growth|reorder|profit|margin|purchase|purchases|spent|spend|kharch|invest|invested|investment|lagaya|supplier|cashier|variance|shrinkage|kitna|kitne|kitni|kaun|konsa|khatam|bacha)\b"
+    r"|स्टॉक|कीमत|दाम|बिक्री|बिका|खर्च|निवेश|कुल|बिल|वस्तु|माँग|पूर्वानुमान|कितना|कितनी|कितने",  # no \b: matras are not \w characters
     re.IGNORECASE,
 )
 
@@ -50,7 +50,7 @@ GROUNDING_NUDGE = (
     "Your previous answer used no tool. You have NO knowledge of this shop's items, quantities, sales or purchases except through tools. "
     "Call the right tool now: stock_overview for general stock questions; get_stock / item_price / search_products for one item; "
     "low_stock_items, out_of_stock_items; sales_summary for totals (period=today/yesterday/this_week/this_month/all_time); "
-    "demand_ranking for item-wise sales / best or worst sellers; dead_stock for 'no demand'; purchases_summary for money spent on stock; "
+    "demand_ranking for item-wise sales / best or worst sellers; dead_stock for 'no demand'; investment_summary for money spent / invested in stock so far (purchases_summary for supplier bills); "
     "forecast_sales / reorder_plan for the coming days. Never invent an item name or a number."
 )
 
