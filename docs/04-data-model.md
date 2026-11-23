@@ -229,6 +229,7 @@ erDiagram
     datetime opened_at
     datetime closed_at
     int opening_float_paise
+    json opening_denominations
     int expected_cash_paise
     int counted_cash_paise
     json denominations
@@ -236,6 +237,8 @@ erDiagram
     int closed_by_user_id FK
     string status "OPEN CLOSED"
     string note
+    json declared_json "UPI/CARD declared vs system"
+    int approved_by_user_id FK "Owner PIN when it did not match"
   }
   CASH_EVENT {
     int id PK
@@ -592,6 +595,13 @@ erDiagram
 - `backup_log` records every snapshot (path, size, verified, trigger, chain head) and every restore drill.
 - `print_pending` queues receipts that could not be printed (no printer / offline) so they can be printed once a printer is available.
 
+### `cashier_day_record` (migration 0004)
+- The **cashier day book**: one row per bill or credit note (`sale_id` UNIQUE, invoice, `business_day` in shop time, `sold_at`, cashier id + name snapshot, shift, status, line count, quantity, total, payment modes, `items_json` = name · qty · unit · rate · amount · entry method per line). Written by `CashierRecordService` on `SaleCommitted`, in its own transaction after the sale has committed — a failure here never touches the bill.
+- Unlike `sale` it is **not** append-only: the nightly `day_book_prune` job deletes rows whose `business_day` is older than `billing.day_record_retention_days` (90; audited `CASHIER_RECORDS_PRUNED`), and the Owner may delete earlier from Reports → Cashier day book after re-entering the password (`CASHIER_RECORDS_PURGED` with the cut-off day, row count and reason). The permanent ledger and the hash chain are unaffected because nothing here is hashed or referenced.
+
+### `stock_movement.unit_cost_paise`
+- Snapshotted on every **inbound** movement (`OPENING`, `PURCHASE`, positive `ADJUSTMENT` / `STOCK_TAKE`): the purchase line's cost when there is one, else the product's `cost_paise` on that day. The *Investment in stock* report and the assistant's `investment_summary` sum `qty_delta × unit_cost_paise` over these rows (falling back to the product's current cost, then its selling price, flagged "estimated"), so a later price change never rewrites what was already spent.
+
 ### `stock_movement` / `product_stock` / `stock_daily_balance`
 - **`product_stock`** is the O(1) read cache and is written **only** by `trg_product_stock_after_insert` (`INSERT … ON CONFLICT DO UPDATE SET qty = qty + NEW.qty_delta`); application code has no write path to it, so cache and ledger cannot diverge. **`stock_daily_balance`** is written by the nightly job (closing qty and cost value per product) and powers stock-as-of-date reports and the three-way reconciliation.
 - **CHECK constraints:** `qty_delta <> 0`, `qty >= 0` on sale/purchase lines, all `*_paise >= 0` except signed discount/refund columns, enumerated `type`/`status` values — invariants hold even for raw inserts.
@@ -611,7 +621,8 @@ erDiagram
 
 ### `shift` / `cash_event`
 - `expected_cash = opening_float + Σ CASH payments − Σ CASH refunds + Σ CASH_IN − Σ CASH_OUT`.
-- `denominations` JSON: `{"500": 4, "200": 3, "100": 10, "50": 2, "20": 5, "10": 8, "coins": 37}`.
+- `denominations` / `opening_denominations` JSON: `{"500": 4, "200": 3, "100": 10, "50": 2, "20": 5, "10": 8}`.
+- `declared_json` (migration 0003): `{"UPI": {"declared": 150000, "system": 150000}}` — the non-cash totals the cashier read off the phone app at close, next to what the system recorded. `approved_by_user_id`: the Owner who entered the PIN because counted cash (beyond `billing.shift_variance_tolerance_paise`) or a declared mode did not match; NULL when everything matched or the Owner closed the shift personally ([05 §6](05-billing-and-anti-theft.md#6-shift--cash-reconciliation)).
 
 ### `work_session` / `app_run`
 - One row per login; `logout_at` + `end_reason` filled by the End-work popup, the window-close beacon, the heartbeat monitor (60 s without heartbeat → `last_seen_at`), idle-lock timeout, or app shutdown. Unclean ends are confirmed by the user at next login (`confirmed_at`). Append-only for staff; Owner may add `owner_note` or force-end. Derived per-session figures (shifts, bills, sales) are computed from `shift`/`sale` by time window, not stored. See [05 §6a](05-billing-and-anti-theft.md#6a-attendance--login-logout-and-work-history).
